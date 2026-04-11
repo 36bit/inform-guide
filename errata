@@ -1,0 +1,66 @@
+Updates to the Language
+
+The Inform 6 language has evolved since the Inform Designer's Manual, Fourth Edition was written. An Addendum describing the changes is available.
+Misprints in the Manual
+
+The Inform Designer's Manual, Fourth Edition (or DM4) was carefully proof-read by teams of readers steeped in Inform lore, through six or seven levels of proof, before going to press, so naturally it still contains mistakes here and there. This errata list aims to collect together all those which have been found.
+
+Throughout the DM4, 'Giovanni Ricardi' should be changed to 'Giovanni Riccardi'. My particular apologies to Giovanni, whose work on Italian-language Inform has been tireless. [GN]
+
+§1.11, p. 29: The code to print a slash on the next letter is "@/" rather than "@\". [KB]
+
+§2.5, p. 45: The diagram of the parsing array seems to be incorrect (and some of the preceding text might be garbled). Entries 4 and 5 should contain "3" and "2" (length and position of "GET"), and entries 8 and 9 should contain "2" and "6" (length and position of "IN"). Also, on p. 481 the answer to Exercise 81 wrongly refers to §2.4. [RF]
+
+§3.5, p. 56: In the double triangle about "common properties", the reference to §3.14 should be to §3.13. [DJ]
+
+§3.9, p. 62: The limit of five parameters to a message should be mentioned. [MT]
+
+§3.11, p. 66: The first sentence after "copy(I,J)" should read "Copies the property and attribute values from J into I, where both have to be instances of the class". In the note which follows, Plant.copy(Gilded_Branch,Poison_Ivy) "copies to Gilded_Branch any properties and attributes that are shared with Poison_Ivy (without referring to Plant)". [CK]
+
+§4, p. 78: Comments such as "it's time to add some rules" rather assume familiarity with the structure of an object definition; readers who have followed the Introduction's advice and skipped straight to this section can easily become confused. [TK]
+
+§8, p. 109: The description of 'found_in' and 'absent' is misleading. 'absent' prevents MoveFloatingObjects( ) from transporting the object to another location as the player moves, but does not cause it to disappear from its current location. To achieve that, you should additionally execute a 'remove' statement. [SD]
+
+§15, p. 129: The note distinguishes between OUT and GET OUT (or EXIT). As far as I can tell, OUT and EXIT behave identically. [CK]
+
+§21, p. 154: See the comment about 'found_in' and 'absent' on p. 109. [SD]
+
+§23, p. 174: In the Treasure class definition, the reference to '(the) second' should be '(the) noun' or '(the) self' -- at this point 'noun' refers to the Treasure object and 'second' refers to the packing_case. [RF]
+
+§33, p. 238: This might be an appropriate place to mention the constant MANUAL_PRONOUNS, which appears not to be documented. [RF]
+
+§36, p. 259: The phrase 'Traduction fran@ccais 961205' should be 'Traduction fran@ccaise 961205'. [JLP]
+
+§36, pp. 260-261: Twice, the DM4 says that the Unicode number for a copyright symbol is 9A. The copyright symbol number is really A9. [ES]
+
+§36, p. 263: The statement "Constant RESTART__WD = 'reprand';" should be "Constant RESTART__WD = 'reprends';". [JLP]
+
+§36, pp. 267-268, also Exercise 111: The phrase 'dessus /on top of it/ (French) -> sur lui' should be 'dessus /on top of it/ (French) -> sur -lui'; the phrase 'dedans /inside it/ -> dans lui' should be 'dedans /inside it/ -> dans -lui'. [JLP]
+
+§36, p. 275: The string "On ne peut pas aller en ce direction." should be "On ne peut pas aller dans cette direction.". The string "votre m@^eme ancien" should be "votre ancien moi". The string "votre m@^eme" should be "vous-m@^eme". [JLP]
+
+§40, p. 290: In the last sentence of the first para, the word 'to' is missing from the phrase 'report it to the author'. [RF]
+
+§42, p. 309: In the para beginning 'There are four output streams for text...', the clause '..."script on" switches it off;' should read '..."script off" switches it off;'. [SK]
+
+§A2, p. 412: The n_to entry does not mention that the value can be a string. [RF]
+
+§A2, p. 412: In the add_to_scope entry, the second mention of PlaceInScope should perhaps be AddToScope. Also, AddToScope should appear in §A3 on p. 419, and in the Index. [RF]
+
+§A2, p. 416: In the heading for the description of the 'orders' property, there should be the 'plus-in-a-circle' symbol meaning 'additive'. [CK]
+
+§A5, p. 432: The entry for InScope should probably be InScope(actor). [RF]
+
+§A5, p. 433: The value returned by ParseNumber should be '0 to signal "no match", any non-zero value to signal "this number has been matched".'. [RF]
+
+Table 2A, p. 519: The value of the ZSCII esc character is 27, rather than 31 as shown. [RM]
+
+Table 2B, p. 520: The escape sequences for ZSCII characters 203, 204, 213 and 214 are respectively @/o, @/O, @cc and @cC, rather than as shown. [RF]
+
+Table 5, p. 523: The definition should read 'Lowstring <new-name> <text>'. [RF]
+
+Index, p. 555: The entry for 'Richard Dyer' should appear under D as 'Dyer, Richard'. [GN]
+
+Index, p. 556: There is no entry for 'self' (the receiver of message sending). [DJ]
+
+Index, p. 557: The entry for 'special (grammar token)' points to p. 222, but no information is provided there. [RF]
