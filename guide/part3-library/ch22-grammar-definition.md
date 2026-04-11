@@ -247,7 +247,7 @@ lines themselves.
 
 **[Z-machine]** GV1 (grammar version 1) is the historical format.
 Each grammar line is exactly 8 bytes: one byte for the parameter count,
-six bytes for tokens (padded with zeroes if fewer than six), and one byte
+six bytes for tokens (padded with zeros if fewer than six), and one byte
 for the action number. GV1 limits verbs to six tokens per line and 256
 actions.
 
