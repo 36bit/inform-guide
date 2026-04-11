@@ -212,7 +212,7 @@ Replace DrawStatusLine;
     #Ifnot; ! TARGET_GLULX
     if (gg_statuswin == 0) return;
     glk_set_window(gg_statuswin);
-    StatusLineStuff: width = ScreenWidth();
+    width = ScreenWidth();
     glk_window_clear(gg_statuswin);
     glk_window_move_cursor(gg_statuswin, 0, 0);
     print " ", (name) location;
@@ -483,7 +483,7 @@ The `@sound_effect` opcode plays, stops, or manages sound resources:
 |------------|-------------|
 | `number`   | Sound resource number (indexes into the Blorb sound resources). |
 | `effect`   | Operation: 1 = prepare, 2 = start, 3 = stop, 4 = finish all. |
-| `volume`   | Volume level: 1–8 (1 = quietest, 8 = loudest), or -1 for maximum. On V5+ this is encoded as a single byte with volume in the low nibble. |
+| `volume`   | Volume level: 1–8 (1 = quietest, 8 = loudest), or -1 for maximum. On V5+ the operand is a single word: the low byte holds the volume (1–8) and the high byte holds the number of repeats (0 = once, 255 = loop forever). When only volume is needed, pass the value directly (1–8). |
 | `routine`  | Callback routine address (V5+ only), called when the sound finishes playing. Pass 0 for no callback. |
 
 Examples:
