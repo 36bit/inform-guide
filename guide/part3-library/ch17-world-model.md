@@ -481,8 +481,7 @@ Object  hidden_switch "small switch" hallway
   with  name 'small' 'switch' 'hidden',
         description "A small switch, barely visible.",
         before [;
-          Push: oak_door.locked = false;
-                give oak_door ~locked;
+          Push: give oak_door ~locked;
                 "Click! Something unlocks nearby.";
         ],
   has   concealed scenery;
