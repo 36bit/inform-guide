@@ -1,0 +1,14 @@
+Consider whether Chapter 4.5: Standard library functions should be in 
+here, or if it should go into the inform6lib project from David 
+Griffith. Consider that perhaps the AI should go into more detail for 
+the functions, perhaps by exploring the inform6lib source code for a 
+released version.
+
+Also, are the functions it talks about for the library really part of 
+the standard library and not Inform itself? Look into it.
+
+Add a chapter about the compiler. Include all of the flags and 
+switches and whatnot that someone might want to use and why. Look over 
+those changelog things - See if they can be included. The goal being 
+to hopefully motivate the people maintaining the compiler to also 
+wanting to contribute to this documentation.
