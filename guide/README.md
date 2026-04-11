@@ -71,10 +71,9 @@ and how the compiler maps Inform 6 constructs onto each architecture.
 
 ### Part 5: Advanced Topics
 
-`part5-advanced/` addresses advanced usage including extending and replacing
-library routines, writing custom library contributions, low-level memory
-manipulation, performance considerations, inter-language interfacing, and
-techniques for pushing the boundaries of the Inform 6 system.
+`part5-advanced/` addresses advanced usage: replacing and extending library
+routines, internationalization and localization, multimedia features, compiler
+optimization, and debugging and testing techniques.
 
 ### Appendices
 
