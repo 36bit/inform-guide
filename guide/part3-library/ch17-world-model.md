@@ -130,9 +130,10 @@ SelfClass selfobj "(self object)";
 
 `selfobj` is an instance of the internal `SelfClass`, which provides
 defaults for `short_name` (`YOURSELF__TX`, typically "yourself"),
-`capacity` (`MAX_CARRIED`, default 100), and `narrative_voice` (2, for
-second person). The global variable `player` is set to `selfobj` during
-initialization. Game code normally refers to `player`, not `selfobj`.
+`capacity` (100), and `narrative_voice` (2, for second person). During
+initialization, `selfobj.capacity` is set to `MAX_CARRIED` (which also
+defaults to 100), and the global variable `player` is set to `selfobj`.
+Game code normally refers to `player`, not `selfobj`.
 
 ### 17.3.1 Reassigning the Player
 
@@ -604,7 +605,7 @@ Object  sky "sky"
         found_in  garden courtyard cliff_edge,
   has   scenery;
 
-! Appear in all outdoor rooms (using a class)
+! Appear in all outdoor rooms (using a routine)
 Object  birdsong "birdsong"
   with  name 'birdsong' 'bird' 'song' 'singing',
         description "A pleasant chorus of birdsong.",
