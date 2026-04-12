@@ -65,7 +65,7 @@ lower-precedence source.
 The `Switches` directive can appear in Inform source code:
 
 ```inform6
-Switches "dexs";
+Switches dexs;
 ```
 
 However, this directive is **deprecated** as of Inform 6.44. The compiler

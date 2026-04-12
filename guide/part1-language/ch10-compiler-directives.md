@@ -397,7 +397,7 @@ The `Switches` directive passes command-line switch options from within
 the source file.
 
 ```inform6
-Switches "-v5-s";          ! equivalent to command-line -v5 -s
+Switches v5s;              ! equivalent to command-line -v5 -s
 ```
 
 As of compiler 6.40, this directive is deprecated and generates a warning.
