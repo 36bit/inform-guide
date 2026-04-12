@@ -65,12 +65,14 @@ transparent, a supporter, or an open container, and stops when it
 reaches an object that blocks visibility:
 
 ```inform6
-[ ScopeCeiling person i;
-    i = parent(person);
+[ ScopeCeiling person act;
+    act = parent(person);
+    if (act == 0) return person;
     if (person == player && location == thedark) return thedark;
-    while (i && IsSeeThrough(i) && parent(i))
-        i = parent(i);
-    return i;
+    while (parent(act)~=0 && (act has transparent || act has supporter ||
+                             (act has container && act has open)))
+        act = parent(act);
+    return act;
 ];
 ```
 
@@ -314,15 +316,20 @@ light and darkness:
 [ AdjustLight flag i;
     i = lightflag;
     lightflag = OffersLight(parent(player));
-    if (i == lightflag) return;
-    if (lightflag) {
-        LocationLightAcquired();
-        if (location == thedark) ReallyLook();
+
+    if (i == 0 && lightflag == 1) {
+        location = real_location;
+        if (flag == 0) <Look>;
     }
-    else {
-        LocationLightLost();
-        ReallyLook();
+
+    if (i == 1 && lightflag == 0) {
+        real_location = location; location = thedark;
+        if (flag == 0) {
+            NoteArrival();
+            return L__M(##Miscellany, 9);
+        }
     }
+    if (i == 0 && lightflag == 0) location = thedark;
 ];
 ```
 
@@ -331,9 +338,9 @@ and darkness:
 
 - **Light acquired:** `location` is updated from `thedark` to
   `real_location`, and a `Look` is performed to show the room.
-- **Light lost:** `location` is set to `thedark`, the `DarkToDark()`
-  entry point is called (if the previous location was also dark), and
-  a `Look` is performed (which shows the darkness message).
+- **Light lost:** `location` is set to `thedark`, `NoteArrival()` is
+  called to run the `initial` property and `NewRoom()` entry point,
+  and a darkness message is printed.
 
 The global `lightflag` records whether the player's current position
 is lit (`1`) or dark (`0`). The `location` variable holds `thedark`
@@ -568,16 +575,12 @@ the nesting depth from the player to the ceiling and stores the
 ceiling object in the global `visibility_ceiling`.
 
 ```inform6
-[ FindVisibilityLevels;
-    visibility_levels = 0;
-    if (location == thedark) {
-        visibility_ceiling = thedark;
-        return 0;
-    }
+[ FindVisibilityLevels visibility_levels;
+    visibility_levels = 1;
     visibility_ceiling = parent(player);
-    while (visibility_ceiling &&
-           IsSeeThrough(visibility_ceiling) &&
-           parent(visibility_ceiling)) {
+    while ((parent(visibility_ceiling)) &&
+           (visibility_ceiling hasnt container ||
+            visibility_ceiling has open or transparent)) {
         visibility_ceiling = parent(visibility_ceiling);
         visibility_levels++;
     }
