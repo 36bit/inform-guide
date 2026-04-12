@@ -807,8 +807,7 @@ count of the `call_vs2` instruction (up to 7 arguments).
 The following table lists every Inform 6 operator from **lowest** to
 **highest** precedence. Operators at the same precedence level are
 evaluated according to their stated associativity. The precedence numbers
-correspond to the internal levels defined in the compiler's operator table
-(`expressc.c`).
+correspond to the internal levels defined in the compiler's operator table.
 
 | Prec. | Operators | Type | Assoc. | Description |
 | ----- | --------- | ---- | ------ | ----------- |

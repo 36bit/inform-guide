@@ -783,7 +783,6 @@ encoding systems:
 The conversion functions:
 
 ```c
-/* chars.c line 1049 */
 extern int unicode_to_zscii(int32 u)
 {   int i;
     if (u < 0x7f) return u;
@@ -792,7 +791,6 @@ extern int unicode_to_zscii(int32 u)
     return 5;
 }
 
-/* chars.c line 1057 */
 extern int32 zscii_to_unicode(int z)
 {   if (z < 0x80) return z;
     if ((z >= 155) && (z <= 251))

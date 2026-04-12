@@ -846,7 +846,7 @@ Array read_buffer -> 256;
 
 ### 34.4.5 The Glk Wrapper and Output Streams
 
-The Inform 6 veneer includes `Glk__Wrap` (`veneer.c` lines 1974–1984),
+The veneer includes `Glk__Wrap`,
 a wrapper routine that mediates between Inform's `print` statement and
 the Glk I/O system. When the compiler targets Glulx, all `print`
 output is routed through the current Glk stream. The `@glk` opcode

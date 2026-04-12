@@ -426,7 +426,7 @@ The debug information file is used by:
   front-ends.
 
 The debug file format is documented in the Inform Technical Manual and
-the compiler source (`inform.c`, `debug.c`).
+the compiler source.
 
 ---
 

@@ -62,8 +62,7 @@ At a high level, compilation proceeds through three broad stages:
 
 ## 13.2 Compilation Phases
 
-The compiler's top-level entry point is the `compile()` function in
-`inform.c`. It orchestrates the entire process:
+The compiler's top-level entry point is the `compile()` function. It orchestrates the entire process:
 
 ```
 compile()
@@ -277,8 +276,8 @@ needed.
 The compiler injects a set of **veneer routines** — small, compiler-
 generated functions that provide runtime support for language features
 that are too complex to expand inline. These routines are defined in
-`veneer.c` as Inform source text, compiled by the compiler itself during
-the finalization phase.
+the compiler's veneer source module as Inform source text, compiled by
+the compiler itself during the finalization phase.
 
 ### 13.5.1 Why Veneer Routines Exist
 
@@ -329,8 +328,8 @@ veneer routines; a minimal program may need only a handful.
 ### 13.5.3 Catalogue of Veneer Routines
 
 The following table lists the major categories of veneer routines. The
-full set of 48 is defined in the `VRs_z[]` and `VRs_g[]` arrays in
-`veneer.c`.
+full set of 48 is defined in the `VRs_z[]` and `VRs_g[]` arrays in the
+compiler's veneer module.
 
 **Statement support:**
 
@@ -630,7 +629,7 @@ file, and its starting address is recorded in the file header.
 ## 13.9 Code Area, String Area, and Static Data Layout
 
 The final story file is a single binary blob with a carefully specified
-layout. The compiler's `construct_storyfile()` function (in `tables.c`)
+layout. The compiler's `construct_storyfile()` function
 assembles all the pieces.
 
 ### 13.9.1 Z-Machine Story File Layout
@@ -769,7 +768,7 @@ compiler performs the following steps after the main pass:
 
 4. **Mark unreachable routines.** Any routine not reachable from an
    entry point is marked as dead. The function `locate_dead_functions()`
-   in `inform.c` orchestrates this process.
+   orchestrates this process.
 
 5. **Strip dead code.** During story file construction, dead routines
    are omitted from the code area. The backpatcher uses

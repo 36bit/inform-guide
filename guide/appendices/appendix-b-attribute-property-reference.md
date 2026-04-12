@@ -377,6 +377,3 @@ x = MyClass::capacity;           ! Original class-defined value
 ```
 
 ---
-
-*Source files referenced: `linklpa.h` (library 6.12.8), `objects.c`,
-`symbols.c`, `inform.c`, `options.c`, `header.h` (compiler 6.44).*

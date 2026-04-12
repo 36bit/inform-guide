@@ -48,9 +48,9 @@ reaches the closing `]` — and uses the game's own definition instead.
 
 The key mechanism works as follows:
 
-1. The `Replace` directive (handled in `directs.c`) sets
+1. The `Replace` directive sets
    `symbols[token_value].flags |= REPLACE_SFLAG` on the named symbol.
-2. When the compiler begins parsing a routine definition (in `syntax.c`),
+2. When the compiler begins parsing a routine definition,
    it checks whether the symbol has `REPLACE_SFLAG` set **and** the
    current file is a system file (via `is_systemfile()`).
 3. If both conditions are true and there is no rename mapping, the
@@ -244,7 +244,7 @@ variables the stub routine should declare.
 
 ### 32.3.1 Compiler Mechanics
 
-When the compiler processes a `Stub` directive (in `directs.c`):
+When the compiler processes a `Stub` directive:
 
 1. It checks whether `routine_name` already exists in the symbol table as
    a defined routine.

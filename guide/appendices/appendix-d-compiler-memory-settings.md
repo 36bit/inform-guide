@@ -773,9 +773,3 @@ option.
 | `TRANSCRIPT_FORMAT` | Compilation transcript format |
 
 ---
-
-*Source: All settings are defined in `Inform6-6.44/options.c`, lines 106–382.
-Variable declarations are in `Inform6-6.44/memory.c`, lines 256–281 and
-`Inform6-6.44/inform.c`, line 94. Trace options are handled in
-`Inform6-6.44/memory.c`, lines 320–444. Setting precedence constants are
-defined in `Inform6-6.44/header.h`, lines 598–600.*
