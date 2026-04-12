@@ -413,9 +413,11 @@ jumps to the loop's next test (or update, in a `for` loop).
 ];
 ```
 
-Both `break` and `continue` apply only to loops. Using them outside a loop
-body produces a compile-time error. Note that `break` does **not** apply to
-`switch` — it only exits loops.
+Both `break` and `continue` apply only to loops and (in the case of
+`break`) `switch` blocks. Using them outside a loop or `switch` body
+produces a compile-time error. In a `switch`, `break` jumps past the
+closing brace — the same effect as reaching the end of a case, so it is
+rarely needed. `continue` applies only to loops, not to `switch`.
 
 ## 5.10 `return`, `rtrue`, `rfalse`
 
@@ -486,6 +488,7 @@ Parenthesised keywords control how a value is printed:
 | `(object) expr` | Print the short name of an object (low-level, no article) |
 | `(a) expr` | Print the object name with an indefinite article ("a sword") |
 | `(an) expr` | Synonym for `(a)` |
+| `(A) expr` | Print the object name with a capitalised indefinite article ("A sword") |
 | `(the) expr` | Print the object name with a definite article ("the sword") |
 | `(The) expr` | Print with a capitalised definite article ("The sword") |
 | `(property) expr` | Print the name of a property (debugging aid) |
@@ -682,15 +685,21 @@ character (e.g., the newline or a function key code):
 ];
 ```
 
-### 5.18.2 Timed Input
+### 5.18.2 Status-Line Routine
 
-On Version 4+, `read` can accept a routine for timed input:
+On Version 4+, `read` can accept a third argument — a routine to call
+immediately before accepting input. On Version 4 this is typically used
+to redraw the status line (since Version 4 does not update it
+automatically the way Version 3 does):
 
 ```inform6
 read buffer parse DrawStatusLine;
 ```
 
-The routine is called periodically while the interpreter waits for input.
+The routine is called once each time the `read` statement executes, just
+before the interpreter begins waiting for input. For true timed input
+(periodic callbacks while waiting), use the `@aread` assembly instruction
+with its time-interval and routine operands.
 
 ## 5.19 `give`
 
