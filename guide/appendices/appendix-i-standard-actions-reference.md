@@ -37,11 +37,12 @@ Properties).
 The standard library defines two categories of actions:
 
 - **Player actions** — triggered by parsed player input and defined in
-  `grammar.h` with corresponding handler routines in `verblibm.h` and
-  `parserm.h`. These are listed in §I.3 (grouped by category).
+  `grammar.h` with corresponding handler routines in `verblib.h` and
+  `parser.h`. Standard game actions are listed alphabetically in §I.3;
+  meta actions (game-control and debug commands) are in §I.4.
 - **Fake actions** — generated internally by the library to communicate
   between objects. They have no grammar and no `*Sub` routine. These are
-  listed in §I.4.
+  listed in §I.5.
 
 Every action, whether real or fake, is assigned a unique numeric value by the
 compiler. Real actions may be either **meta** (game-control commands that do
