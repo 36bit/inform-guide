@@ -249,8 +249,8 @@ which bit to set:
 
 The following sections list every Z-machine opcode known to the Inform
 6.44 compiler, organised by the version in which each opcode was
-introduced. The information is taken directly from the `opcodes_table_z[]`
-array in `asm.c`.
+introduced. The information is taken directly from the compiler's internal
+opcode table.
 
 Each entry shows:
 - **Name**: the opcode's assembly name

@@ -38,7 +38,7 @@ version extends the previous one with additional capabilities, larger
 address spaces, or new instructions. The Inform compiler supports all six
 versions and assigns each an internal name.
 
-The compiler's `select_version()` function (in `inform.c`) configures
+The compiler's `select_version()` function configures
 the following parameters for each version:
 
 | Version | Internal Name | Scale Factor | Length Scale Factor | Extended Memory Map | Instruction Set |
@@ -114,8 +114,7 @@ different access rules at runtime:
 
 ### 28.2.1 Construction Order
 
-The compiler builds the story file sequentially in `construct_storyfile_z()`
-(in `tables.c`). The following listing shows the order in which sections
+The compiler builds the story file sequentially. The following listing shows the order in which sections
 are laid out, grouped by memory region:
 
 **Dynamic memory (byte `0x00` to `grammar_table_at - 1`):**
@@ -192,8 +191,8 @@ The following table documents every header field as set by the Inform
 | 16–17 | Flags 2 | Feature flags, auto-populated from assembled opcodes |
 | 18–23 | Serial number | Six ASCII characters in YYMMDD format |
 | 24–25 | Abbreviations table | Byte address of the abbreviations table |
-| 26–27 | File length | Length of the file divided by the length scale factor (filled in by `files.c`) |
-| 28–29 | Checksum | Unsigned sum of all bytes from `0x40` onwards (filled in by `files.c`) |
+| 26–27 | File length | Length of the file divided by the length scale factor (filled in at output time) |
+| 28–29 | Checksum | Unsigned sum of all bytes from `0x40` onwards (filled in at output time) |
 | 30–31 | Interpreter number/version | Set to 0 by the compiler; filled in by the interpreter at runtime |
 | 32–33 | Screen height/width | Set to 0; filled in by the interpreter |
 | 34–37 | Screen dimensions in units | Set to 0; filled in by the interpreter |
@@ -563,7 +562,7 @@ compilation.
 
 ### 28.9.1 Character Representations
 
-The compiler (as documented in `chars.c`) works with six different
+The compiler works with six different
 character representations:
 
 | Representation | Size | Range | Description |
@@ -647,8 +646,8 @@ The compiler defines 69 standard accented characters starting at ZSCII
 | 162 | » (right guillemet) | 176 | È (E-grave) |
 | 163 | « (left guillemet) | ... | ... |
 
-The complete list of 69 characters is defined by the `accents` string
-in the compiler source (`chars.c`). These characters can be entered in
+The complete list of 69 characters is defined by the compiler's internal
+`accents` string. These characters can be entered in
 source code using the `@` escape notation (e.g., `@:a` for ä, `@'e`
 for é).
 
@@ -686,5 +685,5 @@ efficient character conversion:
 
 These grids must be kept consistent with each other. Changing one
 structure (such as the alphabet table or the character set setting)
-may require rebuilding several others. The dependency relationships
-are documented in the header comments of `chars.c`.
+may require rebuilding several others. These dependency relationships
+are maintained internally by the compiler.

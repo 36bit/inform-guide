@@ -71,22 +71,21 @@ principles are:
 The compiler targets the Z-machine by default. To compile for Glulx,
 pass the `-G` switch on the command line or include `!% -G` in the
 source file header. In the compiler source, this sets the global
-variable `glulx_mode` to `TRUE` (`inform.c`, line 307). When Glulx mode
-is active, `WORDSIZE` is set to 4 and `MAXINTWORD` to `0x7FFFFFFF`
-(`inform.c`, lines 132–133), reflecting the 32-bit word size.
+variable `glulx_mode` to `TRUE`. When Glulx mode
+is active, `WORDSIZE` is set to 4 and `MAXINTWORD` to `0x7FFFFFFF`,
+reflecting the 32-bit word size.
 
 ### 30.1.2 Version Numbering and Auto-Selection
 
 Glulx version numbers use a three-part scheme X.Y.Z, encoded as a
 32-bit integer: `(X << 16) | (Y << 8) | Z`. For example, version 3.1.2
 is encoded as `0x00030102`. The compiler's `select_glulx_version()`
-function (`inform.c`, lines 58–81) parses the version string provided
+function parses the version string provided
 by the `-v` switch in Glulx mode.
 
 If no version is explicitly requested, the compiler automatically
 selects the minimum Glulx version required by the features used in the
-source code. This is determined by a set of feature flags in `asm.c`
-(lines 47–58):
+source code. This is determined by a set of feature flags:
 
 | Feature Flag | Minimum Version | Trigger |
 |---|---|---|
@@ -99,10 +98,9 @@ source code. This is determined by a set of feature flags in `asm.c`
 
 These flags are set automatically during assembly when the compiler
 encounters an opcode belonging to a feature-gated group (see
-`assembleg_instruction()` in `asm.c`, lines 1436–1453). The final
-output version (`final_glulx_version`) is the higher of the requested
-version and the version required by the features used (`files.c`,
-lines 658–670).
+`assembleg_instruction()`). The final
+output version is the higher of the requested
+version and the version required by the features used.
 
 ### 30.1.3 Key Differences Summary
 
@@ -171,8 +169,7 @@ region is determined by the `MEMORY_MAP_EXTENSION` setting.
 ### 30.2.2 Page Alignment
 
 All segment boundaries — RAMSTART, EXTSTART, and ENDMEM — must be
-multiples of `GPAGESIZE`, which is defined as 256 bytes (`header.h`,
-line 632). The stack size specified in the header must also be a
+multiples of `GPAGESIZE`, which is defined as 256 bytes. The stack size specified in the header must also be a
 multiple of 256. This alignment requirement simplifies interpreter
 implementation by ensuring that memory protection boundaries fall on
 clean page boundaries.
@@ -192,7 +189,7 @@ simply the byte offset from the start of memory. This has several
 consequences:
 
 - **No scale factor.** The compiler sets `scale_factor` to 0 in Glulx
-  mode (`inform.c`, line 134) — it is never used.
+  mode — it is never used.
 
 - **No alignment restrictions on code.** Routines can begin at any byte
   address. There is no requirement for routines to be aligned to even
@@ -205,18 +202,16 @@ consequences:
 - **Simpler address arithmetic.** All pointer arithmetic operates
   directly on byte addresses without scaling.
 
-The compiler sets `WORDSIZE` to 4 in Glulx mode (`inform.c`, line 132),
-reflecting the fact that each machine word occupies 4 bytes. The maximum
-signed integer value is `0x7FFFFFFF` (`MAXINTWORD`, line 133), and the
-maximum number of local variables per routine is 119 (including `sp`,
-line 138).
+The compiler sets `WORDSIZE` to 4 in Glulx mode, reflecting the fact
+that each machine word occupies 4 bytes. The maximum signed integer
+value is `0x7FFFFFFF` (`MAXINTWORD`), and the maximum number of local
+variables per routine is 119 (including `sp`).
 
 ## 30.4 The Header (36 Bytes)
 
 Every Glulx game file begins with a 36-byte header containing nine
-32-bit fields. The header size is defined by `GLULX_HEADER_SIZE` (36)
-in `header.h`, line 628. The compiler writes the header in `files.c`,
-lines 675–721.
+32-bit fields. The header size is defined by `GLULX_HEADER_SIZE` (36).
+The compiler writes the header during the output phase.
 
 | Offset | Size | Field | Description |
 |--------|------|-------|-------------|
@@ -233,7 +228,7 @@ lines 675–721.
 The **start function** field points to the beginning of the code area
 (`Write_Code_At`), and the **decoding table** points to the string
 compression table (`Write_Strings_At`). Both are set during the output
-phase in `files.c`.
+phase during output generation.
 
 The **checksum** is computed as the sum of all bytes in the initial
 memory image (ROM + RAM), treating each group of 4 bytes as a big-endian
@@ -243,9 +238,8 @@ computation and filled in afterward.
 ### 30.4.1 The Inform Static ROM Block
 
 Immediately after the 36-byte Glulx header, the compiler writes a
-24-byte Inform-specific block (`GLULX_STATIC_ROM_SIZE`, `header.h`,
-line 630). This block is part of ROM and is written in `files.c`
-beginning at line 725:
+24-byte Inform-specific block (`GLULX_STATIC_ROM_SIZE`). This block is
+part of ROM and is written immediately after the header:
 
 | Offset | Size | Content |
 |--------|------|---------|
@@ -276,8 +270,8 @@ directly.
 
 ### 30.5.1 The Object Record
 
-Each Glulx object is represented by the `objecttg` structure
-(`header.h`, lines 771–778). In the compiled output, each object
+Each Glulx object is represented by the `objecttg` structure.
+In the compiled output, each object
 occupies a contiguous block of memory with the following layout:
 
 | Offset (words) | Field | Size | Description |
@@ -290,8 +284,7 @@ occupies a contiguous block of memory with the following layout:
 | 4 + `NUM_ATTR_BYTES/4` | Sibling | 4 bytes | Object number of the next sibling, or 0. |
 | 5 + `NUM_ATTR_BYTES/4` | Child | 4 bytes | Object number of the first child, or 0. |
 
-The word offsets of these fields are defined by the `GOBJFIELD_*` macros
-in `header.h` (lines 2642–2648):
+The word offsets of these fields are defined by the `GOBJFIELD_*` macros:
 
 ```c
 #define GOBJFIELD_CHAIN()    (1+((NUM_ATTR_BYTES)/4))
@@ -311,7 +304,7 @@ word-sized fields.
 Attributes in Glulx are stored as a byte array at the start of each
 object record, rather than as a fixed-size bit field. The number of
 attribute bytes is controlled by the `NUM_ATTR_BYTES` compiler setting,
-with a maximum of 39 (`MAX_NUM_ATTR_BYTES`, `header.h`, line 615). Each
+with a maximum of 39 (`MAX_NUM_ATTR_BYTES`). Each
 byte holds 8 attribute flags, so the maximum number of attributes is
 312 (39 × 8). By contrast, the Z-machine supports at most 48 attributes
 (6 bytes in versions 4+).
@@ -325,8 +318,7 @@ options.
 
 Each object has a property table whose address is stored in the
 object record. The property table contains a sequence of property
-entries, each described by the `propg` structure (`header.h`, lines
-746–752):
+entries, each described by the `propg` structure:
 
 ```c
 typedef struct propg {
@@ -471,7 +463,7 @@ addressing mode.
 
 ### 30.7.2 Opcode Categories
 
-The Inform compiler's opcode table (`asm.c`, lines 696–847) defines
+The compiler's opcode table defines
 over 130 opcodes organised into the following categories:
 
 | Category | Opcode Range | Count | Description |
@@ -499,8 +491,7 @@ over 130 opcodes organised into the following categories:
 Several opcode groups are gated behind feature flags. When the compiler
 encounters an opcode from one of these groups, it automatically sets
 the corresponding feature flag and adjusts the minimum Glulx version
-requirement. The flags are defined as bit constants in `asm.c` (lines
-505–510):
+requirement. The flags are defined as bit constants:
 
 | Flag Constant | Value | Feature | Minimum Version |
 |---|---|---|---|
@@ -563,12 +554,10 @@ to obtain named constants for all Glk functions.
 
 ### 30.8.3 The Glk__Wrap Veneer Routine
 
-The compiler generates a veneer routine called `Glk__Wrap` (defined
-in `veneer.c`, lines 1973–1984) that provides a high-level calling
-interface for Glk functions. When Inform source code calls `glk()`
-as a system function (identified internally as `GLK_SYSF`, value 11,
-`header.h`, line 1651), the compiler emits a call to `Glk__Wrap`
-(`Glk__Wrap_VR`, veneer routine number 46, `header.h`, line 1871).
+The compiler generates a veneer routine called `Glk__Wrap` that provides
+a high-level calling interface for Glk functions. When Inform source
+code calls `glk()` as a system function, the compiler emits a call to
+`Glk__Wrap`.
 
 The `Glk__Wrap` routine is a `_vararg_count` function that:
 
@@ -687,8 +676,7 @@ Some useful reference values:
 ### 30.9.2 Float Literals in Source Code
 
 The Inform 6 compiler supports floating-point literals when compiling
-for Glulx. The lexer's `construct_float()` function (`lexer.c`, line
-1302) converts a decimal floating-point number into its IEEE-754 binary
+for Glulx. The lexer's `construct_float()` function converts a decimal floating-point number into its IEEE-754 binary
 representation. Float literals use the syntax:
 
 ```inform6
@@ -700,13 +688,12 @@ Global sci = $+6.022e23;
 
 The `$+` or `$-` prefix distinguishes float literals from integer
 hex constants. Attempting to use float literals when compiling for the
-Z-machine produces an error (`lexer.c`, line 1963).
+Z-machine produces an error.
 
 ### 30.9.3 Single-Precision Opcodes
 
 Twenty-six opcodes provide single-precision floating-point operations.
-These are gated behind the `GOP_Float` feature flag (`asm.c`, line 508)
-and require Glulx version 3.1.2 or later. The opcodes fall into
+These are gated behind the `GOP_Float` feature flag and require Glulx version 3.1.2 or later. The opcodes fall into
 several groups:
 
 **Conversion:** `numtof` (integer to float), `ftonumz` (float to
@@ -741,7 +728,7 @@ contains the sign bit, the 11-bit exponent, and the upper 20 bits of
 the mantissa; the low word contains the remaining 32 bits of the
 mantissa.
 
-Thirty-two double-precision opcodes (`asm.c`, lines 815–846) mirror the
+Thirty-two double-precision opcodes mirror the
 single-precision set: `numtod`, `dtonumz`, `dtonumn`, `ftod`, `dtof`,
 `dceil`, `dfloor`, `dadd`, `dsub`, `dmul`, `ddiv`, `dmodr`, `dmodq`,
 `dsqrt`, `dexp`, `dlog`, `dpow`, `dsin`, `dcos`, `dtan`, `dasin`,
@@ -749,7 +736,7 @@ single-precision set: `numtod`, `dtonumz`, `dtonumn`, `ftod`, `dtof`,
 `jdge`, `jdisnan`, `jdisinf`.
 
 These opcodes are gated behind the `GOP_Double` feature flag
-(`asm.c`, line 510) and require Glulx version 3.1.3 or later. Because
+and require Glulx version 3.1.3 or later. Because
 each double occupies two 32-bit words, many double-precision opcodes
 have more operands than their single-precision counterparts (e.g.,
 `dadd` takes 6 operands: two pairs of inputs and one pair of outputs).
@@ -766,7 +753,7 @@ to replace specific bytecode functions with native implementations.
 ### 30.10.1 The Acceleration Opcodes
 
 Two opcodes control acceleration, gated behind the `GOP_Acceleration`
-feature flag (`asm.c`, line 507) requiring Glulx version 3.1.1:
+feature flag requiring Glulx version 3.1.1:
 
 | Opcode | Code | Operands | Description |
 |---|---|---|---|
