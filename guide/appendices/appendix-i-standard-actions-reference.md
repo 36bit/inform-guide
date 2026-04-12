@@ -246,6 +246,7 @@ When an NPC is given or shown an object, the library first tries `Receive` on
 the NPC's `life` property (with `noun` set to the object being given or
 shown). The variable `receive_action` is set to `##Give` or `##Show` so the
 `life` routine can distinguish between the two.
+
 ---
 
 ## §I.3 Standard Game Actions
@@ -1213,6 +1214,9 @@ Verb 'stand'
 | `L__M(##Exit, 6)` | Alternative exit message |
 
 **Related actions:** Enter, GetOff, Go
+
+---
+
 ### Fill
 
 - **Routine:** `FillSub` (verblib.h:2744)
@@ -1897,6 +1901,9 @@ This is a pure stub action — it performs no world-model changes and exists onl
 | `L__M(##LookUnder, 2)` | Default refusal — nothing found |
 
 **Related actions:** Look, Examine, Search
+
+---
+
 ### Mild
 
 - **Routine:** `MildSub` (verblib.h:2777)
