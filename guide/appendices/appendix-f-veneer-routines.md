@@ -542,7 +542,7 @@ value and then increments.
 
 **Signature:** `DB__Pr(obj, identifier)`
 
-**Behavior:** Same structure as `IB__Pr` but decrements: returns `--( x-->0)`.
+**Behavior:** Same structure as `IB__Pr` but decrements: returns `--(x-->0)`.
 
 **Dependencies:** `RT__Err`, `RT__TrPS`
 
@@ -1481,7 +1481,7 @@ dependency graph for each veneer routine, separated by target platform.
 | `OP__Pr` | `Z__Region` |
 | `OC__Cl` | `Z__Region`, `RT__Err` |
 | `Z__Region` | `Unsigned__Compare` |
-| `Metaclass` | `Z__Region` |
+| `Meta__class` | `Z__Region` |
 | `Cl__Ms` | `RT__Err`, `Copy__Primitive` |
 | `RT__ChT` | `RT__Err` |
 | `RT__ChR` | `RT__Err` |
@@ -1519,7 +1519,7 @@ dependency graph for each veneer routine, separated by target platform.
 | `Copy__Primitive` | `CP__Tab` |
 | `Z__Region` | `Unsigned__Compare` |
 | `CP__Tab` | `Z__Region` |
-| `Metaclass` | `Z__Region` |
+| `Meta__class` | `Z__Region` |
 | `Cl__Ms` | `OC__Cl`, `OP__Pr`, `RT__Err`, `Copy__Primitive`, `OB__Remove`, `OB__Move` |
 | `RT__ChG` | `RT__Err` |
 | `RT__ChGt` | `RT__Err` |
