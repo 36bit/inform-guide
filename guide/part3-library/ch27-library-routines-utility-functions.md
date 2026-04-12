@@ -113,8 +113,11 @@ non-zero `found_in` property. For each such object:
    the player's `location` appears in the list. If so, the object is
    moved there; otherwise, it is removed.
 
-Objects with the `absent` attribute are skipped (they have been
-explicitly removed from play and should not be repositioned).
+Objects with the `non_floating` attribute (which is an alias for
+`absent`) are skipped by the floating-object logic and are not
+repositioned. In addition, `MoveFloatingObjects` removes **any**
+object that has the `absent` attribute from the object tree, even
+objects that do not have a `found_in` property.
 
 **Usage:** `MoveFloatingObjects` is called automatically by `PlayerTo`
 and should rarely need to be called directly.
@@ -132,7 +135,7 @@ Activates the daemon for `obj`. See §24.3.2.
 
 Deactivates the daemon for `obj`. See §24.3.3.
 
-### 27.2.3 `StartTimer(obj, turns)`
+### 27.2.3 `StartTimer(obj, timer)`
 
 Starts a countdown timer on `obj`. See §24.4.2.
 
@@ -501,7 +504,7 @@ Attempts to parse word `wordnum` as a numeric value.
 
 | Value   | Meaning                                                |
 |-------- |------------------------------------------------------- |
-| 1–10000 | The parsed numeric value.                              |
+| 0–10000 | The parsed numeric value.                              |
 | -1000   | The word is not a number.                              |
 | 10000   | The word is a number but exceeds 4 digits.             |
 
@@ -747,7 +750,7 @@ Returns the metaclass of a value — `Object`, `Class`, `Routine`,
 | `MoveFloatingObjects()`            | Reposition floating objects     | 27.1  |
 | `StartDaemon(obj)`                 | Activate daemon                 | 24.3  |
 | `StopDaemon(obj)`                  | Deactivate daemon               | 24.3  |
-| `StartTimer(obj, turns)`           | Start countdown timer           | 24.4  |
+| `StartTimer(obj, timer)`           | Start countdown timer           | 24.4  |
 | `StopTimer(obj)`                   | Cancel timer                    | 24.4  |
 | `TestScope(obj, actor)`            | Is object in scope?             | 25.4  |
 | `LoopOverScope(routine, actor)`    | Iterate over scope              | 25.4  |
