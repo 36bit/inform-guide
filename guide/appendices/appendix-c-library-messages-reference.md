@@ -26,7 +26,7 @@ messages, see Chapter 32 (Replacing and Extending the Library).
 
 Every message listed here can be intercepted and replaced by game code using
 the `LibraryMessages` object or the `LibraryExtensions` mechanism. The
-**Default Text** column shows the English-language default from `english.h`.
+**Default Text** column shows the English-language default.
 Messages marked **Tense-aware** adapt their wording based on whether the game
 uses present or past tense narration.
 
@@ -42,7 +42,7 @@ in the `LanguageLM` routine.
 
 ### §C.1.1 The L__M Dispatch Mechanism
 
-The `L__M` routine is defined in `verblib.h` (lines 3113–3120):
+The `L__M` routine dispatches library messages:
 
 ```inform6
 [ L__M act n x1 x2 s;
@@ -69,7 +69,7 @@ Key behaviors:
 - If `n` is 0, it defaults to 1. This means `L__M(##Pray)` is equivalent
   to `L__M(##Pray, 1)`.
 
-The inner `L___M` routine (`verblib.h`, lines 3122–3132) handles the actual
+The inner `L___M` routine handles the actual
 dispatch chain:
 
 ```inform6
@@ -190,7 +190,7 @@ A through D, in alphabetical order.
 
 ### §C.3.1 Answer / Ask (`##Answer`, `##Ask`)
 
-**Source:** `english.h:798–801` | **Messages:** 1
+**Messages:** 1
 
 These two actions share a single message handler via the `Answer,Ask:` case
 label.
@@ -201,7 +201,7 @@ label.
 
 ### §C.3.2 Attack (`##Attack`)
 
-**Source:** `english.h:803–805` | **Messages:** 1
+**Messages:** 1
 
 | # | Default Text | Parameters | Called From | Notes |
 |--:|-------------|-----------|------------|-------|
@@ -209,7 +209,7 @@ label.
 
 ### §C.3.3 Blow (`##Blow`)
 
-**Source:** `english.h:806–807` | **Messages:** 1
+**Messages:** 1
 
 | # | Default Text | Parameters | Called From | Notes |
 |--:|-------------|-----------|------------|-------|
@@ -217,7 +217,7 @@ label.
 
 ### §C.3.4 Burn (`##Burn`)
 
-**Source:** `english.h:808–813` | **Messages:** 2
+**Messages:** 2
 
 | # | Default Text | Parameters | Called From | Notes |
 |--:|-------------|-----------|------------|-------|
@@ -226,7 +226,7 @@ label.
 
 ### §C.3.5 Buy (`##Buy`)
 
-**Source:** `english.h:814–816` | **Messages:** 1
+**Messages:** 1
 
 | # | Default Text | Parameters | Called From | Notes |
 |--:|-------------|-----------|------------|-------|
@@ -234,7 +234,7 @@ label.
 
 ### §C.3.6 Climb (`##Climb`)
 
-**Source:** `english.h:817–822` | **Messages:** 2
+**Messages:** 2
 
 | # | Default Text | Parameters | Called From | Notes |
 |--:|-------------|-----------|------------|-------|
@@ -243,7 +243,7 @@ label.
 
 ### §C.3.7 Close (`##Close`)
 
-**Source:** `english.h:823–832` | **Messages:** 4
+**Messages:** 4
 
 | # | Default Text | Parameters | Called From | Notes |
 |--:|-------------|-----------|------------|-------|
@@ -254,7 +254,7 @@ label.
 
 ### §C.3.8 CommandsOff (`##CommandsOff`)
 
-**Source:** `english.h:833–837` | **Messages:** 2
+**Messages:** 2
 
 | # | Default Text | Parameters | Called From | Notes |
 |--:|-------------|-----------|------------|-------|
@@ -263,7 +263,7 @@ label.
 
 ### §C.3.9 CommandsOn (`##CommandsOn`)
 
-**Source:** `english.h:839–845` | **Messages:** 4
+**Messages:** 4
 
 | # | Default Text | Parameters | Called From | Notes |
 |--:|-------------|-----------|------------|-------|
@@ -274,7 +274,7 @@ label.
 
 ### §C.3.10 CommandsRead (`##CommandsRead`)
 
-**Source:** `english.h:847–854` | **Messages:** 5
+**Messages:** 5
 
 | # | Default Text | Parameters | Called From | Notes |
 |--:|-------------|-----------|------------|-------|
@@ -286,7 +286,7 @@ label.
 
 ### §C.3.11 Consult (`##Consult`)
 
-**Source:** `english.h:856–859` | **Messages:** 1
+**Messages:** 1
 
 | # | Default Text | Parameters | Called From | Notes |
 |--:|-------------|-----------|------------|-------|
@@ -294,7 +294,7 @@ label.
 
 ### §C.3.12 Cut (`##Cut`)
 
-**Source:** `english.h:860–865` | **Messages:** 2
+**Messages:** 2
 
 | # | Default Text | Parameters | Called From | Notes |
 |--:|-------------|-----------|------------|-------|
@@ -303,7 +303,7 @@ label.
 
 ### §C.3.13 Dig (`##Dig`)
 
-**Source:** `english.h:866–868` | **Messages:** 1
+**Messages:** 1
 
 | # | Default Text | Parameters | Called From | Notes |
 |--:|-------------|-----------|------------|-------|
@@ -311,7 +311,7 @@ label.
 
 ### §C.3.14 Disrobe (`##Disrobe`)
 
-**Source:** `english.h:869–876` | **Messages:** 4
+**Messages:** 4
 
 | # | Default Text | Parameters | Called From | Notes |
 |--:|-------------|-----------|------------|-------|
@@ -322,7 +322,7 @@ label.
 
 ### §C.3.15 Drink (`##Drink`)
 
-**Source:** `english.h:877–879` | **Messages:** 1
+**Messages:** 1
 
 | # | Default Text | Parameters | Called From | Notes |
 |--:|-------------|-----------|------------|-------|
@@ -330,7 +330,7 @@ label.
 
 ### §C.3.16 Drop (`##Drop`)
 
-**Source:** `english.h:880–893` | **Messages:** 4
+**Messages:** 4
 
 | # | Default Text | Parameters | Called From | Notes |
 |--:|-------------|-----------|------------|-------|
@@ -345,7 +345,7 @@ label.
 
 ### §C.4.1 Eat (`##Eat`)
 
-**Source:** `english.h:894–898` | **Messages:** 2
+**Messages:** 2
 
 | # | Default Text | Parameters | Called From | Notes |
 |--:|-------------|-----------|------------|-------|
@@ -354,7 +354,7 @@ label.
 
 ### §C.4.2 EmptyT (`##EmptyT`)
 
-**Source:** `english.h:899–906` | **Messages:** 4
+**Messages:** 4
 
 | # | Default Text | Parameters | Called From | Notes |
 |--:|-------------|-----------|------------|-------|
@@ -365,7 +365,7 @@ label.
 
 ### §C.4.3 Enter (`##Enter`)
 
-**Source:** `english.h:907–928` | **Messages:** 7
+**Messages:** 7
 
 | # | Default Text | Parameters | Called From | Notes |
 |--:|-------------|-----------|------------|-------|
@@ -379,7 +379,7 @@ label.
 
 ### §C.4.4 Examine (`##Examine`)
 
-**Source:** `english.h:930–938` | **Messages:** 3
+**Messages:** 3
 
 | # | Default Text | Parameters | Called From | Notes |
 |--:|-------------|-----------|------------|-------|
@@ -389,7 +389,7 @@ label.
 
 ### §C.4.5 Exit (`##Exit`)
 
-**Source:** `english.h:939–954` | **Messages:** 6
+**Messages:** 6
 
 | # | Default Text | Parameters | Called From | Notes |
 |--:|-------------|-----------|------------|-------|
@@ -402,7 +402,7 @@ label.
 
 ### §C.4.6 Fill (`##Fill`)
 
-**Source:** `english.h:955–962` | **Messages:** 2
+**Messages:** 2
 
 | # | Default Text | Parameters | Called From | Notes |
 |--:|-------------|-----------|------------|-------|
@@ -411,7 +411,7 @@ label.
 
 ### §C.4.7 FullScore (`##FullScore`)
 
-**Source:** `english.h:963–969` | **Messages:** 4
+**Messages:** 4
 
 | # | Default Text | Parameters | Called From | Notes |
 |--:|-------------|-----------|------------|-------|
@@ -422,7 +422,7 @@ label.
 
 ### §C.4.8 GetOff (`##GetOff`)
 
-**Source:** `english.h:970–971` | **Messages:** 1
+**Messages:** 1
 
 | # | Default Text | Parameters | Called From | Notes |
 |--:|-------------|-----------|------------|-------|
@@ -430,7 +430,7 @@ label.
 
 ### §C.4.9 Give (`##Give`)
 
-**Source:** `english.h:972–981` | **Messages:** 4
+**Messages:** 4
 
 | # | Default Text | Parameters | Called From | Notes |
 |--:|-------------|-----------|------------|-------|
@@ -441,7 +441,7 @@ label.
 
 ### §C.4.10 Go (`##Go`)
 
-**Source:** `english.h:982–992` | **Messages:** 7
+**Messages:** 7
 
 | # | Default Text | Parameters | Called From | Notes |
 |--:|-------------|-----------|------------|-------|
@@ -455,7 +455,7 @@ label.
 
 ### §C.4.11 Insert (`##Insert`)
 
-**Source:** `english.h:993–1010` | **Messages:** 9
+**Messages:** 9
 
 | # | Default Text | Parameters | Called From | Notes |
 |--:|-------------|-----------|------------|-------|
@@ -471,7 +471,7 @@ label.
 
 ### §C.4.12 Inv (`##Inv`)
 
-**Source:** `english.h:1011–1016` | **Messages:** 4
+**Messages:** 4
 
 | # | Default Text | Parameters | Called From | Notes |
 |--:|-------------|-----------|------------|-------|
@@ -482,7 +482,7 @@ label.
 
 ### §C.4.13 Jump (`##Jump`)
 
-**Source:** `english.h:1017` | **Messages:** 1
+**Messages:** 1
 
 | # | Default Text | Parameters | Called From | Notes |
 |--:|-------------|-----------|------------|-------|
@@ -490,7 +490,7 @@ label.
 
 ### §C.4.14 JumpIn (`##JumpIn`)
 
-**Source:** `english.h:1018–1023` | **Messages:** 2
+**Messages:** 2
 
 | # | Default Text | Parameters | Called From | Notes |
 |--:|-------------|-----------|------------|-------|
@@ -499,7 +499,7 @@ label.
 
 ### §C.4.15 JumpOn (`##JumpOn`)
 
-**Source:** `english.h:1024–1029` | **Messages:** 2
+**Messages:** 2
 
 | # | Default Text | Parameters | Called From | Notes |
 |--:|-------------|-----------|------------|-------|
@@ -508,7 +508,7 @@ label.
 
 ### §C.4.16 JumpOver (`##JumpOver`)
 
-**Source:** `english.h:1030–1035` | **Messages:** 2
+**Messages:** 2
 
 | # | Default Text | Parameters | Called From | Notes |
 |--:|-------------|-----------|------------|-------|
@@ -517,7 +517,7 @@ label.
 
 ### §C.4.17 Kiss (`##Kiss`)
 
-**Source:** `english.h:1036` | **Messages:** 1
+**Messages:** 1
 
 | # | Default Text | Parameters | Called From | Notes |
 |--:|-------------|-----------|------------|-------|
@@ -525,7 +525,7 @@ label.
 
 ### §C.4.18 Listen (`##Listen`)
 
-**Source:** `english.h:1037` | **Messages:** 1
+**Messages:** 1
 
 | # | Default Text | Parameters | Called From | Notes |
 |--:|-------------|-----------|------------|-------|
@@ -533,7 +533,7 @@ label.
 
 ### §C.4.19 ListMiscellany (`##ListMiscellany`)
 
-**Source:** `english.h:1038–1061` | **Messages:** 22
+**Messages:** 22
 
 These messages are used internally by the object listing system
 (`WriteListFrom` and related routines in `verblib.h`) to format parenthetical
@@ -567,7 +567,7 @@ inventory listings.
 
 ### §C.4.20 LMode1 (`##LMode1`)
 
-**Source:** `english.h:1062–1065` | **Messages:** 1
+**Messages:** 1
 
 | # | Default Text | Parameters | Called From | Notes |
 |--:|-------------|-----------|------------|-------|
@@ -575,7 +575,7 @@ inventory listings.
 
 ### §C.4.21 LMode2 (`##LMode2`)
 
-**Source:** `english.h:1066–1069` | **Messages:** 1
+**Messages:** 1
 
 | # | Default Text | Parameters | Called From | Notes |
 |--:|-------------|-----------|------------|-------|
@@ -583,7 +583,7 @@ inventory listings.
 
 ### §C.4.22 LMode3 (`##LMode3`)
 
-**Source:** `english.h:1070–1073` | **Messages:** 1
+**Messages:** 1
 
 | # | Default Text | Parameters | Called From | Notes |
 |--:|-------------|-----------|------------|-------|
@@ -591,7 +591,7 @@ inventory listings.
 
 ### §C.4.23 Lock (`##Lock`)
 
-**Source:** `english.h:1074–1083` | **Messages:** 5
+**Messages:** 5
 
 | # | Default Text | Parameters | Called From | Notes |
 |--:|-------------|-----------|------------|-------|
@@ -603,7 +603,7 @@ inventory listings.
 
 ### §C.4.24 Look (`##Look`)
 
-**Source:** `english.h:1084–1105` | **Messages:** 7
+**Messages:** 7
 
 | # | Default Text | Parameters | Called From | Notes |
 |--:|-------------|-----------|------------|-------|
@@ -617,7 +617,7 @@ inventory listings.
 
 ### §C.4.25 LookUnder (`##LookUnder`)
 
-**Source:** `english.h:1106–1111` | **Messages:** 2
+**Messages:** 2
 
 | # | Default Text | Parameters | Called From | Notes |
 |--:|-------------|-----------|------------|-------|
@@ -630,7 +630,7 @@ inventory listings.
 
 ### §C.5.1 Mild (`##Mild`)
 
-**Source:** `english.h:1112` | **Messages:** 1
+**Messages:** 1
 
 | # | Default Text | Parameters | Called From | Notes |
 |--:|-------------|-----------|------------|-------|
@@ -638,7 +638,7 @@ inventory listings.
 
 ### §C.5.2 Miscellany (`##Miscellany`)
 
-**Source:** `english.h:1113–1221` | **Messages:** 60
+**Messages:** 60
 
 The `##Miscellany` pseudo-action is a catch-all for parser messages, system
 messages, and other text that does not belong to any specific game action.
@@ -711,7 +711,7 @@ thematic breakdown, see §C.7.
 
 ### §C.5.3 No / Yes (`##No`, `##Yes`)
 
-**Source:** `english.h:1222` | **Messages:** 1
+**Messages:** 1
 
 These two actions share a single message handler via the `No,Yes:` case label.
 
@@ -721,7 +721,7 @@ These two actions share a single message handler via the `No,Yes:` case label.
 
 ### §C.5.4 NotifyOff (`##NotifyOff`)
 
-**Source:** `english.h:1223–1224` | **Messages:** 1
+**Messages:** 1
 
 | # | Default Text | Parameters | Called From | Notes |
 |--:|-------------|-----------|------------|-------|
@@ -729,7 +729,7 @@ These two actions share a single message handler via the `No,Yes:` case label.
 
 ### §C.5.5 NotifyOn (`##NotifyOn`)
 
-**Source:** `english.h:1225` | **Messages:** 1
+**Messages:** 1
 
 | # | Default Text | Parameters | Called From | Notes |
 |--:|-------------|-----------|------------|-------|
@@ -737,7 +737,7 @@ These two actions share a single message handler via the `No,Yes:` case label.
 
 ### §C.5.6 Objects (`##Objects`)
 
-**Source:** `english.h:1226–1237` | **Messages:** 10
+**Messages:** 10
 
 | # | Default Text | Parameters | Called From | Notes |
 |--:|-------------|-----------|------------|-------|
@@ -754,7 +754,7 @@ These two actions share a single message handler via the `No,Yes:` case label.
 
 ### §C.5.7 Open (`##Open`)
 
-**Source:** `english.h:1238–1251` | **Messages:** 6
+**Messages:** 6
 
 | # | Default Text | Parameters | Called From | Notes |
 |--:|-------------|-----------|------------|-------|
@@ -767,7 +767,7 @@ These two actions share a single message handler via the `No,Yes:` case label.
 
 ### §C.5.8 Order (`##Order`)
 
-**Source:** `english.h:1252` | **Messages:** 1
+**Messages:** 1
 
 | # | Default Text | Parameters | Called From | Notes |
 |--:|-------------|-----------|------------|-------|
@@ -775,7 +775,7 @@ These two actions share a single message handler via the `No,Yes:` case label.
 
 ### §C.5.9 Places (`##Places`)
 
-**Source:** `english.h:1253–1257` | **Messages:** 3
+**Messages:** 3
 
 | # | Default Text | Parameters | Called From | Notes |
 |--:|-------------|-----------|------------|-------|
@@ -785,7 +785,7 @@ These two actions share a single message handler via the `No,Yes:` case label.
 
 ### §C.5.10 Pray (`##Pray`)
 
-**Source:** `english.h:1258–1260` | **Messages:** 1
+**Messages:** 1
 
 | # | Default Text | Parameters | Called From | Notes |
 |--:|-------------|-----------|------------|-------|
@@ -793,7 +793,7 @@ These two actions share a single message handler via the `No,Yes:` case label.
 
 ### §C.5.11 Prompt (`##Prompt`)
 
-**Source:** `english.h:1261` | **Messages:** 1
+**Messages:** 1
 
 | # | Default Text | Parameters | Called From | Notes |
 |--:|-------------|-----------|------------|-------|
@@ -801,7 +801,7 @@ These two actions share a single message handler via the `No,Yes:` case label.
 
 ### §C.5.12 Pronouns (`##Pronouns`)
 
-**Source:** `english.h:1262–1268` | **Messages:** 5
+**Messages:** 5
 
 | # | Default Text | Parameters | Called From | Notes |
 |--:|-------------|-----------|------------|-------|
@@ -813,7 +813,7 @@ These two actions share a single message handler via the `No,Yes:` case label.
 
 ### §C.5.13 Pull / Push / Turn (`##Pull`, `##Push`, `##Turn`)
 
-**Source:** `english.h:1269–1287` | **Messages:** 6
+**Messages:** 6
 
 These three actions share a single message handler via the `Pull,Push,Turn:`
 case label.
@@ -829,7 +829,7 @@ case label.
 
 ### §C.5.14 PushDir (`##PushDir`)
 
-**Source:** `english.h:1289–1299` | **Messages:** 3
+**Messages:** 3
 
 | # | Default Text | Parameters | Called From | Notes |
 |--:|-------------|-----------|------------|-------|
@@ -839,7 +839,7 @@ case label.
 
 ### §C.5.15 PutOn (`##PutOn`)
 
-**Source:** `english.h:1300–1316` | **Messages:** 8
+**Messages:** 8
 
 | # | Default Text | Parameters | Called From | Notes |
 |--:|-------------|-----------|------------|-------|
@@ -854,7 +854,7 @@ case label.
 
 ### §C.5.16 Quit (`##Quit`)
 
-**Source:** `english.h:1317–1320` | **Messages:** 2
+**Messages:** 2
 
 | # | Default Text | Parameters | Called From | Notes |
 |--:|-------------|-----------|------------|-------|
@@ -863,7 +863,7 @@ case label.
 
 ### §C.5.17 Remove (`##Remove`)
 
-**Source:** `english.h:1321–1328` | **Messages:** 4
+**Messages:** 4
 
 | # | Default Text | Parameters | Called From | Notes |
 |--:|-------------|-----------|------------|-------|
@@ -874,7 +874,7 @@ case label.
 
 ### §C.5.18 Restart (`##Restart`)
 
-**Source:** `english.h:1329–1332` | **Messages:** 2
+**Messages:** 2
 
 | # | Default Text | Parameters | Called From | Notes |
 |--:|-------------|-----------|------------|-------|
@@ -883,7 +883,7 @@ case label.
 
 ### §C.5.19 Restore (`##Restore`)
 
-**Source:** `english.h:1333–1336` | **Messages:** 2
+**Messages:** 2
 
 | # | Default Text | Parameters | Called From | Notes |
 |--:|-------------|-----------|------------|-------|
@@ -892,7 +892,7 @@ case label.
 
 ### §C.5.20 Rub (`##Rub`)
 
-**Source:** `english.h:1337–1341` | **Messages:** 2
+**Messages:** 2
 
 | # | Default Text | Parameters | Called From | Notes |
 |--:|-------------|-----------|------------|-------|
@@ -901,7 +901,7 @@ case label.
 
 ### §C.5.21 RunTimeError (`##RunTimeError`)
 
-**Source:** `english.h:1342–1371` | **Messages:** 16
+**Messages:** 16
 
 These are internal runtime error diagnostics, printed with `** ... **`
 delimiters. They indicate programming errors or exceeded limits. For a
@@ -931,7 +931,7 @@ complete discussion, see §C.9.
 
 ### §C.6.1 Save (`##Save`)
 
-**Source:** `english.h:1372–1375` | **Messages:** 2
+**Messages:** 2
 
 | # | Default Text | Parameters | Called From | Notes |
 |--:|-------------|-----------|------------|-------|
@@ -940,7 +940,7 @@ complete discussion, see §C.9.
 
 ### §C.6.2 Score (`##Score`)
 
-**Source:** `english.h:1376–1382` | **Messages:** 2
+**Messages:** 2
 
 | # | Default Text | Parameters | Called From | Notes |
 |--:|-------------|-----------|------------|-------|
@@ -949,7 +949,7 @@ complete discussion, see §C.9.
 
 ### §C.6.3 ScriptOff (`##ScriptOff`)
 
-**Source:** `english.h:1383–1387` | **Messages:** 3
+**Messages:** 3
 
 | # | Default Text | Parameters | Called From | Notes |
 |--:|-------------|-----------|------------|-------|
@@ -959,7 +959,7 @@ complete discussion, see §C.9.
 
 ### §C.6.4 ScriptOn (`##ScriptOn`)
 
-**Source:** `english.h:1388–1392` | **Messages:** 3
+**Messages:** 3
 
 | # | Default Text | Parameters | Called From | Notes |
 |--:|-------------|-----------|------------|-------|
@@ -969,7 +969,7 @@ complete discussion, see §C.9.
 
 ### §C.6.5 Search (`##Search`)
 
-**Source:** `english.h:1393–1410` | **Messages:** 7
+**Messages:** 7
 
 | # | Default Text | Parameters | Called From | Notes |
 |--:|-------------|-----------|------------|-------|
@@ -983,7 +983,7 @@ complete discussion, see §C.9.
 
 ### §C.6.6 Set (`##Set`)
 
-**Source:** `english.h:1412` | **Messages:** 1
+**Messages:** 1
 
 | # | Default Text | Parameters | Called From | Notes |
 |--:|-------------|-----------|------------|-------|
@@ -991,7 +991,7 @@ complete discussion, see §C.9.
 
 ### §C.6.7 SetTo (`##SetTo`)
 
-**Source:** `english.h:1413` | **Messages:** 1
+**Messages:** 1
 
 | # | Default Text | Parameters | Called From | Notes |
 |--:|-------------|-----------|------------|-------|
@@ -999,7 +999,7 @@ complete discussion, see §C.9.
 
 ### §C.6.8 Show (`##Show`)
 
-**Source:** `english.h:1414–1417` | **Messages:** 2
+**Messages:** 2
 
 | # | Default Text | Parameters | Called From | Notes |
 |--:|-------------|-----------|------------|-------|
@@ -1008,7 +1008,7 @@ complete discussion, see §C.9.
 
 ### §C.6.9 Sing (`##Sing`)
 
-**Source:** `english.h:1418–1420` | **Messages:** 1
+**Messages:** 1
 
 | # | Default Text | Parameters | Called From | Notes |
 |--:|-------------|-----------|------------|-------|
@@ -1016,7 +1016,7 @@ complete discussion, see §C.9.
 
 ### §C.6.10 Sleep (`##Sleep`)
 
-**Source:** `english.h:1421` | **Messages:** 1
+**Messages:** 1
 
 | # | Default Text | Parameters | Called From | Notes |
 |--:|-------------|-----------|------------|-------|
@@ -1024,7 +1024,7 @@ complete discussion, see §C.9.
 
 ### §C.6.11 Smell (`##Smell`)
 
-**Source:** `english.h:1422–1425` | **Messages:** 2
+**Messages:** 2
 
 | # | Default Text | Parameters | Called From | Notes |
 |--:|-------------|-----------|------------|-------|
@@ -1033,7 +1033,7 @@ complete discussion, see §C.9.
 
 ### §C.6.12 Sorry (`##Sorry`)
 
-**Source:** `english.h:1426–1430` | **Messages:** 1
+**Messages:** 1
 
 | # | Default Text | Parameters | Called From | Notes |
 |--:|-------------|-----------|------------|-------|
@@ -1041,7 +1041,7 @@ complete discussion, see §C.9.
 
 ### §C.6.13 Squeeze (`##Squeeze`)
 
-**Source:** `english.h:1431–1434` | **Messages:** 2
+**Messages:** 2
 
 | # | Default Text | Parameters | Called From | Notes |
 |--:|-------------|-----------|------------|-------|
@@ -1050,7 +1050,7 @@ complete discussion, see §C.9.
 
 ### §C.6.14 Strong (`##Strong`)
 
-**Source:** `english.h:1435–1437` | **Messages:** 1
+**Messages:** 1
 
 | # | Default Text | Parameters | Called From | Notes |
 |--:|-------------|-----------|------------|-------|
@@ -1058,7 +1058,7 @@ complete discussion, see §C.9.
 
 ### §C.6.15 Swim (`##Swim`)
 
-**Source:** `english.h:1438–1440` | **Messages:** 1
+**Messages:** 1
 
 | # | Default Text | Parameters | Called From | Notes |
 |--:|-------------|-----------|------------|-------|
@@ -1066,7 +1066,7 @@ complete discussion, see §C.9.
 
 ### §C.6.16 Swing (`##Swing`)
 
-**Source:** `english.h:1441–1443` | **Messages:** 1
+**Messages:** 1
 
 | # | Default Text | Parameters | Called From | Notes |
 |--:|-------------|-----------|------------|-------|
@@ -1074,7 +1074,7 @@ complete discussion, see §C.9.
 
 ### §C.6.17 SwitchOff (`##SwitchOff`)
 
-**Source:** `english.h:1444–1451` | **Messages:** 3
+**Messages:** 3
 
 | # | Default Text | Parameters | Called From | Notes |
 |--:|-------------|-----------|------------|-------|
@@ -1084,7 +1084,7 @@ complete discussion, see §C.9.
 
 ### §C.6.18 SwitchOn (`##SwitchOn`)
 
-**Source:** `english.h:1452–1459` | **Messages:** 3
+**Messages:** 3
 
 | # | Default Text | Parameters | Called From | Notes |
 |--:|-------------|-----------|------------|-------|
@@ -1094,7 +1094,7 @@ complete discussion, see §C.9.
 
 ### §C.6.19 Take (`##Take`)
 
-**Source:** `english.h:1461–1480` | **Messages:** 13
+**Messages:** 13
 
 | # | Default Text | Parameters | Called From | Notes |
 |--:|-------------|-----------|------------|-------|
@@ -1114,7 +1114,7 @@ complete discussion, see §C.9.
 
 ### §C.6.20 Taste (`##Taste`)
 
-**Source:** `english.h:1481–1484` | **Messages:** 2
+**Messages:** 2
 
 | # | Default Text | Parameters | Called From | Notes |
 |--:|-------------|-----------|------------|-------|
@@ -1123,7 +1123,7 @@ complete discussion, see §C.9.
 
 ### §C.6.21 Tell (`##Tell`)
 
-**Source:** `english.h:1485–1491` | **Messages:** 2
+**Messages:** 2
 
 | # | Default Text | Parameters | Called From | Notes |
 |--:|-------------|-----------|------------|-------|
@@ -1132,7 +1132,7 @@ complete discussion, see §C.9.
 
 ### §C.6.22 Think (`##Think`)
 
-**Source:** `english.h:1492` | **Messages:** 1
+**Messages:** 1
 
 | # | Default Text | Parameters | Called From | Notes |
 |--:|-------------|-----------|------------|-------|
@@ -1140,7 +1140,7 @@ complete discussion, see §C.9.
 
 ### §C.6.23 ThrowAt (`##ThrowAt`)
 
-**Source:** `english.h:1493–1499` | **Messages:** 2
+**Messages:** 2
 
 | # | Default Text | Parameters | Called From | Notes |
 |--:|-------------|-----------|------------|-------|
@@ -1149,7 +1149,7 @@ complete discussion, see §C.9.
 
 ### §C.6.24 Tie (`##Tie`)
 
-**Source:** `english.h:1500–1505` | **Messages:** 2
+**Messages:** 2
 
 | # | Default Text | Parameters | Called From | Notes |
 |--:|-------------|-----------|------------|-------|
@@ -1158,7 +1158,7 @@ complete discussion, see §C.9.
 
 ### §C.6.25 Touch (`##Touch`)
 
-**Source:** `english.h:1506–1512` | **Messages:** 3
+**Messages:** 3
 
 | # | Default Text | Parameters | Called From | Notes |
 |--:|-------------|-----------|------------|-------|
@@ -1168,7 +1168,7 @@ complete discussion, see §C.9.
 
 ### §C.6.26 Transfer (`##Transfer`)
 
-**Source:** `english.h:1513–1515` | **Messages:** 1
+**Messages:** 1
 
 | # | Default Text | Parameters | Called From | Notes |
 |--:|-------------|-----------|------------|-------|
@@ -1176,7 +1176,7 @@ complete discussion, see §C.9.
 
 ### §C.6.27 Unlock (`##Unlock`)
 
-**Source:** `english.h:1518–1527` | **Messages:** 5
+**Messages:** 5
 
 | # | Default Text | Parameters | Called From | Notes |
 |--:|-------------|-----------|------------|-------|
@@ -1188,7 +1188,7 @@ complete discussion, see §C.9.
 
 ### §C.6.28 VagueGo (`##VagueGo`)
 
-**Source:** `english.h:1528–1531` | **Messages:** 1
+**Messages:** 1
 
 | # | Default Text | Parameters | Called From | Notes |
 |--:|-------------|-----------|------------|-------|
@@ -1196,7 +1196,7 @@ complete discussion, see §C.9.
 
 ### §C.6.29 Verify (`##Verify`)
 
-**Source:** `english.h:1532–1535` | **Messages:** 2
+**Messages:** 2
 
 | # | Default Text | Parameters | Called From | Notes |
 |--:|-------------|-----------|------------|-------|
@@ -1205,7 +1205,7 @@ complete discussion, see §C.9.
 
 ### §C.6.30 Wait (`##Wait`)
 
-**Source:** `english.h:1536–1538` | **Messages:** 1
+**Messages:** 1
 
 | # | Default Text | Parameters | Called From | Notes |
 |--:|-------------|-----------|------------|-------|
@@ -1213,7 +1213,7 @@ complete discussion, see §C.9.
 
 ### §C.6.31 Wake (`##Wake`)
 
-**Source:** `english.h:1539–1541` | **Messages:** 1
+**Messages:** 1
 
 | # | Default Text | Parameters | Called From | Notes |
 |--:|-------------|-----------|------------|-------|
@@ -1221,7 +1221,7 @@ complete discussion, see §C.9.
 
 ### §C.6.32 WakeOther (`##WakeOther`)
 
-**Source:** `english.h:1542–1544` | **Messages:** 1
+**Messages:** 1
 
 | # | Default Text | Parameters | Called From | Notes |
 |--:|-------------|-----------|------------|-------|
@@ -1229,7 +1229,7 @@ complete discussion, see §C.9.
 
 ### §C.6.33 Wave (`##Wave`)
 
-**Source:** `english.h:1545–1554` | **Messages:** 3
+**Messages:** 3
 
 | # | Default Text | Parameters | Called From | Notes |
 |--:|-------------|-----------|------------|-------|
@@ -1239,7 +1239,7 @@ complete discussion, see §C.9.
 
 ### §C.6.34 WaveHands (`##WaveHands`)
 
-**Source:** `english.h:1555–1561` | **Messages:** 2
+**Messages:** 2
 
 | # | Default Text | Parameters | Called From | Notes |
 |--:|-------------|-----------|------------|-------|
@@ -1248,7 +1248,7 @@ complete discussion, see §C.9.
 
 ### §C.6.35 Wear (`##Wear`)
 
-**Source:** `english.h:1562–1574` | **Messages:** 5
+**Messages:** 5
 
 | # | Default Text | Parameters | Called From | Notes |
 |--:|-------------|-----------|------------|-------|
