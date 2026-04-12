@@ -26,8 +26,7 @@ used by the compiler: ASCII, ZSCII, Unicode, and the mappings between them.
 
 ## §J.1 Character Representation Overview
 
-The Inform 6.44 compiler uses six internal character representations (from
-`chars.c` lines 8–37):
+The Inform 6.44 compiler uses six internal character representations:
 
 1. **ASCII** — Plain ASCII characters in range 0x20 to 0x7E (unsigned 7-bit).
 2. **Source** — Raw bytes from source code (unsigned 8-bit).
@@ -39,12 +38,11 @@ The Inform 6.44 compiler uses six internal character representations (from
 6. **Unicode** — Unifying character set (unsigned 16-bit, 0–0xFFFF).
 
 There is also a seventh form: sequences of 5-bit **Z-chars** which encode
-ZSCII into the story file in compressed form (handled in `text.c`).
+ZSCII into the story file in compressed form.
 
 ### Conversion Pipeline
 
-The compiler converts characters through the following pipeline (from `chars.c`
-lines 44–68):
+The compiler converts characters through the following pipeline:
 
 ```
 Source → (source_to_iso_grid) → ISO → (iso_to_unicode) → Unicode
@@ -214,7 +212,7 @@ treats each character in source input.
 **[Z-machine]**
 
 The Z-machine encodes text using three alphabets of 26 characters each. The
-default alphabets are defined in `chars.c` lines 1288–1290:
+The default alphabets are:
 
 ```inform6
 ! Default Z-machine alphabets (internal compiler data)
@@ -263,7 +261,6 @@ The following table shows all 26 positions across all three alphabets:
   here; the Z-machine interprets A2 position 1 as a newline (ZSCII 10).
 - **Position 19** (Z-char 25 in A2): The source character `~` is stored here;
   during story file output it is written as `"` (double-quote, ZSCII 34).
-  See `tables.c` line 357.
 
 ### §J.3.2 Z-Character Encoding
 
@@ -288,8 +285,6 @@ sequence is used: `5, 6, high5, low5`, where:
 - `high5` = ZSCII ÷ 32 (upper 5 bits)
 - `low5` = ZSCII mod 32 (lower 5 bits)
 
-This is verified from `text.c` `write_zscii()` lines 393–417.
-
 ### §J.3.3 Custom Alphabets via `Zcharacter`
 
 **[Z-machine]**
@@ -302,12 +297,12 @@ Zcharacter "abcdefghijklmnopqrstuvwxyz"
            "0123456789.,!?_#'~/@\-:()>";
 ```
 
-Constraints (verified from `chars.c` `new_alphabet()` lines 233–278):
+Constraints:
 
 - A0 and A1 strings must each contain exactly **26** characters.
 - The A2 string must contain exactly **23** characters (positions 3–25);
   positions 0–2 are fixed (padding, newline, ZSCII escape).
-- This directive is an error in Glulx mode (`directs.c` line 1173).
+- This directive is an error in Glulx mode.
 
 ---
 
@@ -346,8 +341,7 @@ ZSCII is the Z-machine's native character set, using 10-bit values (0–1023).
 
 ### §J.4.2 ZSCII-to-Unicode Conversion Functions
 
-The compiler provides two conversion functions (from `chars.c` lines
-1049–1061):
+The compiler provides two conversion functions:
 
 **`unicode_to_zscii(u)`**: For Unicode values < 0x7F, returns the value
 unchanged (identity mapping). For values ≥ 0x7F, searches
@@ -364,7 +358,9 @@ Returns `?` otherwise.
 
 This is the standard Z-Machine Standard 1.0 default table used when `-C0` or
 `-C1` is active. It contains 69 entries mapping ZSCII 155–223 to Unicode code
-points. Verified from `chars.c` lines 872–903 (`default_zscii_to_unicode_c01[]`).
+points. This is the standard Z-Machine Standard 1.0 default table used when `-C0` or
+`-C1` is active. It contains 69 entries mapping ZSCII 155–223 to Unicode code
+points.
 
 | ZSCII | Unicode | Char | Escape | Description |
 |-------|---------|------|--------|-------------|
@@ -442,11 +438,9 @@ points. Verified from `chars.c` lines 872–903 (`default_zscii_to_unicode_c01[]
 
 ## §J.6 Accent Escape Codes
 
-The accent escape codes are defined by the `accents` string in `chars.c` lines
-85–88. Each pair of characters forms an escape code when prefixed with `@`. The
-codes are processed by `text_to_unicode()` (`chars.c` lines 1152–1157), which
-scans the `accents` string in pairs and returns the corresponding entry from
-`default_zscii_to_unicode_c01[]`.
+The accent escape codes define pairs of characters that form escape codes when
+prefixed with `@`. Each pair is looked up to return the corresponding Unicode
+code point from the default ZSCII-to-Unicode table.
 
 ### Diaeresis (`:` prefix)
 
@@ -583,7 +577,7 @@ scans the `accents` string in pairs and returns the corresponding entry from
 
 The `-C` switch selects different source character sets, each with its own
 ZSCII-to-Unicode translation table. The following table summarises the
-available character sets (from `chars.c` line 870):
+available character sets:
 
 | Index | `-C` Switch | Character Set | ISO Standard | Entries |
 |-------|-------------|---------------|--------------|---------|
@@ -603,8 +597,6 @@ following subsections provide the complete translation tables for each
 remaining character set.
 
 ### §J.7.1 ISO 8859-2 (Latin-2) — 81 entries
-
-From `chars.c` lines 905–917 (`default_zscii_to_unicode_c2[]`).
 
 | ZSCII | Unicode | Char | Name |
 |-------|---------|------|------|
@@ -692,8 +684,6 @@ From `chars.c` lines 905–917 (`default_zscii_to_unicode_c2[]`).
 
 ### §J.7.2 ISO 8859-3 (Latin-3) — 71 entries
 
-From `chars.c` lines 919–929 (`default_zscii_to_unicode_c3[]`).
-
 | ZSCII | Unicode | Char | Name |
 |-------|---------|------|------|
 | 155 | U+0126 | Ħ | H-stroke |
@@ -769,8 +759,6 @@ From `chars.c` lines 919–929 (`default_zscii_to_unicode_c3[]`).
 | 225 | U+015D | ŝ | s-circumflex |
 
 ### §J.7.3 ISO 8859-4 (Latin-4) — 82 entries
-
-From `chars.c` lines 931–943 (`default_zscii_to_unicode_c4[]`).
 
 | ZSCII | Unicode | Char | Name |
 |-------|---------|------|------|
@@ -858,8 +846,6 @@ From `chars.c` lines 931–943 (`default_zscii_to_unicode_c4[]`).
 | 236 | U+016B | ū | u-macron |
 
 ### §J.7.4 ISO 8859-5 (Cyrillic) — 92 entries
-
-From `chars.c` lines 945–958 (`default_zscii_to_unicode_c5[]`).
 
 | ZSCII | Unicode | Char | Name |
 |-------|---------|------|------|
@@ -958,8 +944,6 @@ From `chars.c` lines 945–958 (`default_zscii_to_unicode_c5[]`).
 
 ### §J.7.5 ISO 8859-6 (Arabic) — 48 entries
 
-From `chars.c` lines 960–967 (`default_zscii_to_unicode_c6[]`).
-
 | ZSCII | Unicode | Char | Name |
 |-------|---------|------|------|
 | 155 | U+060C | ، | Arabic comma |
@@ -1012,8 +996,6 @@ From `chars.c` lines 960–967 (`default_zscii_to_unicode_c6[]`).
 | 202 | U+0652 | ْ | Sukun |
 
 ### §J.7.6 ISO 8859-7 (Greek) — 71 entries
-
-From `chars.c` lines 969–979 (`default_zscii_to_unicode_c7[]`).
 
 | ZSCII | Unicode | Char | Name |
 |-------|---------|------|------|
@@ -1091,8 +1073,6 @@ From `chars.c` lines 969–979 (`default_zscii_to_unicode_c7[]`).
 
 ### §J.7.7 ISO 8859-8 (Hebrew) — 27 entries
 
-From `chars.c` lines 981–986 (`default_zscii_to_unicode_c8[]`).
-
 | ZSCII | Unicode | Char | Name |
 |-------|---------|------|------|
 | 155 | U+05D0 | א | Alef |
@@ -1124,8 +1104,6 @@ From `chars.c` lines 981–986 (`default_zscii_to_unicode_c8[]`).
 | 181 | U+05EA | ת | Tav |
 
 ### §J.7.8 ISO 8859-9 (Latin-5, Turkish) — 62 entries
-
-From `chars.c` lines 988–997 (`default_zscii_to_unicode_c9[]`).
 
 | ZSCII | Unicode | Char | Name |
 |-------|---------|------|------|
@@ -1199,15 +1177,15 @@ From `chars.c` lines 988–997 (`default_zscii_to_unicode_c9[]`).
 Complete reference of all special characters and `@`-escape sequences
 available in Inform 6 string literals.
 
-| Syntax | Meaning | Source Reference |
-|--------|---------|------------------|
-| `^` | Newline (ZSCII 10) | `chars.c` lines 125–126 |
-| `~` | Double-quote `"` (ZSCII 34) | `chars.c` lines 125–126 |
-| `@@`*nnn* | Literal ZSCII value *nnn* (decimal, 0–1023) | `text.c` lines 677–697 |
-| `@`*xy* | Accent character (see §J.6) | `text.c` lines 780–793 |
-| `@{`*hex*`}` | Unicode character (1–6 hex digits) | `chars.c` lines 1164–1187 |
-| `@`*nn* | Dynamic string variable (2 decimal digits, 00–99) | `text.c` lines 748–779 |
-| `@(`*id*`)` | Dynamic string variable by constant name | `text.c` lines 698–746 |
+| Syntax | Meaning |
+|--------|---------|
+| `^` | Newline (ZSCII 10) |
+| `~` | Double-quote `"` (ZSCII 34) |
+| `@@`*nnn* | Literal ZSCII value *nnn* (decimal, 0–1023) |
+| `@`*xy* | Accent character (see §J.6) |
+| `@{`*hex*`}` | Unicode character (1–6 hex digits) |
+| `@`*nn* | Dynamic string variable (2 decimal digits, 00–99) |
+| `@(`*id*`)` | Dynamic string variable by constant name |
 
 ### Examples
 
@@ -1231,8 +1209,6 @@ values are special-cased by the compiler:
 - **`@@126`** (tilde `~`): The compiler uses a 4-Z-char escape sequence to
   prevent `~` from being interpreted as double-quote.
 
-See `text.c` lines 682–691.
-
 ---
 
 ## §J.9 The `Zcharacter` Directive
@@ -1240,7 +1216,7 @@ See `text.c` lines 682–691.
 **[Z-machine]**
 
 The `Zcharacter` directive controls Z-machine character encoding. It has four
-forms, verified from `directs.c` lines 1164–1227.
+forms.
 
 ### Form 1: Replace all three alphabets
 
@@ -1286,14 +1262,12 @@ Appends to the existing table without clearing it.
 ### Limits
 
 The maximum number of entries in the translation table is **97** (ZSCII
-155–251). The grid size is `0x61` = 97 (`chars.c` line 858). An error is
-reported if the table is full (`chars.c` line 1040).
+155–251). An error is reported if the table is full.
 
 ### Glulx restriction
 
 This directive is not available when targeting Glulx. Attempting to use it
 produces the error: *"The Zcharacter directive has no meaning in Glulx."*
-(`directs.c` line 1173).
 
 ---
 
@@ -1307,7 +1281,7 @@ writes translation tables to the story file.
 
 ### Unicode translation table
 
-From `tables.c` lines 362–375:
+The Unicode translation table has the following format:
 
 - **Format**: 1 byte (count) followed by count × 2 bytes (big-endian Unicode
   values).
@@ -1318,7 +1292,7 @@ From `tables.c` lines 362–375:
 
 ### Alphabet table
 
-Written when `alphabet_modified` is true (`tables.c` lines 354–360):
+Written when `alphabet_modified` is true:
 
 - **Format**: 78 bytes — 3 alphabets × 26 ZSCII values.
 - During the write, tilde (`~`, value 0x7E) is replaced with double-quote
@@ -1376,17 +1350,15 @@ See `english.h` lines 790–791.
 
 Key differences from Z-machine character handling:
 
-1. **No `Zcharacter` directive**: Using `Zcharacter` produces an error
-   (`directs.c` line 1173).
+1. **No `Zcharacter` directive**: Using `Zcharacter` produces an error.
 
 2. **Dictionary encoding**: Words are stored as Unicode values directly, not
    Z-char sequences. Character size is controlled by `DICT_CHAR_SIZE`: 1 byte
-   for Latin-1 or 4 bytes for full Unicode. See `text.c`
-   `dictionary_prepare_g()` lines 2078–2210.
+   for Latin-1 or 4 bytes for full Unicode.
 
 3. **String compression**: Uses Huffman encoding rather than Z-char alphabet
    encoding. Unicode characters above U+00FF use `@U` escape sequences with
-   4 hex-encoded digits. See `text.c` lines 1000–1012.
+   4 hex-encoded digits.
 
 4. **Full Unicode via Glk**: Glulx interpreters provide Unicode I/O through
    the Glk API (`glk_put_char_uni()`, `glk_char_to_lower()`, etc.).
@@ -1399,7 +1371,7 @@ Key differences from Z-machine character handling:
 ## §J.13 Character Set Selection (`-C` Switch)
 
 The `-C` compiler switch selects the source character set and the default
-ZSCII-to-Unicode mapping. From `inform.c` lines 284–285, 355–356, 1417–1432:
+ZSCII-to-Unicode mapping:
 
 | Switch | Character Set | ISO Standard | High ZSCII Entries |
 |--------|--------------|--------------|-------------------|
@@ -1419,7 +1391,7 @@ The default is **`-C1`** (ISO 8859-1 / Latin-1).
 
 **`-Cu`** enables `character_set_unicode` for UTF-8 source file parsing. The
 ZSCII mapping table remains the same as `-C1` because the first 256 Unicode
-code points coincide with ISO 8859-1. From `inform.c` lines 1418–1422.
+code points coincide with ISO 8859-1.
 
-Character set name mapping is provided by `name_of_iso_set()` in `chars.c`
-lines 1222–1235.
+The compiler maps character set names to their corresponding ISO standard
+designations.

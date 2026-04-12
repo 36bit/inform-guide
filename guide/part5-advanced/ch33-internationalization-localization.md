@@ -644,8 +644,7 @@ ZSCII escape sequence, which is expensive.
 
 ### 33.3.1 Directive Forms
 
-The `Zcharacter` directive (compiler source: `directs.c` lines 1164–1254)
-has four forms:
+The `Zcharacter` directive has four forms:
 
 **Form 1: Replace all three alphabets**
 
@@ -656,9 +655,8 @@ Zcharacter "abcdefghijklmnopqrstuvwxyz"
 ```
 
 Each string replaces one alphabet: A0 (26 characters), A1 (26 characters),
-A2 (23 characters, since positions 0–2 are reserved). The compiler calls
-`new_alphabet()` (`chars.c` line 233) for each string, which replaces the
-entire alphabet array for that position.
+A2 (23 characters, since positions 0–2 are reserved). The compiler
+replaces the entire alphabet array for each position.
 
 **Form 2: Add a single character to alphabet A2**
 
@@ -666,9 +664,9 @@ entire alphabet array for that position.
 Zcharacter '@{00E9}';
 ```
 
-This calls `map_new_zchar()` (`chars.c` line 191), which attempts to place
+This attempts to place
 the given Unicode character into an unused position in alphabet A2. The
-function scans A2 positions left to right, skipping positions 12, 13, and
+compiler scans A2 positions left to right, skipping positions 12, 13, and
 19 (which correspond to `.`, `"`, and `~` — characters considered
 essential). It replaces the first position whose character has not yet been
 used in any compiled text. If no positions are available, the operation
@@ -686,9 +684,8 @@ Zcharacter table
 ```
 
 This replaces the default ZSCII extension table entirely. Each number is a
-Unicode code point to be mapped into the ZSCII range 155–251. The compiler
-calls `new_zscii_character()` (`chars.c` line 1034) for each value. The
-first call (without the `+` flag) resets `zscii_high_water_mark` to 0,
+Unicode code point to be mapped into the ZSCII range 155–251. The
+first entry (without the `+` flag) resets the high-water mark to 0,
 clearing any previous mappings. Up to 97 custom characters can be defined
 (ZSCII codes 155 through 251).
 
@@ -739,13 +736,11 @@ extension table.
 
 - The Z-machine can support at most 97 extra characters (ZSCII 155–251)
   beyond the base Latin-1 set.
-- Unicode characters beyond U+FFFF cannot be placed in the ZSCII table
-  (`chars.c` line 1036 checks `u > 0xFFFF`).
+- Unicode characters beyond U+FFFF cannot be placed in the ZSCII table.
 - Alphabet A2 has only about 12 replaceable positions (digits and some
   punctuation), since positions 0–2 are reserved and several punctuation
   characters are protected.
-- The `Zcharacter` directive is rejected with an error in Glulx mode
-  (`directs.c` line 1172).
+- The `Zcharacter` directive is rejected with an error in Glulx mode.
 
 ## 33.4 Unicode Support in Glulx
 
@@ -779,11 +774,10 @@ encoding systems:
 
 - **Source text** is read as ISO 8859-1 by default, or as UTF-8 if the
   `character_set_unicode` flag is set (via the `-Cu` compiler switch).
-- **ISO 8859-1 ↔ Unicode**: The `iso_to_unicode_grid` array (`chars.c`
-  line 81) maps ISO 8859-1 byte values to Unicode code points.
-- **Unicode ↔ ZSCII**: `unicode_to_zscii()` (`chars.c` line 1049) maps
-  Unicode to ZSCII codes; `zscii_to_unicode()` (`chars.c` line 1057)
-  performs the reverse. For Glulx, these are used during compilation but
+- **ISO 8859-1 ↔ Unicode**: The compiler maintains an internal mapping
+  from ISO 8859-1 byte values to Unicode code points.
+- **Unicode ↔ ZSCII**: Internal conversion functions map Unicode to
+  ZSCII codes and vice versa. For Glulx, these are used during compilation but
   the runtime operates on Unicode directly.
 
 The conversion functions:
@@ -810,11 +804,10 @@ extern int32 zscii_to_unicode(int z)
 ### 33.4.3 Huffman Compression and Unicode
 
 Glulx uses Huffman compression for strings. The compiler tracks distinct
-Unicode characters beyond U+00FF with the `no_unicode_chars` counter
-(`text.c` line 48). The `huff_unicode_start` variable (`text.c` line 57)
-records the position in the Huffman entity table where Unicode character
-entries begin, allowing the decompression code to distinguish Unicode
-entries from ASCII entries and abbreviation references.
+Unicode characters beyond U+00FF. The position in the Huffman entity table
+where Unicode character entries begin is recorded separately, allowing the
+decompression code to distinguish Unicode entries from ASCII entries and
+abbreviation references.
 
 When a Unicode character beyond the Latin-1 range appears in a string, the
 compiler:
@@ -829,9 +822,9 @@ transparently, printing the correct Unicode character to the output stream.
 ### 33.4.4 UTF-8 Source Files
 
 The compiler's `-Cu` switch sets the `character_set_unicode` flag, enabling
-UTF-8 decoding of source files. When active, the `text_to_unicode()`
-function (`chars.c` line 1085) performs UTF-8 multi-byte decoding when it
-encounters high-bit characters (bytes with bit 7 set). This allows source
+UTF-8 decoding of source files. When active, the compiler performs
+UTF-8 multi-byte decoding when it encounters high-bit characters
+(bytes with bit 7 set). This allows source
 files to contain accented characters and non-Latin scripts directly,
 without `@{...}` escapes:
 
@@ -866,14 +859,14 @@ tense ("You took the lamp") narration. This system is documented in
 
 ### 33.5.1 Configuration Properties and Constants
 
-Two constants are defined in `parser.h` (lines 799–800):
+Two constants control this:
 
 ```inform6
 Constant PRESENT_TENSE 0;
 Constant PAST_TENSE    1;
 ```
 
-The `SelfClass` class (parser.h lines 821–842), from which the default
+The `SelfClass` class, from which the default
 `selfobj` player object is derived, defines two properties that control
 narration:
 
@@ -931,7 +924,7 @@ object. Setting up a flashback in past tense is straightforward:
 
 ### 33.5.3 The CSubjectVerb Function
 
-The core conjugation function is `CSubjectVerb` (`english.h` line 554).
+The core conjugation function is `CSubjectVerb` (in `english.h`).
 All library messages that print a subject-verb combination call this
 function or one of its specialised wrappers:
 
@@ -994,7 +987,7 @@ print " ", (the) x1, ".^";
 follows the same pattern as `CSubjectVerb` but with the verb forms
 built in:
 
-**`CSubjectIs(obj, reportage, nocaps)`** (line 577):
+**`CSubjectIs(obj, reportage, nocaps)`**:
 Prints the subject with the appropriate form of "to be":
 
 | Voice | Present       | Past          |

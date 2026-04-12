@@ -46,10 +46,9 @@ toggled from the command line or from `!%` directives in source code.
 ### 36.1.1 -D (Define DEBUG)
 
 The `-D` switch causes the compiler to define the `DEBUG` constant
-before compilation begins. The compiler variable `define_DEBUG_switch`
-(declared at `inform.c:274`) defaults to `FALSE` (initialized at line
-343). Passing `-D` on the command line (handled at `inform.c:1435`) sets
-this variable to `TRUE`, which in turn defines the symbol `DEBUG` as a
+before compilation begins. The compiler's internal `define_DEBUG_switch`
+variable defaults to `FALSE`. Passing `-D` on the command line sets
+it to `TRUE`, which in turn defines the symbol `DEBUG` as a
 compile-time constant.
 
 The primary effect is to enable conditional compilation blocks throughout
@@ -97,15 +96,13 @@ This directive must appear before any library inclusion.
 
 ### 36.1.2 -S (Runtime Error Checking — STRICT Mode)
 
-The `-S` switch controls the `runtime_error_checking_switch` variable
-(declared at `inform.c:275`), which defaults to `TRUE` (initialized at
-line 347). This means strict runtime checking is **enabled by default**.
-To disable it, use `-~S` on the command line. The switch is handled at
-`inform.c:1454`.
+The `-S` switch controls the `runtime_error_checking_switch` variable,
+which defaults to `TRUE`. This means strict runtime checking is
+**enabled by default**. To disable it, use `-~S` on the command line.
 
 When enabled, the compiler inserts runtime bounds-checking and
 type-checking code at various points during code generation. The checks
-are implemented in `states.c` and `expressc.c` and cover several
+cover several
 categories:
 
 **Array bounds checking.** Every array access is preceded by a check
@@ -151,9 +148,8 @@ inform6 -~S game.inf    ! Disable strict checking for release
 
 ### 36.1.3 -X (Infix Debugger)
 
-The `-X` switch controls the `define_INFIX_switch` variable (declared
-at `inform.c:276`), which defaults to `FALSE` (initialized at line 349).
-Passing `-X` on the command line (handled at `inform.c:1473`) sets this
+The `-X` switch controls the `define_INFIX_switch` variable, which
+defaults to `FALSE`. Passing `-X` on the command line sets this
 variable to `TRUE`, which defines the `INFIX` constant and enables the
 Infix interactive debugger.
 
@@ -190,7 +186,7 @@ When `define_INFIX_switch` is `TRUE`, the compiler makes several
 modifications to the generated code:
 
 **The `infix__watching` attribute.** The compiler creates a special
-attribute named `infix__watching` (in `symbols.c`) that can be set on
+attribute named `infix__watching` that can be set on
 any object to enable change tracking for that object. This attribute
 is allocated at attribute slot 0, which means it is reserved and
 unavailable for normal use.
@@ -204,13 +200,12 @@ unavailable for normal use.
 
 **Property modification tracing.** When Infix is enabled, the compiler
 modifies the veneer routines to include property-change tracing. The
-`RT__TrPS` (trace property set) veneer function (`veneer.c:227-228,
-340, 371`) is called whenever a property is modified on a watched
+`RT__TrPS` (trace property set) veneer function is called whenever a property is modified on a watched
 object. This function reports the property name, old value, and new
 value.
 
-**Instruction-level tracing.** In `asm.c:1835-1842` and `1919-1923`,
-the compiler generates additional code to track execution points. This
+**Instruction-level tracing.** When Infix is enabled, the compiler
+generates additional code to track execution points. This
 enables Infix to report which routines are being entered and exited,
 and to support single-stepping through code.
 
@@ -282,9 +277,7 @@ sufficient.
 The Inform 6 library defines a comprehensive set of debug verbs that
 are available at runtime when the game is compiled with `-D`. All debug
 verb definitions are guarded by `#Ifdef DEBUG` in `grammar.h`
-(lines 104–178) and their implementing routines appear in `verblib.h`
-(lines 2920–2975, 3005–3058) and `parser.h` (lines 341–345,
-6018–6170).
+and their implementing routines appear in `verblib.h` and `parser.h`.
 
 All debug verbs are declared as `meta` verbs, which means they do not
 consume a game turn — the turn counter is not incremented, and
@@ -307,7 +300,7 @@ Constant DEBUG_VERBOSE   $0080;   ! Verbose mode flag
 Global debug_flag;
 ```
 
-These constants are defined in `parser.h` (lines 341–345). The
+These constants are defined in `parser.h`. The
 `debug_flag` variable is a bitmask: multiple categories can be active
 simultaneously by setting multiple bits.
 
@@ -770,8 +763,7 @@ that provide graphical source-level debugging.
 ### 36.4.1 Enabling Debug File Generation
 
 The debug file is generated when the `-k` switch is used on the command
-line. The output file is named `gameinfo.dbg` (defined at
-`header.h:385`).
+line. The output file is named `gameinfo.dbg`.
 
 ```
 inform6 -k game.inf
@@ -800,21 +792,19 @@ declaration and a root element that identifies the compiler version:
 </inform-story-file>
 ```
 
-The `begin_debug_file()` function (`files.c:1297`) opens the file and
-writes the XML declaration and root element. Subsequent compiler passes
-add child elements as compilation proceeds.
+The compiler opens the file and writes the XML declaration and root
+element. Subsequent compiler passes add child elements as compilation
+proceeds.
 
 
 ### 36.4.3 Writing Functions
 
-Several functions in `files.c` handle output to the debug file:
+The compiler uses several internal functions to write the debug file:
 
-- `debug_file_printf()` (`files.c:1310`): a `printf`-style function
-  that writes formatted text to the debug file. Used for most debug
-  file output.
-- `debug_file_print_with_entities()` (`files.c:1320`): writes a string
-  to the debug file, escaping XML special characters to their entity
-  references:
+- A `printf`-style function writes formatted text to the debug file,
+  used for most debug file output.
+- An entity-escaping function writes strings to the debug file,
+  replacing XML special characters with their entity references:
 
   | Character | Entity     |
   |-----------|------------|
@@ -1102,8 +1092,7 @@ within source code. Unlike the runtime `trace` verb (§36.3.2), the
 `Trace` directive operates during compilation and reveals the
 compiler's internal processing.
 
-The directive is implemented in `directs.c` (lines 957–1065) and
-supports the following keywords:
+The directive supports the following keywords:
 
 **Assembly tracing:**
 
@@ -1184,7 +1173,7 @@ the command line using the `$!` prefix. These correspond to the same
 tracing categories available through the `Trace` directive, but are set
 externally rather than embedded in source code.
 
-The available settings (defined at `inform.c:287–304`) are:
+The available settings are:
 
 | Setting          | Switch  | Description                             |
 |------------------|---------|-----------------------------------------|

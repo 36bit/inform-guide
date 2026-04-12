@@ -64,8 +64,7 @@ The key characteristics of veneer routines are:
    to report object moves, property changes, attribute changes, and message
    sends to aid debugging.
 
-There are exactly **48** veneer routines (numbered 0–47), defined by the
-constant `VENEER_ROUTINES` in `header.h`.
+There are exactly **48** veneer routines (numbered 0–47).
 
 ---
 
@@ -1356,7 +1355,7 @@ equivalent of the Z-machine's `@insert_obj` opcode.
 4. Sets `obj-->GOBJFIELD_PARENT` to `dest`.
 5. Sets `dest-->GOBJFIELD_CHILD` to `obj` (making obj the new first child).
 
-**Glulx object field offsets** (from `header.h`):
+**Glulx object field offsets**:
 
 | Field | Word Offset |
 |-------|-------------|
@@ -1539,7 +1538,7 @@ dependency graph for each veneer routine, separated by target platform.
 
 ## §F.10 Language Constructs and Their Veneer Routines
 
-This section maps Inform 6 language constructs to the veneer routines the
+This section maps language constructs to the veneer routines the
 compiler invokes when compiling them.
 
 | Language Construct | Veneer Routine(s) |

@@ -195,8 +195,7 @@ Some constructs require their targets to be defined first:
 ## 13.4 Backpatching
 
 Backpatching is the mechanism by which the compiler resolves addresses
-and values that were unknown during the main pass. It is implemented in
-`bpatch.c`.
+and values that were unknown during the main pass.
 
 ### 13.4.1 Backpatch Markers
 
@@ -438,8 +437,7 @@ pass and sorts it during finalization.
 Every time the compiler encounters a dictionary word — in a `Verb`
 directive, a `name` property, a `'word'` literal, or a `Dictionary`
 directive — it inserts the word into a **red-black tree** (a self-
-balancing binary search tree). This data structure, implemented in
-`text.c`, ensures that insertion and lookup are O(log n) operations
+balancing binary search tree). This data structure ensures that insertion and lookup are O(log n) operations
 even as the dictionary grows to thousands of entries.
 
 Each tree node stores left/right child indices and a colour bit. The
