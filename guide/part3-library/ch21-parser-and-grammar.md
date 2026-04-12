@@ -433,10 +433,11 @@ matched, or `0` to decline (letting the parser use its own matching).
 ];
 ```
 
-`ParseNoun` is called **before** `parse_name` and the standard name
-matching. If it returns a positive value, that match is used. If it
-returns `0`, parsing continues normally. It returns `-1` if the object
-should not be considered at all.
+`ParseNoun` is called **after** `parse_name` but before the standard
+`name` word matching. If it returns a positive value, that match is
+used. If it returns `0`, parsing continues normally. If it returns
+`-1`, the routine is declining to handle this object, and the parser
+falls through to the standard name-word matching instead.
 
 ## 21.7 Disambiguation
 
@@ -625,7 +626,7 @@ WordAddress(n)      ! Returns the buffer address of word n.
 WordLength(n)       ! Returns the length of word n.
 
 NumberWord(n)       ! Parses word n as a number; returns the value
-                    ! or -1000 on failure.
+                    ! or 0 if not found.
 ```
 
 ### Manipulating Input
