@@ -146,8 +146,9 @@ Z-machine's size constraints. Its limits are far more generous:
   (default 9). Unlike the Z-machine, this is freely adjustable.
   `$DICT_CHAR_SIZE` can be set to 4 for full Unicode dictionary entries.
 
-- **Local variables:** A maximum of 119 local variables per routine
-  (compared to 15 in the Z-machine).
+- **Local variables:** `MAX_LOCAL_VARIABLES` is set to 119 (including the
+  internal `sp` slot), giving a maximum of **118** usable local variables
+  per routine (compared to 15 in the Z-machine).
 
 - **Stack size:** Controlled by `$MAX_STACK_SIZE` (default 4096 bytes).
   This can be increased for deeply recursive programs.

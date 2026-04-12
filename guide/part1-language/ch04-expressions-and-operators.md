@@ -835,6 +835,8 @@ correspond to the internal levels defined in the compiler's operator table.
 | 9 | `++` `--` (postfix) | Postfix | Right | Post-increment, post-decrement |
 | 10 | `.&` | Infix | Left | Property data address |
 | 10 | `.#` | Infix | Left | Property data length (bytes) |
+| 10 | `..&` | Infix | Left | Individual property data address |
+| 10 | `..#` | Infix | Left | Individual property data length (bytes) |
 | 11 | `()` | — | Left | Function call |
 | 12 | `.` | Infix | Left | Property access / message send |
 | 13 | `::` | Infix | Left | Superclass property access |
