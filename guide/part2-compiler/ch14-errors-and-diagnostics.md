@@ -300,34 +300,39 @@ The `-E` switch controls the format of error and warning messages. This
 is useful for integrating the compiler with editors and IDEs that parse
 error output to jump to the relevant source line.
 
-### 14.5.1 `-E0` — Classic Format
-
-```
-line 42: Error: Expected ';'
-```
-
-The original Inform error format. Only the line number is shown, with no
-filename. Suitable for single-file projects.
-
-### 14.5.2 `-E1` — Microsoft Format
-
-```
-game.inf(42): error: Expected ';'
-```
-
-Uses the `file(line)` format recognised by Microsoft Visual Studio and
-many Windows-based editors. Note the lowercase `error` and `warning`
-keywords.
-
-### 14.5.3 `-E2` — Default Format
+### 14.5.1 `-E0` — Archimedes / RISC OS Format
 
 ```
 "game.inf", line 42: Error: Expected ';'
 ```
 
-The default format, which includes the full filename in quotes. This is
-the format shown in most examples throughout this guide. Recognised by
-many Unix editors and IDEs.
+The original Inform error format. Includes the filename in double
+quotes followed by the line number. For errors in the main source file
+the filename is omitted (showing only `line 42: Error: …`); filenames
+are always shown for errors in included files. This is the default
+format on Unix/Linux and most other platforms.
+
+### 14.5.2 `-E1` — Microsoft Format
+
+```
+game.inf(42): Error: Expected ';'
+```
+
+Uses the `file(line)` format recognised by Microsoft Visual Studio and
+many Windows-based editors. This is the default format on Windows.
+
+### 14.5.3 `-E2` — Macintosh MPW Format
+
+```
+File "game.inf"; Line 42	# Error: Expected ';'
+```
+
+Uses the Macintosh Programmer's Workshop format. This is the default
+format on classic Mac OS.
+
+> **Note:** The default error format is platform-dependent: `-E0` on
+> Unix/Linux, `-E1` on Windows, `-E2` on Mac OS. It can always be
+> overridden explicitly.
 
 ---
 
@@ -557,34 +562,50 @@ table lists the most important codes and their meanings:
 
 | Code | Description |
 |------|-------------|
-| 1    | Attempt to read property of nothing (`0`) |
-| 2    | Attempt to test attribute of nothing |
-| 3    | Attempt to give attribute to nothing |
-| 4    | Attempt to `move` nothing |
-| 5    | Attempt to `move` to nothing |
-| 6    | Attempt to `move` object to itself |
-| 7    | Attempt to `give` an out-of-range attribute |
-| 8    | Attempt to access a property the object doesn't provide |
-| 9    | Attempt to call a property value that is not a routine |
-| 10   | Attempt to print (string) a non-string value |
-| 11   | Attempt to read from an out-of-range array index |
-| 12   | Attempt to write to an out-of-range array index |
-| 13   | Division by zero |
-| 14   | Attempt to `remove` an object that has no parent |
-| 15   | Attempt to access `child`/`sibling`/`parent` of nothing |
-| 16   | Attempt to read a word-array entry as byte, or vice versa |
-| 17   | Attempt to `objectloop` over invalid range |
-| 18   | Attempt to `move` an object to one of its own children |
-| 19   | Attempt to read property length of nothing |
-| 20   | Attempt to print (object) a non-object value |
-| 21–24 | Various message-sending errors |
-| 25   | Attempt to `create` when no objects are available in the pool |
-| 26   | Attempt to `destroy` an object not in the pool |
-| 27–32 | Class and metaclass operation errors |
-| 33   | Attempt to use an invalid comparison operator |
-| 34   | Attempt to call a non-routine value |
-| 35   | Attempt to read a non-existent word in the dictionary |
-| 36   | Modulo by zero |
+| 1    | `create` message called with more than 3 arguments |
+| 2    | Test `in`/`notin` on invalid object |
+| 3    | Test `has`/`hasnt` on invalid object |
+| 4    | Find `parent` of invalid object |
+| 5    | Find `eldest` of invalid object |
+| 6    | Find `child` of invalid object |
+| 7    | Find `younger` of invalid object |
+| 8    | Find `sibling` of invalid object |
+| 9    | Find `children` of invalid object |
+| 10   | Find `youngest` of invalid object |
+| 11   | Find `elder` of invalid object |
+| 12   | Use `objectloop` with invalid object |
+| 13   | `}` at end of `objectloop` with invalid object |
+| 14   | `give` attribute to invalid object |
+| 15   | `remove` invalid object |
+| 16   | `move` with invalid source object |
+| 17   | `move` with invalid destination object |
+| 18   | `move` would create a loop in the object tree |
+| 19   | `give`/`has`/`hasnt` with non-attribute value |
+| 20   | Division by zero |
+| 21   | Read `.&` (property address) of invalid object |
+| 22   | Read `.#` (property length) of invalid object |
+| 23   | Read `.` (property value) of invalid object |
+| 24   | Read outside memory bounds using `->` |
+| 25   | Read outside memory bounds using `-->` |
+| 26   | Write outside memory bounds using `->` |
+| 27   | Write outside memory bounds using `-->` |
+| 28   | Read past end of `->` array |
+| 29   | Read past end of `-->` array |
+| 30   | Write past end of `->` array |
+| 31   | Write past end of `-->` array |
+| 32   | `objectloop` broken because object was moved during traversal |
+| 33   | `print (char)` with invalid character code |
+| 34   | `print (address)` on non-string address |
+| 35   | `print (string)` on non-string value |
+| 36   | `print (object)` on non-object value |
+| 37   | Glulx `print_to_array` called with only one argument [Glulx] |
+| 40   | Invalid dynamic string variable number [Glulx] |
+
+String-based error codes (not shown as numeric codes above) are also
+used for property access errors: the veneer calls `RT__Err` with a
+string such as `"read"`, `"write to"`, or `"send message"` to report
+property-related errors like accessing a non-existent individual
+property.
 
 ### 14.9.5 Example
 
