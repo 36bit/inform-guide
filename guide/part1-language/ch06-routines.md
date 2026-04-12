@@ -66,7 +66,7 @@ definition. It is callable by name from anywhere in the program:
 ```
 
 Stand-alone routines are the primary mechanism for organising code in
-Inform 6 programs. The name becomes a global constant whose value is the
+programs. The name becomes a global constant whose value is the
 packed address of the routine.
 
 ## 6.3 Embedded Routines
@@ -378,7 +378,7 @@ can still overflow it.
 
 ### 6.10.2 Tail Recursion
 
-The Inform 6 compiler does not perform tail-call optimisation. A recursive
+The compiler does not perform tail-call optimisation. A recursive
 call in tail position still allocates a new stack frame. If deep recursion
 is needed, consider rewriting the algorithm iteratively:
 

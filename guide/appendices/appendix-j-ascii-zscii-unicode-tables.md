@@ -57,7 +57,7 @@ through to the compressed Z-character encoding stored in the story file.
 
 ## §J.2 ASCII Table (0x00–0x7F)
 
-The full 128-entry ASCII character set, with notes on how the Inform 6 compiler
+The full 128-entry ASCII character set, with notes on how the compiler
 treats each character in source input.
 
 ### §J.2.1 Control Characters (0–31)

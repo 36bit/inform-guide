@@ -30,7 +30,7 @@ fine-tuning the compiler for a production release.
 
 ## 15.1 Overview
 
-Limits on an Inform 6 program come from two distinct sources:
+Limits on a program come from two distinct sources:
 
 1. **Virtual machine constraints.** The Z-machine and Glulx each define
    a fixed architecture — address widths, object table formats, and

@@ -858,7 +858,7 @@ lists do not have a natural index ordering).
 
 ## 31.7 I/O Through Glk
 
-This section describes how Inform 6 programs interact with the Glk I/O
+This section describes how programs interact with the Glk I/O
 library at the assembly level. For the architectural overview of the
 Glk I/O layer, see §30.8.
 

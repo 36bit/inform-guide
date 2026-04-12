@@ -286,7 +286,7 @@ formatting of the game's output, so it should be tested before use.
 
 ## 35.3 Dead Code Elimination
 
-The Inform 6 compiler performs basic dead code elimination by tracking
+The compiler performs basic dead code elimination by tracking
 the reachability of each statement during assembly. When a statement is
 determined to be unreachable — because it follows an unconditional return,
 jump, or other flow-terminating opcode — the compiler can skip it
@@ -422,7 +422,7 @@ indirectly.
 
 ## 35.4 Memory Setting Tuning
 
-The Inform 6 compiler uses a set of configurable memory settings that
+The compiler uses a set of configurable memory settings that
 control the sizes of internal tables, buffers, and limits. These settings
 can be adjusted to accommodate larger or more complex games, or to
 fine-tune the compiler's resource usage.

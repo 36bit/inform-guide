@@ -19,7 +19,7 @@ will not complain about any of these operations.
 
 This design reflects the underlying virtual machines. Both the Z-machine and
 Glulx are stack-based architectures whose instructions operate on untyped
-words. The compiler translates Inform 6 source into sequences of these
+words. The compiler translates source code into sequences of these
 instructions and does not insert runtime type checks unless the programmer
 explicitly requests them (for example, by calling `metaclass()`).
 

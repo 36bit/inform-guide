@@ -35,14 +35,14 @@ fiction written in Inform 6. It supplies:
   library messages.
 - **Timekeeping** — turn counting, timers, daemons, and each-turn processing.
 
-Most Inform 6 programs are built on top of this library. A game author
+Most programs are built on top of this library. A game author
 writes objects, rooms, and a handful of entry-point routines; the library
 handles everything else. Understanding the library's architecture makes it
 easier to customize behaviour and debug problems.
 
 ## 16.2 The Three-File Include Pattern
 
-A standard Inform 6 program includes the library in three pieces, in a
+A standard program includes the library in three pieces, in a
 fixed order:
 
 ```inform6
@@ -406,7 +406,7 @@ Message error "This extension requires library 6.12 or later.";
 ```
 
 `Grammar__Version` is used internally to select between grammar table
-formats. Version 2 is standard in all modern Inform 6 programs.
+formats. Version 2 is standard in all modern programs.
 
 ## 16.7 Compilation Constants
 

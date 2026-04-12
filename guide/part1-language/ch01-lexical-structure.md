@@ -10,7 +10,7 @@ illegal characters.
 
 ### 1.1.1 Source Encoding
 
-Inform 6 source files are streams of 8-bit bytes. The compiler interprets
+Source files are streams of 8-bit bytes. The compiler interprets
 these bytes according to a **character set setting** that can be selected
 with the `-C` compiler switch:
 
@@ -183,7 +183,7 @@ print "This is not a comment! It prints.^";
 
 ### 1.3.1 How Tokenisation Works
 
-The Inform 6 lexer reads source text one character at a time, using a
+The lexer reads source text one character at a time, using a
 three-character lookahead buffer (the current character plus two characters
 ahead). It classifies each character using a precomputed 256-entry grid
 called the **tokeniser grid**, which maps each possible byte value to one
@@ -240,7 +240,7 @@ returned as one of the higher-numbered keyword token types instead of
 
 ### 1.3.3 Context-Sensitive Lexing
 
-Unlike many compilers, the Inform 6 lexer is **not context-free**. It has
+Unlike many compilers, the lexer is **not context-free**. It has
 12,288 possible lexical states, determined by which keyword groups are
 currently enabled. The same identifier text can produce different token
 types depending on context. For example, `default` may be:
@@ -267,7 +267,7 @@ string-scanning code (see §1.7).
 
 The lexer maintains a circular buffer of 6 token positions, allowing up
 to 5 tokens to be "put back" for re-reading. This supports the limited
-lookahead that the Inform 6 parser requires.
+lookahead that the parser requires.
 
 ## 1.4 Identifiers
 
@@ -679,7 +679,7 @@ what would otherwise be the end of the literal.
 
 ### 1.9.1 Complete List of Separator Tokens
 
-The Inform 6 lexer recognises exactly **49 separator tokens**. They are
+The lexer recognises exactly **49 separator tokens**. They are
 matched using longest-match semantics — the lexer always tries to match
 the longest possible separator before falling back to shorter ones.
 

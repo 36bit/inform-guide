@@ -37,7 +37,7 @@ using them together during development.
 
 ## 36.1 Compile-Time Debugging Switches
 
-The Inform 6 compiler provides three principal switches that control
+The compiler provides three principal switches that control
 the inclusion of debugging infrastructure in the compiled story file.
 Each corresponds to a Boolean variable in the compiler's switch state,
 toggled from the command line or from `!%` directives in source code.
@@ -274,7 +274,7 @@ sufficient.
 
 ## 36.3 Debug Verbs
 
-The Inform 6 library defines a comprehensive set of debug verbs that
+The library defines a comprehensive set of debug verbs that
 are available at runtime when the game is compiled with `-D`. All debug
 verb definitions are guarded by `#Ifdef DEBUG` in `grammar.h`
 and their implementing routines appear in `verblib.h` and `parser.h`.
@@ -753,7 +753,7 @@ game states that would be difficult to reach through normal play.
 
 ## 36.4 Debug File Format (gameinfo.dbg)
 
-The Inform 6 compiler can generate an external debug information file
+The compiler can generate an external debug information file
 that records the mapping between compiled story file addresses and
 source-level constructs (routine names, object names, source file
 locations, etc.). This file is consumed by external debugger tools
@@ -879,7 +879,7 @@ line-by-line display).
 
 ## 36.5 Common Bugs and Troubleshooting
 
-This section documents common Inform 6 programming mistakes and the
+This section documents common programming mistakes and the
 techniques for diagnosing them. Many of these issues are caught
 automatically by strict mode (§36.1.2); others require manual
 investigation using the debug verbs (§36.3).
@@ -1082,7 +1082,7 @@ problems in other situations or on other interpreters.
 ## 36.6 Testing Strategies
 
 This section covers compile-time diagnostic tools and practical
-methodologies for testing Inform 6 programs.
+methodologies for testing programs.
 
 
 ### 36.6.1 The Trace Directive
@@ -1234,7 +1234,7 @@ code instead.
 
 ### 36.6.4 Testing Methodology
 
-Effective testing of Inform 6 programs combines compile-time checking,
+Effective testing of programs combines compile-time checking,
 runtime debug verbs, and systematic play-testing. The following
 methodology covers the recommended practices:
 

@@ -28,7 +28,7 @@ on top of the object system.
 
 ## 17.1 The Object Tree
 
-Every object in an Inform 6 program exists in a single global **object
+Every object in a program exists in a single global **object
 tree**. The tree is rooted at a virtual object 0 (the "root object"),
 which is never referenced directly. Each object has exactly one parent
 (or no parent, meaning it sits at the top level), and may have children

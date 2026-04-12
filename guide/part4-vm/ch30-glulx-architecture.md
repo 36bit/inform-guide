@@ -675,7 +675,7 @@ Some useful reference values:
 
 ### 30.9.2 Float Literals in Source Code
 
-The Inform 6 compiler supports floating-point literals when compiling
+The compiler supports floating-point literals when compiling
 for Glulx. The lexer's `construct_float()` function converts a decimal floating-point number into its IEEE-754 binary
 representation. Float literals use the syntax:
 

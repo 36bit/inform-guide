@@ -138,7 +138,7 @@ practical patterns for replacing library routines.
 
 ### 32.2.1 The Standard Template
 
-The standard Inform 6 source file structure places `Replace` directives
+The standard source file structure places `Replace` directives
 at the very top, before any library includes:
 
 ```inform6

@@ -881,7 +881,7 @@ operand.
 
 ## 4.14 Expression Contexts
 
-The Inform 6 compiler evaluates expressions differently depending on the
+The compiler evaluates expressions differently depending on the
 **context** in which they appear. The compiler defines nine expression
 contexts, each with its own rules about what expressions are valid and how
 their values are used.
