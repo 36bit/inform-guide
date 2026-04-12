@@ -89,9 +89,9 @@ each daemon entry, the library stores `WORD_HIGHBIT + obj` rather than
 
 **[Glulx]** `WORD_HIGHBIT` is `$80000000` (bit 31 of a 32-bit word).
 
-The library tests `the_timers-->i > WORD_HIGHBIT` to distinguish
-daemon entries from timer entries, and recovers the object with
-`the_timers-->i - WORD_HIGHBIT`.
+The library tests `the_timers-->i & WORD_HIGHBIT` (a bitwise AND) to
+distinguish daemon entries from timer entries, and recovers the object
+with `the_timers-->i & ~WORD_HIGHBIT` (masking off the high bit).
 
 ## 24.3 Daemons
 
@@ -550,7 +550,7 @@ The implementation in `parser.h`:
 ```inform6
 [ SetTime t s;
     the_time = t; time_rate = s; time_step = 0;
-    sline1 = t/60; sline2 = t%60;
+    if (s < 0) time_step = 0-s;
 ];
 ```
 
@@ -559,17 +559,20 @@ The implementation in `parser.h`:
 Each turn, `AdvanceWorldClock()` advances the clock according to
 `time_rate`:
 
-- If `time_rate > 0`: `the_time` is incremented by `time_rate`
+- If `time_rate >= 0`: `the_time` is incremented by `time_rate`
   minutes. If `the_time` reaches or exceeds 1440 (midnight), it wraps
-  around.
+  around. (When `time_rate` is zero, the clock does not advance
+  automatically, but the game can still modify `the_time` directly or
+  call `SetTime`.)
 
 - If `time_rate < 0`: the internal `time_step` counter is decremented.
   When `time_step` reaches zero, `the_time` is incremented by 1 minute
   and `time_step` is reset to `|time_rate|`. This effectively advances
   the clock by one minute every `|time_rate|` turns.
 
-- If `time_rate == 0`: the clock does not advance automatically. The
-  game can still modify `the_time` directly or call `SetTime`.
+- If `time_rate == 0`: this falls into the `>= 0` branch above, so
+  zero is added and the clock does not advance. The game can still
+  modify `the_time` directly or call `SetTime`.
 
 ### 24.7.4 Displaying the Time
 
