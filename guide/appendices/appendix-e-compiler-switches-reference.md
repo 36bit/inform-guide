@@ -257,9 +257,9 @@ or both [All].
 | Setting | Target | Z Default | G Default | Brief Description |
 |---------|--------|-----------|-----------|-------------------|
 | `MAX_ABBREVS` | [Z] | 64 | — | Maximum declared abbreviations (max 96) |
-| `NUM_ATTR_BYTES` | [G] | 6 | 7 | Bytes for attribute flags |
-| `DICT_WORD_SIZE` | [G] | 6 | 9 | Characters per dictionary word |
-| `DICT_CHAR_SIZE` | [G] | 1 | 1 | Byte size of one dictionary character (1 or 4) |
+| `NUM_ATTR_BYTES` | [G] | — | 7 | Bytes for attribute flags (fixed at 6 in Z-code) |
+| `DICT_WORD_SIZE` | [G] | — | 9 | Characters per dictionary word (fixed at 6 in Z-code, 4 in v3) |
+| `DICT_CHAR_SIZE` | [G] | — | 1 | Byte size of one dictionary character: 1 or 4 (Z-code uses compressed encoding) |
 | `GRAMMAR_VERSION` | [All] | 1 | 2 | Grammar table format version |
 | `GRAMMAR_META_FLAG` | [All] | 0 | 0 | Use action-value ordering for meta actions |
 | `MAX_DYNAMIC_STRINGS` | [All] | 32 | 100 | Maximum string substitution variables (max 96 in Z) |
