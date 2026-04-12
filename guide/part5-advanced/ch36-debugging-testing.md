@@ -319,7 +319,7 @@ Verb meta 'trace'
     * 'off'                         -> TraceOff;
 ```
 
-**Implementation** (verblib.h:2920–2927):
+**Implementation:**
 
 - `TraceOnSub` sets `parser_trace = 1`, enabling parser tracing at
   level 1.
@@ -364,7 +364,7 @@ Verb meta 'actions'
     * 'off'                         -> ActionsOff;
 ```
 
-**Implementation** (verblib.h:2944): `ActionsOnSub` sets the
+**Implementation:** `ActionsOnSub` sets the
 `DEBUG_ACTIONS` bit (`$0002`) in `debug_flag`; `ActionsOffSub` clears
 it.
 
@@ -400,7 +400,7 @@ Verb meta 'routines' 'messages'
     * 'off'                         -> RoutinesOff;
 ```
 
-**Implementation** (verblib.h:2929): `RoutinesOnSub` sets the
+**Implementation:** `RoutinesOnSub` sets the
 `DEBUG_MESSAGES` bit (`$0001`) in `debug_flag`; `RoutinesOffSub` clears
 it.
 
@@ -435,7 +435,7 @@ Verb meta 'timers' 'daemons'
     * 'off'                         -> TimersOff;
 ```
 
-**Implementation** (verblib.h:2954): `TimersOnSub` sets the
+**Implementation:** `TimersOnSub` sets the
 `DEBUG_TIMERS` bit (`$0004`) in `debug_flag`; `TimersOffSub` clears it.
 
 **Effect:** When active, the library prints each timer and daemon as it
@@ -483,7 +483,7 @@ Verb meta 'showobj'
     * multi                         -> ShowObj;
 ```
 
-**Implementation** (parser.h:6065–6130): `ShowObjSub` displays a
+**Implementation:** `ShowObjSub` displays a
 comprehensive dump of the specified object (or the current location if
 no argument is given). The output includes:
 
@@ -523,7 +523,7 @@ Verb meta 'showverb'
     * special                       -> ShowVerb;
 ```
 
-**Implementation** (parser.h:6018–6061): `ShowVerbSub` displays the
+**Implementation:** `ShowVerbSub` displays the
 complete grammar definition for the specified verb word. The output
 includes:
 
@@ -560,7 +560,7 @@ Verb meta 'showdict' 'dict'
     * topic                         -> ShowDict;
 ```
 
-**Implementation** (parser.h:6133–6170): `ShowDictSub` displays
+**Implementation:** `ShowDictSub` displays
 dictionary entries. Without an argument, it lists all words in the
 dictionary. With a word argument, it displays the flags set on that
 specific dictionary entry.
@@ -596,7 +596,7 @@ Verb meta 'scope'
     * noun                          -> Scope;
 ```
 
-**Implementation** (verblib.h:3053): `ScopeSub` lists all objects
+**Implementation:** `ScopeSub` lists all objects
 currently in scope. Without an argument, it lists objects in scope for
 the player. With an object argument, it lists objects in scope from that
 object's perspective.
@@ -635,7 +635,7 @@ Verb meta 'tree'
     * noun                          -> XTree;
 ```
 
-**Implementation** (verblib.h): `XTreeSub` displays the object
+**Implementation:** `XTreeSub` displays the object
 containment hierarchy. Without arguments, it shows all top-level objects
 (objects with no parent). With an argument, it shows that object and all
 its descendants, indented to reflect containment depth.
@@ -670,7 +670,7 @@ Verb meta 'gonear'
     * noun                          -> GoNear;
 ```
 
-**Implementation** (verblib.h:3044–3058): `GoNearSub` moves the
+**Implementation:** `GoNearSub` moves the
 player to the room that contains the specified object. The routine
 walks up the object tree from the target object until it finds a room
 (an object without a parent, or an object that `has light` and is at
@@ -701,7 +701,7 @@ Verb meta 'purloin'
     * multi                         -> XPurloin;
 ```
 
-**Implementation** (verblib.h:3005–3037): `XPurloinSub` moves the
+**Implementation:** `XPurloinSub` moves the
 specified object directly into the player's inventory, bypassing all
 `before` and `after` rules, capacity checks, and any other restrictions.
 
@@ -736,7 +736,7 @@ Verb meta 'abstract'
     * noun 'to' noun                -> XAbstract;
 ```
 
-**Implementation** (verblib.h): `XAbstractSub` moves the first
+**Implementation:** `XAbstractSub` moves the first
 object into the second object, bypassing all `before` and `after`
 rules. This is a more general version of `purloin` — it allows
 moving any object to any other object, not just to the player.

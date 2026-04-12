@@ -520,44 +520,44 @@ The following functions are checked with `#Ifdef` before being called. If
 they are absent, the library uses default behaviour:
 
 **`LanguageInitialise`** — Called once at game startup during
-`Initialise()` (parser.h line 5364). Can be used to set up
+`Initialise()`. Can be used to set up
 language-specific global state.
 
-**`LanguageToInformese`** — Called during input tokenisation (parser.h
-line 1600) to preprocess the raw input buffer before the parser analyses
+**`LanguageToInformese`** — Called during input tokenisation
+to preprocess the raw input buffer before the parser analyses
 it. Useful for normalising accented characters, expanding contractions, or
 handling language-specific input transformations. The `english.h` file
 defines this as an empty function.
 
-**`LanguageIsVerb(w)`** — Called during verb identification (parser.h
-lines 1751, 3229, 3398). If defined, gives the language file a chance to
-identify a word as a verb before the standard grammar tables are checked.
+**`LanguageIsVerb(w)`** — Called during verb identification. If defined,
+gives the language file a chance to identify a word as a verb before the
+standard grammar tables are checked.
 
 **`LanguageRefers(obj, word)`** — Called during pronoun reference
-resolution (parser.h line 4605). If defined, allows the language file to
+resolution. If defined, allows the language file to
 provide custom logic for determining whether a given word can refer to a
 given object.
 
 **`LanguageCommand(v)`** — Called when printing a command back to the
-player (parser.h line 4011). If defined, gives the language file a chance
+player. If defined, gives the language file a chance
 to customise how commands are displayed.
 
 **`LanguagePrintShortName(obj)`** — Called when printing an object's short
-name (parser.h line 7067). If defined, allows the language file to
+name. If defined, allows the language file to
 override the default short-name printing. Return true to suppress the
 default print, false to let it proceed.
 
-**`LanguageBanner`** — Called during the game banner display (verblib.h
-line 62). If defined, replaces the default banner printing.
+**`LanguageBanner`** — Called during the game banner display. If defined,
+replaces the default banner printing.
 
-**`LanguageVersion`** — Called during the `VERSION` verb output (verblib.h
-line 145). If defined, prints additional version information about the
+**`LanguageVersion`** — Called during the `VERSION` verb output. If
+defined, prints additional version information about the
 language definition file.
 
-**`LanguageVersionSub`** — Called during the `VERSION` verb handler
-(verblib.h line 110). If defined, replaces the entire version display.
+**`LanguageVersionSub`** — Called during the `VERSION` verb handler. If
+defined, replaces the entire version display.
 
-**`LanguageError`** — Called on library errors (verblib.h line 152). If
+**`LanguageError`** — Called on library errors. If
 defined, allows the language file to provide custom error formatting.
 
 ### 33.2.5 The GNA System
@@ -1030,7 +1030,7 @@ Delegates to `CSubjectVerb` with `"don't"` / `"doesn't"` / `"didn't"`.
 
 ### 33.5.5 The Tense Helper
 
-The `Tense` function (`english.h` line 746) is a low-level helper that
+The `Tense` function is a low-level helper that
 prints one of two strings depending on the current tense:
 
 ```inform6

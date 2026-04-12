@@ -36,7 +36,7 @@ layout by replacing the `DrawStatusLine` routine.
 
 ### 34.1.1 The sline1 and sline2 Globals
 
-Two global variables in `parser.h` (lines 190–191) control the values
+Two global variables control the values
 displayed on the right side of the default status line:
 
 ```inform6
@@ -117,27 +117,27 @@ For details on Glk windows and styles, see §30.8.
 
 ### 34.1.3 Screen Utility Routines
 
-The library provides several platform-abstracted screen utility routines in
-`parser.h` (lines 6201–6261) that are used internally by `DrawStatusLine`
+The library provides several platform-abstracted screen utility routines
+that are used internally by `DrawStatusLine`
 and the menu system, and are available for game code:
 
-**`ClearScreen(window)`** (`parser.h` line 6201) — clears the specified
+**`ClearScreen(window)`** — clears the specified
 window. On the Z-machine, this compiles to `@erase_window window`. On
 Glulx, it calls `glk_window_clear()` on the appropriate Glk window. The
 `window` parameter is 0 for the main window and 1 for the status window.
 
-**`MoveCursor(line, column)`** (`parser.h` line 6220) — positions the
+**`MoveCursor(line, column)`** — positions the
 cursor to the given line and column within the upper (status) window.
 Coordinates are **1-based**: `MoveCursor(1, 1)` is the top-left corner.
 On the Z-machine, this compiles to `@set_cursor line column`. On Glulx,
 it calls `glk_window_move_cursor(gg_statuswin, column-1, line-1)`,
 adjusting for Glk's 0-based coordinates.
 
-**`MainWindow()`** (`parser.h` line 6240) — switches output back to the
+**`MainWindow()`** — switches output back to the
 main (lower) window. On the Z-machine, this compiles to `@set_window 0`.
 On Glulx, it calls `glk_set_window(gg_mainwin)`.
 
-**`ScreenWidth()`** (`parser.h` lines 6253/6261) — returns the width of
+**`ScreenWidth()`** — returns the width of
 the screen in characters.
 
 **[Z-machine]** On the Z-machine, `ScreenWidth` reads the screen width
@@ -333,7 +333,7 @@ separators in the string.
 
 ### 34.2.3 The LowKey_Menu Fallback
 
-`LowKey_Menu(menu_choices, EntryR, ChoiceR)` (`verblib.h` lines 766–810)
+`LowKey_Menu(menu_choices, EntryR, ChoiceR)`
 provides a text-only menu fallback. It is used automatically on Z-machine
 V3 (which has no upper window support) and on interpreters that lack
 cursor-addressing capabilities. It can also be called directly by game
@@ -357,7 +357,7 @@ works with plain sequential text output and basic keyboard input.
 
 ### 34.2.4 Z-machine Windowed Menu
 
-**[Z-machine]** On V5 and later (`verblib.h` lines 816–926), `DoMenu`
+**[Z-machine]** On V5 and later, `DoMenu`
 uses a graphical windowed menu that takes over the full screen. The
 implementation proceeds through several phases:
 
@@ -401,7 +401,7 @@ normal screen layout:
 
 ### 34.2.5 Glulx Menu
 
-**[Glulx]** The Glulx menu implementation (`verblib.h` lines 932–1036)
+**[Glulx]** The Glulx menu implementation
 uses the Glk API for all display operations. The structure mirrors the
 Z-machine version but uses Glk calls:
 
@@ -908,12 +908,11 @@ the Glulx return values to match the library's internal convention.
 
 ### 34.5.2 Library Undo Globals
 
-The library maintains two global variables in `parser.h` (lines 209–210)
-to track undo state:
+The library maintains two global variables to track undo state:
 
 ```inform6
-Global undo_flag;     ! parser.h line 209
-Global just_undone;   ! parser.h line 210
+Global undo_flag;
+Global just_undone;
 ```
 
 **`undo_flag`** records the current availability of undo:
@@ -933,7 +932,7 @@ point (only one level of undo is maintained).
 ### 34.5.3 Saving Undo State in the Game Loop
 
 The library saves an undo snapshot every turn as part of the main game
-loop (`parser.h` lines 1384–1396). This code runs at the **start** of
+loop. This code runs at the **start** of
 each turn, before the player's command is read, so that the undo point
 captures the state as it was at the beginning of the turn:
 
@@ -973,7 +972,7 @@ This code performs the following steps:
 ### 34.5.4 The PerformUndo Routine
 
 When the player types UNDO, the parser recognises it as a special
-meta-command and calls `PerformUndo` (`parser.h` lines 1499–1512).
+meta-command and calls `PerformUndo`.
 This routine handles all the validation and error reporting:
 
 1. **Check for game start**: if the turn count is at its initial value
