@@ -788,14 +788,17 @@ Multi-character separators are matched greedily. Given the source text
 1. The first character is looked up in the tokeniser grid to find which
    separators begin with that character and how many.
 2. The lexer checks each candidate separator in order, comparing against
-   lookahead characters.
-3. Three-character separators are checked before two-character ones, and
-   two-character before one-character, because candidates are ordered by
-   length in the separator table.
+   lookahead characters. The first match wins.
+3. Candidates are ordered so that if one separator is an initial substring
+   of another, the longer one appears first. This ensures greedy matching:
+   a shorter separator cannot match prematurely when a longer one would
+   also match.
 
-For example, the separators beginning with `.` are ordered: `..&`, `..#`,
-`..`, `.&`, `.#`, `.` — so the longest possible match is always tried
-first.
+For example, the separators beginning with `.` are ordered: `.&`, `.#`,
+`..&`, `..#`, `..`, `.` — the two-character `.&` and `.#` are not
+prefixes of the three-character `..&` and `..#`, so their relative order
+does not matter. But `..` is a prefix of `..&` and `..#`, so it comes
+after them; and `.` is a prefix of all the others, so it comes last.
 
 ## 1.10 The Hash Character and Directives
 
