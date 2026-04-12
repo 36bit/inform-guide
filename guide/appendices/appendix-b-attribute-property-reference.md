@@ -73,7 +73,7 @@ compiler in declaration order.
 |     30 | `pluralname`   |                  | Gender/name  | Game author        | Object uses plural pronouns (they/them)                  | §19.2.31  |
 
 **Alias:** `non_floating` is declared as an alias for `absent` on the same
-source line (`linklpa.h` line 35). Both names refer to attribute number 1.
+source line. Both names refer to attribute number 1.
 
 ### §B.1.2 Conditional Attributes
 
@@ -86,13 +86,13 @@ debugging support:
 
 When `INFIX` is not defined, attribute 31 is available for user-defined
 attributes. When `INFIX` is defined, the compiler pre-creates the
-`infix__watching` symbol as attribute 0 before processing any source files
-(`symbols.c` line 887), and the library conditionally declares it to
-avoid a duplicate definition (`linklpa.h` lines 67–71).
+`infix__watching` symbol as attribute 0 before processing any source files,
+and the library conditionally declares it to
+avoid a duplicate definition.
 
-> **Note:** The compiler pre-creates `infix__watching` at number 0 in
-> `symbols.c`, but since `no_attributes` starts at 1 when `INFIX` is set
-> (`objects.c` line 2343), the library's `Attribute` declarations begin
+> **Note:** The compiler pre-creates `infix__watching` at number 0,
+> but since `no_attributes` starts at 1 when `INFIX` is set,
+> the library's `Attribute` declarations begin
 > numbering from 1. The library's conditional `Attribute infix__watching`
 > block in `linklpa.h` is guarded by `#Ifndef infix__watching` to avoid
 > re-declaring a symbol the compiler already created.
@@ -105,14 +105,13 @@ virtual machine:
 **[Z-machine]** Each object has 6 attribute bytes, supporting 48 attributes
 (numbered 0–47). The library uses attributes 0–30 (or 0–31 with Infix),
 leaving 17–18 attributes available for game-specific use. The value 6 is
-fixed and cannot be changed (`inform.c` lines 160–163).
+fixed and cannot be changed.
 
 **[Glulx]** Each object has `NUM_ATTR_BYTES` attribute bytes, defaulting to
 7 (56 attributes, numbered 0–55). This can be increased via the compiler
 setting `$NUM_ATTR_BYTES`. The value must be a multiple of four, plus three
 (i.e., 7, 11, 15, 19, …). The maximum is `MAX_NUM_ATTR_BYTES` = 39, giving
-up to 312 attributes (`header.h` line 615; `inform.c` lines 171–174,
-187–192).
+up to 312 attributes.
 
 To define game-specific attributes, simply use the `Attribute` directive in
 your source code after the library includes:
@@ -134,8 +133,8 @@ creates three built-in common properties before any library code is processed.
 ### §B.2.1 Complete Property Table
 
 Properties are numbered starting from 1. The compiler reserves properties
-1–3 internally (`objects.c` lines 2303–2323); the library declares
-properties starting from number 4 (`linklpa.h` lines 75–130). The table
+1–3 internally; the library declares
+properties starting from number 4. The table
 below lists all common properties in numeric order.
 
 | Number | Name                | Default    | Additive | Value Type(s)                        | Description                                                     | Reference |
@@ -194,10 +193,10 @@ below lists all common properties in numeric order.
 ### §B.2.2 Notes on Specific Properties
 
 **The `name` property (number 1):** This property is created by the compiler
-itself (`symbols.c` line 869), not by the library. It is long and additive.
+itself, not by the library. It is long and additive.
 A special compiler rule applies: when a double-quoted string appears as a
 value of the `name` property, the compiler treats it as a dictionary entry
-rather than a static string (`objects.c` lines 1309–1318). The compiler
+rather than a static string. The compiler
 issues a warning if non-dictionary values are used in `name`.
 
 **Additive properties:** Seven library properties are declared additive:
@@ -210,7 +209,7 @@ both a class and an instance need to process actions. The `name` property
 
 **Properties 2 and 3 (compiler internal):** Property 2 stores the class
 inheritance chain and property 3 stores the instance variables table address.
-Both are created by the compiler (`objects.c` lines 2311–2321). Property 3
+Both are created by the compiler. Property 3
 is only meaningful in Z-code; in Glulx its slot is reserved but unused.
 Neither property is accessible by name in source code.
 
@@ -226,8 +225,7 @@ how many objects a container, supporter, or the player can hold.
 ## §B.3 Compiler Built-in Individual Properties (Class System)
 
 The compiler defines eight individual properties used by the class system.
-These are created during symbol initialization (`symbols.c` lines 935–942
-for Z-code, lines 976–991 for Glulx) and are available on every class object.
+These are created during symbol initialization and are available on every class object.
 
 ### §B.3.1 Individual Property Table
 
@@ -258,19 +256,17 @@ The `INDIV_PROP_START` constant marks the boundary between common properties
 and individual properties in the property numbering space.
 
 **[Z-machine]** `INDIV_PROP_START` is fixed at 64 and cannot be changed.
-The compiler enforces this (`inform.c` lines 148–151). Common properties
+The compiler enforces this. Common properties
 are numbered 1–63; individual properties start at 64.
 
 **[Glulx]** `INDIV_PROP_START` defaults to 256 and can be set to any value
-≥ 256 via the compiler setting `$INDIV_PROP_START=N` (`options.c` lines
-255–261; `inform.c` lines 166–169). Common properties are numbered 1–255;
+≥ 256 via the compiler setting `$INDIV_PROP_START=N`. Common properties are numbered 1–255;
 individual properties start at 256 (or higher if configured).
 
 User-defined individual properties — those defined using `with` on an object
 or class but not declared globally with `Property` — are numbered from
 `INDIV_PROP_START+8` upward (Z-code: 72+, Glulx: 264+). The compiler tracks
-this via `no_individual_properties`, initialized to `INDIV_PROP_START+8`
-(`objects.c` lines 2351, 2356).
+this via `no_individual_properties`, initialized to `INDIV_PROP_START+8`.
 
 ---
 

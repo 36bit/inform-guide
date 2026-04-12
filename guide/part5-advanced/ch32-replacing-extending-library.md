@@ -76,7 +76,7 @@ Replace Banner OriginalBanner;
 This tells the compiler to do everything the one-argument form does, but
 additionally to compile the system file's definition under the name
 `preserved_name` rather than discarding it. The replacement mapping is
-stored in an array of `value_pair_t` structures (defined in `symbols.c`):
+stored in an array of `value_pair_t` structures:
 
 ```c
 typedef struct value_pair_struct {
@@ -126,7 +126,7 @@ Include "VerbLib";
 Include "Grammar";
 ```
 
-The library's own `Banner` routine (defined in `verblibm.h`, which is
+The library's own `Banner` routine (which is
 included via `VerbLib`) is skipped because `Replace Banner` was issued
 before the `Include`. The game's `Banner` routine is compiled in its
 place.
@@ -611,7 +611,7 @@ Attributes are inherited from all listed classes via a union — if any
 class provides an attribute, the inheriting object receives it.
 
 The compiler tracks class information through an internal `classinfo`
-structure (defined in `objects.c`):
+structure:
 
 ```c
 static int   *classes_to_inherit_from;
@@ -944,7 +944,7 @@ action to fail, while in others it may be a count of items.
 ### 32.7.5 LanguageLM and Internationalisation
 
 The default message handler, `LanguageLM`, is defined in `english.h`
-(approximately lines 797–1370) and contains a large switch statement
+and contains a large switch statement
 covering every action that the library can generate. Each case handles the
 various `lm_n` sub-messages for that action:
 

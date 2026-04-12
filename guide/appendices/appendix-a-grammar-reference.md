@@ -288,9 +288,9 @@ Verb meta 'glklist'
 
 The following are in-game verbs — actions performed by the player character
 within the game world. Each entry shows the `Verb` declaration exactly as it
-appears in `grammar.h` (library 6.12.8), preserving synonym lists, grammar
+appears in the library (6.12.8), preserving synonym lists, grammar
 lines, and all tokens. Entries are listed in alphabetical order by primary verb
-word, matching the source file order.
+word.
 
 **answer** (synonyms: say, shout, speak):
 

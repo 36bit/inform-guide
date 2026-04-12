@@ -207,7 +207,7 @@ return value inside a `print` statement without generating output.
 
 ## 23.4 `WriteListFrom()` and Object Listing
 
-The `WriteListFrom()` routine, defined in `verblib.h`, is the library's
+The `WriteListFrom()` routine is the library's
 general-purpose object lister. It produces formatted lists of objects
 for inventories, room descriptions, and container contents.
 
@@ -289,7 +289,7 @@ Object -> magic_ring "magic ring"
 ## 23.5 List Style Flags
 
 The `style` argument to `WriteListFrom()` is a bitmask of the following
-constants, defined in `verblib.h`. Combine them with `+` or bitwise
+constants. Combine them with `+` or bitwise
 `|`.
 
 | Constant | Value | Effect |
@@ -483,7 +483,7 @@ by the library — no additional game code is required.
 
 ## 23.9 CSubject Helper Routines
 
-The `CSubject` family of routines, defined in `english.h`, handles
+The `CSubject` family of routines handles
 subject-verb agreement across all narrative voices and tenses. They are
 used extensively in library messages and are available for game code.
 

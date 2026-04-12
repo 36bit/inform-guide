@@ -441,7 +441,7 @@ has been generated. The compiler uses a **backpatching** system to
 record these unresolved references and fix them up after the story file
 is fully assembled.
 
-The backpatching system (implemented in `bpatch.c`) uses **marker
+The backpatching system uses **marker
 values** to classify each reference that needs resolution. When a value
 is written into the story file or code area, it may be tagged with a
 marker indicating what kind of address adjustment is needed.

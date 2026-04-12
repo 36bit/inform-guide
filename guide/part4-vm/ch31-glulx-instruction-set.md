@@ -168,7 +168,7 @@ Each opcode in the compiler's table (`asm.c`, lines 696–847) has a
 ## 31.3 Full Opcode Listing with Semantics
 
 This section provides the complete listing of all Glulx opcodes as
-defined in the compiler's opcode table (`asm.c`, lines 696–847). For
+defined in the compiler's opcode table. For
 each opcode, the following information is given:
 
 - **Code**: The opcode number in hexadecimal.
@@ -576,8 +576,7 @@ paired representation.
 
 The compiler provides four synthetic opcodes that are not real Glulx
 instructions but are expanded into equivalent real instructions during
-assembly. They are defined in the `opmacros_table_g` table (`asm.c`,
-lines 851–856):
+assembly. They are defined in the `opmacros_table_g` table:
 
 | Macro | Expands To | Description |
 |---|---|---|

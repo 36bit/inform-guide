@@ -691,7 +691,7 @@ compiled with the `DEBUG` flag.
 
 ### Helper Routines
 
-Three small filter routines are defined in `grammar.h` for use in
+Three small filter routines are provided for use in
 grammar tokens:
 
 ```inform6

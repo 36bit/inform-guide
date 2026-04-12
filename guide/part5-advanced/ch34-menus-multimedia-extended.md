@@ -64,8 +64,7 @@ an `each_turn` entry point to show custom information.
 
 ### 34.1.2 The Default DrawStatusLine Routine
 
-The default `DrawStatusLine` routine is defined in `parser.h`
-(lines 6439–6560). Its behaviour depends on the virtual machine and, for
+The default `DrawStatusLine` routine is defined in the library. Its behaviour depends on the virtual machine and, for
 the Z-machine, on the Z-machine version number.
 
 **[Z-machine]** On Z-machine **version 3**, the status line is drawn by the
@@ -545,8 +544,7 @@ use Glulx instead.
 
 ### 34.3.2 Glulx Sound and Graphics
 
-**[Glulx]** Glulx provides sound and graphics through the Glk API,
-defined in `infglk.h`. Unlike the Z-machine's dedicated opcodes, Glk
+**[Glulx]** Glulx provides sound and graphics through the Glk API. Unlike the Z-machine's dedicated opcodes, Glk
 uses an object-oriented model with windows, streams, and channels.
 
 **Capability checking:**
@@ -579,16 +577,16 @@ The second argument to `glk_gestalt()` is a subquery parameter. For
 `wintype_TextBuffer` or `wintype_Graphics`) to check whether images can
 be drawn in that specific window type.
 
-**Graphics functions** (`infglk.h` lines 538–662):
+**Graphics functions:**
 
-- `glk_image_draw(win, image, val1, val2)` (line 544) — draws image
+- `glk_image_draw(win, image, val1, val2)` — draws image
   resource `image` in window `win`. For text buffer windows, `val1` and
   `val2` control alignment. For graphics windows, they specify the x,y
   position.
 - `glk_image_draw_scaled(win, image, val1, val2, width, height)`
-  (line 548) — draws the image scaled to the specified `width` and
+  — draws the image scaled to the specified `width` and
   `height` in pixels.
-- `glk_image_get_info(image, width_ptr, height_ptr)` (line 540) —
+- `glk_image_get_info(image, width_ptr, height_ptr)` —
   retrieves the dimensions of image `image`, storing the width and
   height at the given addresses. Returns true if the image exists.
 
@@ -605,17 +603,17 @@ Example of drawing an image:
 ];
 ```
 
-**Sound channel functions** (`infglk.h` lines 592–620):
+**Sound channel functions:**
 
 Sound in Glk is played through **sound channels**. A game creates one or
 more channels, then plays sounds through them:
 
-- `glk_schannel_create(rock)` (line 592) — creates a new sound channel.
+- `glk_schannel_create(rock)` — creates a new sound channel.
   The `rock` is an arbitrary identifier for the channel. Returns the
   channel reference, or 0 on failure.
-- `glk_schannel_play(chan, sound)` (line 600) — plays sound resource
+- `glk_schannel_play(chan, sound)` — plays sound resource
   `sound` on channel `chan`. Returns true on success.
-- `glk_schannel_play_ext(chan, sound, repeats, notify)` (line 604) —
+- `glk_schannel_play_ext(chan, sound, repeats, notify)` —
   extended play: `repeats` is the number of times to play (1 = once,
   -1 = loop forever), and `notify` is a non-zero value that will be
   included in the sound notification event when playback completes.
@@ -624,7 +622,7 @@ more channels, then plays sounds through them:
 - `glk_schannel_set_volume(chan, vol)` — sets the volume for `chan`.
   Volume is a linear scale where `$10000` (65536) is full volume and
   0 is silence.
-- `glk_sound_load_hint(sound, flag)` (line 620) — hints to the
+- `glk_sound_load_hint(sound, flag)` — hints to the
   interpreter that sound resource `sound` should be preloaded (`flag`
   = 1) or may be unloaded (`flag` = 0). The interpreter may ignore
   this hint.
@@ -694,8 +692,7 @@ communication, transcript output, and command recording.
 
 ### 34.4.1 File Mode and Usage Constants
 
-File operations use mode and usage constants defined in `infglk.h`
-(lines 24–34):
+File operations use mode and usage constants:
 
 **File mode constants** control how a file is opened:
 
@@ -757,30 +754,29 @@ referenced by `fref` exists on the host system.
 ### 34.4.3 Stream Operations
 
 Files are accessed through **streams**, which provide a uniform I/O
-interface. The stream operations are defined in `infglk.h`
-(lines 268–323):
+interface. The stream operations are:
 
 **Opening streams:**
 
-- `glk_stream_open_file(fileref, mode, rock)` (line 280) — opens the
+- `glk_stream_open_file(fileref, mode, rock)` — opens the
   file identified by `fileref` in the given mode. Returns a stream
   reference, or 0 on failure.
-- `glk_stream_open_memory(buf, buflen, mode, rock)` (line 284) — opens
+- `glk_stream_open_memory(buf, buflen, mode, rock)` — opens
   a memory buffer as a stream. Useful for in-memory string construction
   and formatting. `buf` is a byte array, `buflen` is its length.
 
 **Closing streams:**
 
-- `glk_stream_close(stream, result_ptr)` (line 290) — closes the
+- `glk_stream_close(stream, result_ptr)` — closes the
   stream. If `result_ptr` is non-zero, the read and write counts are
   stored at that address.
 
 **Positioning:**
 
-- `glk_stream_set_position(stream, pos, seekmode)` (line 296) — sets
+- `glk_stream_set_position(stream, pos, seekmode)` — sets
   the read/write position. `seekmode` is 0 for absolute, 1 for relative
   to current position, 2 for relative to end.
-- `glk_stream_get_position(stream)` (line 300) — returns the current
+- `glk_stream_get_position(stream)` — returns the current
   position in the stream.
 
 **Reading and writing:**
@@ -879,7 +875,7 @@ standard game loop.
 ### 34.5.1 Undo Opcodes
 
 **[Z-machine]** The Z-machine provides two opcodes for undo (available
-from V5 onward, defined in `asm.c` lines 633–634):
+from V5 onward):
 
 - `@save_undo -> result` (EXT opcode 0x09) — saves a snapshot of the
   entire game state (memory, stack, program counter) into an
@@ -1019,7 +1015,7 @@ This routine handles all the validation and error reporting:
 ### 34.5.5 Undo-Related Library Messages
 
 The undo system communicates with the player through the `Miscellany`
-library message set (defined in `english.h`). These can be customised
+library message set. These can be customised
 through the standard library message interception mechanism
 (see §32.4):
 

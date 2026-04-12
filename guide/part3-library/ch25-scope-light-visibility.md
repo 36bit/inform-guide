@@ -99,7 +99,7 @@ An object is "see-through" if it is:
 ### 25.1.3 `SearchScope`: The Main Algorithm
 
 The core of the scope system is `SearchScope(domain1, domain2,
-context)`, defined in `parser.h`. It populates the set of in-scope
+context)`. It populates the set of in-scope
 objects by searching two domains (typically the player's location and
 the player object itself) and respecting any custom scope overrides.
 
@@ -562,7 +562,7 @@ actual parent remains unchanged.
 
 ## 25.6 `FindVisibilityLevels()`
 
-The routine `FindVisibilityLevels()`, defined in `verblib.h`,
+The routine `FindVisibilityLevels()`
 determines the **visibility ceiling** for display purposes. It returns
 the nesting depth from the player to the ceiling and stores the
 ceiling object in the global `visibility_ceiling`.
