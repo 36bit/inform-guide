@@ -19,12 +19,11 @@
 
 # Chapter 27: Library Routines and Utility Functions
 
-The standard library (version 6.12.8) provides a collection of public
-routines that game authors can call from their own code. These routines
-handle player movement, object-tree queries, input parsing, list
-formatting, action dispatch, and other common tasks. This chapter
-provides a complete reference for each routine, organised by function.
-The information here is derived from `parser.h` and `verblib.h`.
+The standard library provides a collection of public routines that game
+authors can call from their own code. These routines handle player
+movement, object-tree queries, input parsing, list formatting, action
+dispatch, and other common tasks. This chapter provides a complete
+reference for each routine, organised by function.
 
 ## 27.1 Player Movement
 

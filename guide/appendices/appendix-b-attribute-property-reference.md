@@ -19,11 +19,10 @@
 
 # Appendix B: Attribute and Property Reference
 
-This appendix provides complete tables of every standard attribute and property
-defined by the Inform 6 standard library (version 6.12.8) and the Inform 6
-compiler (version 6.44). Each entry is verified against the source code.
-For detailed explanations, usage examples, and semantic discussions, see
-Chapter 18 (Common Properties) and Chapter 19 (Common Attributes).
+This appendix provides complete tables of every standard attribute and
+property defined by the standard library and the compiler. For detailed
+explanations, usage examples, and semantic discussions, see Chapter 18
+(Common Properties) and Chapter 19 (Common Attributes).
 
 ---
 

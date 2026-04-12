@@ -19,15 +19,14 @@
 
 # Chapter 23: Printing and Output
 
-This chapter is the definitive reference for producing textual output in
-Inform 6. It covers the `print` statement and its format specifiers, the
-library's print-rule system for articles and pronouns, object-listing
-routines, text styling, narrative voice and tense, and the library
-message customisation mechanism. Where §5 introduces `print` and
-`print_ret` as language statements, this chapter examines the full
-breadth of the output system — from low-level VM opcodes to
-high-level library routines that automatically conjugate verbs across
-person and tense.
+This chapter is the definitive reference for producing textual output. It
+covers the `print` statement and its format specifiers, the library's
+print-rule system for articles and pronouns, object-listing routines, text
+styling, narrative voice and tense, and the library message customisation
+mechanism. Where §5 introduces `print` and `print_ret` as language
+statements, this chapter examines the full breadth of the output system —
+from low-level VM opcodes to high-level library routines that automatically
+conjugate verbs across person and tense.
 
 ## 23.1 The `print` Statement and Format Specifiers
 

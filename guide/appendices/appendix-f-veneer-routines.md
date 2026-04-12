@@ -20,13 +20,10 @@
 # Appendix F: Veneer Routines Reference
 
 This appendix provides a complete listing and documentation of every
-compiler-generated **veneer routine** in Inform 6.44. The veneer is a layer of
-run-time support code that the compiler automatically inserts into the output
-file. It bridges the gap between Inform 6 language constructs and the
-underlying virtual machine capabilities.
-
-All information in this appendix is verified against the compiler source file
-`veneer.c` and the header `header.h` in Inform 6.44.
+compiler-generated **veneer routine**. The veneer is a layer of run-time
+support code that the compiler automatically inserts into the output file.
+It bridges the gap between language constructs and the underlying virtual
+machine capabilities.
 
 ---
 

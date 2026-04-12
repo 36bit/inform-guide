@@ -19,11 +19,9 @@
 
 # Chapter 16: Library Architecture and Initialization
 
-This chapter describes the overall architecture of the Inform 6 standard
-library (version 6.12.8): how the library files fit together, how the game
-loop operates, and how programs configure and initialize the library. The
-information here is derived from the library source files `parser.h`,
-`verblib.h`, `grammar.h`, and `version.h`.
+This chapter describes the overall architecture of the standard library
+(version 6.12.8): how the library files fit together, how the game loop
+operates, and how programs configure and initialize the library.
 
 ## 16.1 Overview
 

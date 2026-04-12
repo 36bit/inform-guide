@@ -19,13 +19,11 @@
 
 # Chapter 11: Invoking the Compiler
 
-The Inform 6 compiler translates source files written in the Inform
-language into story files for either the Z-machine or Glulx virtual
-machine. This chapter describes how to invoke the compiler from the
-command line, how it locates source and output files, and how to control
-its behaviour through switches, path settings, and configuration files.
-The information here is derived from the compiler source (`inform.c`,
-`header.h`) and the I6-Addendum.
+The compiler translates source files written in the Inform language into
+story files for either the Z-machine or Glulx virtual machine. This
+chapter describes how to invoke the compiler from the command line, how it
+locates source and output files, and how to control its behaviour through
+switches, path settings, and configuration files.
 
 ---
 

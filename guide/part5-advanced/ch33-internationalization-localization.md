@@ -19,9 +19,9 @@
 
 # Chapter 33: Internationalization and Localization
 
-The Inform 6 library separates language-dependent text and grammar from the
-core parser and world model. All English-specific behaviour is isolated in
-a single file, `english.h`, which defines arrays, constants, and functions
+The library separates language-dependent text and grammar from the core
+parser and world model. All English-specific behaviour is isolated in a
+single file, `english.h`, which defines arrays, constants, and functions
 that the parser and verb library call through a well-defined interface. To
 translate a game into another language, one replaces `english.h` with a new
 language definition file that implements the same interface. This chapter

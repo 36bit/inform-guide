@@ -19,14 +19,12 @@
 
 # Chapter 32: Replacing and Extending the Library
 
-The Inform 6 library provides a comprehensive framework for interactive
-fiction, but nearly every game needs to customise it in some way. This
-chapter covers the compiler directives and design patterns that allow a
-game to replace individual library routines, define new actions and verbs,
-extend the class hierarchy, intercept library messages, and write reusable
-library extensions. These mechanisms range from simple overrides (replacing
-a single routine) to structural extensions (adding entirely new verbs and
-grammar).
+The library provides a comprehensive framework for interactive fiction,
+but nearly every game needs to customise it in some way. This chapter
+covers the compiler directives and design patterns that allow a game to
+replace individual library routines, define new actions and verbs, extend
+the class hierarchy, intercept library messages, and write reusable
+library extensions.
 
 ## 32.1 The Replace Directive
 

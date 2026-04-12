@@ -19,12 +19,9 @@
 
 # Chapter 8: Arrays
 
-This chapter describes arrays in Inform 6: how they are declared, the five
-array types and their distinct memory layouts, how entries are read and
-written, and the idioms used to work with arrays in practice. The
-information here is derived from the array parser in the compiler source
-(`arrays.c`), the expression code generator (`expressc.c`), and the
-I6-Addendum.
+This chapter describes arrays: how they are declared, the five array types
+and their distinct memory layouts, how entries are read and written, and
+the idioms used to work with arrays in practice.
 
 ## 8.1 Array Declarations
 

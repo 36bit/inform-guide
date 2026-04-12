@@ -20,13 +20,11 @@
 # Chapter 22: Grammar Definition
 
 This chapter provides a detailed reference for defining and extending
-grammar in Inform 6. Where Chapter 21 introduced the parser, verb
-directives, and token types at a practical level, this chapter examines
-the underlying mechanisms: formal syntax, grammar table encoding, token
-type internals, custom parsing routines, action linkage, and a complete
-catalogue of the standard library's grammar entries. The information
-here is derived from `parser.h` and `grammar.h` in library version
-6.12.8, supplemented by compiler features from Inform 6.43+.
+grammar. Where Chapter 21 introduced the parser, verb directives, and
+token types at a practical level, this chapter examines the underlying
+mechanisms: formal syntax, grammar table encoding, token type internals,
+custom parsing routines, action linkage, and a complete catalogue of the
+standard library's grammar entries.
 
 ## 22.1 The Verb Directive in Detail
 

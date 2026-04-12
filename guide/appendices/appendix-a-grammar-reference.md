@@ -19,11 +19,11 @@
 
 # Appendix A: Complete Grammar Reference
 
-This appendix provides a complete listing of all standard library grammar lines
-and actions as defined in `grammar.h` from library version 6.12.8. Each entry
-is taken verbatim from the source. For a full explanation of grammar syntax,
-token types, and action processing, see Chapter 20 (Actions), Chapter 21
-(Parser and Grammar), and Chapter 22 (Grammar Definition).
+This appendix provides a complete listing of all standard library grammar
+lines and actions. Each entry is taken verbatim from the library source.
+For a full explanation of grammar syntax, token types, and action
+processing, see Chapter 20 (Actions), Chapter 21 (Parser and Grammar),
+and Chapter 22 (Grammar Definition).
 
 **How to read a grammar entry:**
 

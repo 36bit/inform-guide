@@ -20,9 +20,7 @@
 # Appendix J: ASCII, ZSCII, and Unicode Tables
 
 This appendix provides comprehensive reference tables for the character sets
-used by the Inform 6.44 compiler: ASCII, ZSCII, Unicode, and the mappings
-between them. All information is verified against the Inform 6.44 compiler
-source code (primarily `chars.c`, `text.c`, `tables.c`, and `directs.c`).
+used by the compiler: ASCII, ZSCII, Unicode, and the mappings between them.
 
 ---
 

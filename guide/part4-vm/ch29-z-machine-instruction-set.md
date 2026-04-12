@@ -20,13 +20,10 @@
 # Chapter 29: Z-Machine Instruction Set (Assembly)
 
 **[Z-machine]** This chapter documents the Z-machine instruction set as
-implemented by the Inform 6.44 compiler. It covers the binary encoding
-of instructions, the complete set of opcodes organised by category, and
-the Inform 6 assembly language syntax that allows programmers to embed
-Z-machine instructions directly in their source code.
-
-All opcode definitions, encoding rules, and assembly syntax documented
-here have been verified against the compiler source code in `asm.c`.
+supported by the compiler. It covers the binary encoding of instructions,
+the complete set of opcodes organised by category, and the assembly
+language syntax that allows programmers to embed Z-machine instructions
+directly in their source code.
 
 ## 29.1 Encoding Format: Opcodes, Operand Types
 

@@ -19,16 +19,11 @@
 
 # Chapter 31: Glulx Instruction Set (Assembly)
 
-**[Glulx]** This chapter documents the Glulx instruction set as
-implemented by the Inform 6.44 compiler. It covers the binary encoding
-of instructions, the complete set of opcodes organised by category,
-function call conventions, search opcodes, and the Inform 6 assembly
-language syntax for embedding Glulx instructions directly in source
-code.
-
-All opcode definitions, encoding rules, and assembly syntax documented
-here have been verified against the compiler source code in `asm.c`
-and the Glulx specification (version 3.1.3).
+**[Glulx]** This chapter documents the Glulx instruction set as supported
+by the compiler. It covers the binary encoding of instructions, the
+complete set of opcodes organised by category, function call conventions,
+search opcodes, and the assembly language syntax for embedding Glulx
+instructions directly in source code.
 
 ## 31.1 Encoding Format
 

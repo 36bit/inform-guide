@@ -19,12 +19,9 @@
 
 # Chapter 5: Statements and Control Flow
 
-This chapter describes every statement form recognised by the Inform 6
-compiler and the control-flow constructs that determine the order in which
-statements execute. The information here is derived from the statement
-parser in the compiler source (`states.c`), the syntax driver (`syntax.c`),
-the assembler (`asm.c`), and the I6-Addendum's clarifications on new
-features introduced in compiler versions 6.40–6.44.
+This chapter describes every statement form recognised by the compiler and
+the control-flow constructs that determine the order in which statements
+execute.
 
 ## 5.1 Expression Statements
 

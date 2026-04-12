@@ -19,10 +19,9 @@
 
 # Appendix K: Inform 6 BNF Grammar
 
-This appendix provides a formal grammar specification of the Inform 6 language
-as accepted by the Inform 6.44 compiler targeting both Z-machine and Glulx
-virtual machines. The grammar is expressed in a variant of Backus–Naur Form
-(BNF) and has been derived and verified directly from the compiler source code.
+This appendix provides a formal grammar specification of the language as
+accepted by the compiler targeting both Z-machine and Glulx virtual
+machines. The grammar is expressed in a variant of Backus–Naur Form (BNF).
 
 **Notation conventions:**
 

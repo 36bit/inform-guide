@@ -28,8 +28,7 @@ three are processed during the end-of-turn sequence described in §16,
 after the player's action has been resolved. This chapter provides a
 complete reference for all three mechanisms, including the underlying
 data structures, the turn-end execution order, and the real-time clock
-used for time-of-day games. The information here is derived from
-`parser.h` and `linklpa.h` in library version 6.12.8.
+used for time-of-day games.
 
 ## 24.1 Overview of Scheduled Events
 

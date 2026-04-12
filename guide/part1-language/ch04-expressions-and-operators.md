@@ -1,11 +1,8 @@
 # Chapter 4: Expressions and Operators
 
-This chapter describes every operator in Inform 6, how expressions are
-evaluated, and how the compiler interprets expressions differently
-depending on the context in which they appear. The information here is
-derived directly from the operator table in the compiler source
-(`expressc.c`) and the expression parser (`expressp.c`), supplemented by
-the I6-Addendum's clarifications on precedence and the `or` operator.
+This chapter describes every operator, how expressions are evaluated, and
+how the compiler interprets expressions differently depending on the
+context in which they appear.
 
 ## 4.1 Expression Evaluation
 

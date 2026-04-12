@@ -1,6 +1,6 @@
 # Chapter 1: Lexical Structure
 
-This chapter describes the lexical structure of Inform 6: how source text
+This chapter describes the lexical structure of the language: how source text
 is broken into the tokens that form the input to the parser. Understanding
 the lexical level is essential for writing correct programs and for
 interpreting compiler error messages that refer to unexpected tokens or

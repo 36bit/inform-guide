@@ -20,10 +20,9 @@
 # Appendix D: Compiler Memory Settings Reference
 
 This appendix provides a complete reference for all compiler settings
-controllable through the `$` command syntax in Inform 6.44. These settings
-govern dictionary format, object layout, code generation strategy, diagnostic
-output, and other compiler behavior. Each entry is verified against the
-compiler source code (`Inform6-6.44/options.c`).
+controllable through the `$` command syntax. These settings govern
+dictionary format, object layout, code generation strategy, diagnostic
+output, and other compiler behavior.
 
 For an overview of how to invoke the compiler and pass these settings, see
 Chapter 11 (Invoking the Compiler) and Chapter 12 (Compiler Switches and

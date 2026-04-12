@@ -23,9 +23,7 @@ Compiler directives are top-level instructions processed at compile time.
 They define program structure, declare data, configure compilation, and
 control conditional inclusion. Unlike statements (which appear inside
 routines), directives appear at the outermost level of source files, with
-a few exceptions noted in §10.12. The information here is derived from
-the compiler source (`directs.c`, `syntax.c`, `tables.c`) and the
-I6-Addendum.
+a few exceptions noted in §10.12.
 
 Directives are not case-sensitive. The following declarations are
 equivalent:

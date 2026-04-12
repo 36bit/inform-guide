@@ -19,14 +19,12 @@
 
 # Chapter 13: Compilation Model
 
-This chapter describes how the Inform 6 compiler transforms source code
-into a finished story file. It covers the single-pass architecture, the
+This chapter describes how the compiler transforms source code into a
+finished story file. It covers the single-pass architecture, the
 backpatching mechanism that resolves forward references, the veneer
 routines injected as runtime support, and the construction of the major
 data structures — dictionary, object tree, grammar tables, and memory
-layout — that make up the final output. The information here is derived
-from the compiler source (`inform.c`, `veneer.c`, `tables.c`, `bpatch.c`,
-`text.c`, `objects.c`, `asm.c`, `header.h`).
+layout — that make up the final output.
 
 ---
 

@@ -20,12 +20,10 @@
 # Chapter 12: Compiler Switches and Settings
 
 This chapter provides a comprehensive reference for every switch, path
-option, memory setting, and trace option recognised by the Inform 6
-compiler. Chapter 11 explains how to invoke the compiler and where
-options may be supplied (command line, ICL files, `!%` header comments);
-this chapter documents what each option does in detail. The information
-here is derived from the compiler source (`inform.c`, `options.c`,
-`memory.c`, `header.h`) and the I6-Addendum.
+option, memory setting, and trace option recognised by the compiler.
+Chapter 11 explains how to invoke the compiler and where options may be
+supplied (command line, ICL files, `!%` header comments); this chapter
+documents what each option does in detail.
 
 ---
 

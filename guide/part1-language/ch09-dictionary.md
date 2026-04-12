@@ -19,13 +19,11 @@
 
 # Chapter 9: The Dictionary
 
-This chapter describes the dictionary in Inform 6: a compile-time data
-structure that maps textual words to compact binary entries used by the
-parser at runtime. Every single-quoted word that appears in source code
-creates or references an entry in the dictionary, and the parser consults
-this table to recognize words typed by the player. The information here is
-derived from the compiler source (`text.c`, `tables.c`, `directs.c`,
-`options.c`) and the I6-Addendum.
+This chapter describes the dictionary: a compile-time data structure that
+maps textual words to compact binary entries used by the parser at runtime.
+Every single-quoted word that appears in source code creates or references
+an entry in the dictionary, and the parser consults this table to recognize
+words typed by the player.
 
 ## 9.1 Overview
 

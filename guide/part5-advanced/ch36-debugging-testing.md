@@ -19,8 +19,8 @@
 
 # Chapter 36: Debugging and Testing
 
-Inform 6 provides a layered set of debugging and testing facilities that
-span compile time, link time, and runtime. At the compiler level,
+The language provides a layered set of debugging and testing facilities
+that span compile time, link time, and runtime. At the compiler level,
 switches control which debugging infrastructure is included in the
 compiled story file: the `DEBUG` constant, strict runtime error checking,
 and the Infix source-level debugger. At runtime, the library provides a
@@ -30,10 +30,9 @@ information file for use by external debugger tools, and a variety of
 trace directives and switches allow fine-grained inspection of the
 compilation process itself.
 
-This chapter documents each of these facilities, their implementation
-in the compiler and library, the trade-offs they impose on story file
-size and performance, and practical strategies for using them together
-during development.
+This chapter documents each of these facilities, the trade-offs they
+impose on story file size and performance, and practical strategies for
+using them together during development.
 
 
 ## 36.1 Compile-Time Debugging Switches

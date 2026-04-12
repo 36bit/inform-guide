@@ -20,12 +20,11 @@
 # Appendix E: Compiler Switches Reference
 
 This appendix provides a complete reference for every command-line switch,
-path option, and configuration command accepted by the Inform 6.44 compiler.
-Each entry is verified against the compiler source code. For detailed
-discussion of compiler invocation, see Chapter 11 (Invoking the Compiler)
-and Chapter 12 (Compiler Switches and Settings). For the full reference on
-`$SETTING=value` memory settings, see Appendix D (Compiler Memory Settings
-Reference).
+path option, and configuration command accepted by the compiler. For
+detailed discussion of compiler invocation, see Chapter 11 (Invoking the
+Compiler) and Chapter 12 (Compiler Switches and Settings). For the full
+reference on `$SETTING=value` memory settings, see Appendix D (Compiler
+Memory Settings Reference).
 
 ---
 

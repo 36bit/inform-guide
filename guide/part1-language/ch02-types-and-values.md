@@ -1,8 +1,8 @@
 # Chapter 2: Types and Values
 
-This chapter describes the value model of Inform 6: how data is represented,
-interpreted, and manipulated at runtime. Inform 6 is an **untyped** language
-in which every value is a machine word, and the interpretation of that word
+This chapter describes the value model: how data is represented,
+interpreted, and manipulated at runtime. The language is **untyped**:
+every value is a machine word, and the interpretation of that word
 depends entirely on context. Understanding this model is essential for
 writing correct programs and avoiding subtle errors that arise from treating
 a value as the wrong kind of thing.

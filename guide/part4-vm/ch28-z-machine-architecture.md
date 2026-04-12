@@ -20,13 +20,12 @@
 # Chapter 28: The Z-Machine Architecture
 
 **[Z-machine]** This chapter describes the architecture of the Z-machine
-virtual machine as implemented by the Inform 6.44 compiler. The Z-machine
-is the primary compilation target for Inform 6 and was originally designed
-by Infocom in the early 1980s to run interactive fiction portably across
-many different hardware platforms. The Inform compiler produces story files
-that conform to the Z-machine specification, and understanding the
-underlying architecture is valuable for advanced optimisation, debugging,
-and writing assembly-level code.
+virtual machine as targeted by the compiler. The Z-machine is the primary
+compilation target and was originally designed by Infocom in the early
+1980s to run interactive fiction portably across many different hardware
+platforms. The compiler produces story files that conform to the Z-machine
+specification, and understanding the underlying architecture is valuable
+for advanced optimisation, debugging, and writing assembly-level code.
 
 All details in this chapter have been verified against the Inform 6.44
 compiler source code. Where the compiler's behaviour differs from or

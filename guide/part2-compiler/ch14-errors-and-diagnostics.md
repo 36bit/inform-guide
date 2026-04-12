@@ -19,13 +19,11 @@
 
 # Chapter 14: Error Messages and Diagnostics
 
-The Inform 6 compiler provides a rich set of diagnostic messages to help
+The compiler provides a rich set of diagnostic messages to help
 programmers identify and fix problems in their source code. This chapter
 catalogues the three categories of diagnostic messages — fatal errors,
 errors, and warnings — and describes the compiler's debugging and
-tracing facilities. The information here is derived from the compiler
-source (`errors.c`, `inform.c`, `veneer.c`, `header.h`) and the
-I6-Addendum.
+tracing facilities.
 
 ---
 

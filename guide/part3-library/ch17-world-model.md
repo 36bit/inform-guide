@@ -23,8 +23,8 @@ The standard library models the interactive fiction world as a tree of
 objects connected by containment relationships. Rooms form the geography,
 items populate the landscape, and a set of attributes and properties give
 objects their physical characteristics — light, openability, wearability,
-and so on. This chapter describes the world model that the library
-(version 6.12.8) builds on top of the Inform 6 object system.
+and so on. This chapter describes the world model that the library builds
+on top of the object system.
 
 ## 17.1 The Object Tree
 

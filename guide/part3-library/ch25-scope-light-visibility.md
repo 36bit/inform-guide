@@ -25,8 +25,7 @@ systems form the visibility model that governs what the player can
 perceive and interact with. This chapter provides a complete reference
 for both systems: the scope-determination algorithm, visibility
 ceilings, light propagation, and the routines that query and
-manipulate scope. The information here is derived from `parser.h`,
-`verblib.h`, and `linklpa.h` in library version 6.12.8.
+manipulate scope.
 
 ## 25.1 The Scope Determination Algorithm
 

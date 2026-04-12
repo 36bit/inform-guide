@@ -19,14 +19,12 @@
 
 # Chapter 15: Compiler Limits and Memory Settings
 
-This chapter describes the limits that constrain an Inform 6 program:
-both the hard constraints imposed by the target virtual machine and the
-configurable settings that control the compiler's own behaviour. It
-collects the practical information a programmer needs when a project
-grows beyond default limits, when choosing between Z-machine and Glulx,
-or when fine-tuning the compiler for a production release. The
-information here is derived from the compiler source (`memory.c`,
-`options.c`, `header.h`, `objects.c`, `tables.c`) and the I6-Addendum.
+This chapter describes the limits that constrain a program: both the hard
+constraints imposed by the target virtual machine and the configurable
+settings that control the compiler's own behaviour. It collects the
+practical information a programmer needs when a project grows beyond
+default limits, when choosing between Z-machine and Glulx, or when
+fine-tuning the compiler for a production release.
 
 ---
 

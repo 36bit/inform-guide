@@ -19,12 +19,10 @@
 
 # Chapter 6: Routines
 
-This chapter describes routines (functions) in Inform 6: how they are
-declared, how arguments and local variables work, how values are returned,
-and the calling conventions that govern their behaviour on the Z-machine
-and Glulx virtual machines. The information here is derived from the
-routine parser in the compiler source (`syntax.c`), the code generator
-(`asm.c`), and the I6-Addendum.
+This chapter describes routines (functions): how they are declared, how
+arguments and local variables work, how values are returned, and the
+calling conventions that govern their behaviour on the Z-machine and Glulx
+virtual machines.
 
 ## 6.1 Routine Declaration Syntax
 

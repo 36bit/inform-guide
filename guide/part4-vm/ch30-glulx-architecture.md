@@ -20,13 +20,12 @@
 # Chapter 30: The Glulx Architecture
 
 **[Glulx]** This chapter describes the architecture of the Glulx virtual
-machine as targeted by the Inform 6.44 compiler. Glulx is the secondary
-compilation target for Inform 6, designed to overcome the size and
-capability limitations of the Z-machine by providing a 32-bit address
-space, unlimited object counts, and a clean separation between the
-virtual machine and its I/O layer. The Inform compiler produces Glulx
-game files (typically with a `.ulx` extension) when invoked with the
-`-G` switch.
+machine as targeted by the compiler. Glulx is the secondary compilation
+target, designed to overcome the size and capability limitations of the
+Z-machine by providing a 32-bit address space, unlimited object counts,
+and a clean separation between the virtual machine and its I/O layer.
+The compiler produces Glulx game files (typically with a `.ulx`
+extension) when invoked with the `-G` switch.
 
 All details in this chapter have been verified against the Inform 6.44
 compiler source code and the Glulx specification (version 3.1.3). Where

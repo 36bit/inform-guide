@@ -19,13 +19,11 @@
 
 # Chapter 21: The Parser and Grammar
 
-The parser is the largest and most complex component of the Inform 6
-standard library. It reads the player's typed input, matches it against
-grammar definitions, resolves noun phrases to objects, and produces an
-action with its arguments. This chapter explains how the parser works,
-how grammar is defined, and how game authors can customise parsing
-behaviour. The information here is derived from `parser.h` and
-`grammar.h` in library version 6.12.8.
+The parser is the largest and most complex component of the standard
+library. It reads the player's typed input, matches it against grammar
+definitions, resolves noun phrases to objects, and produces an action with
+its arguments. This chapter explains how the parser works, how grammar is
+defined, and how game authors can customise parsing behaviour.
 
 ## 21.1 How the Parser Works
 

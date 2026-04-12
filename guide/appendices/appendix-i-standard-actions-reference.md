@@ -20,9 +20,8 @@
 # Appendix I: Standard Actions Reference
 
 This appendix is a comprehensive reference for every action defined by the
-Inform 6 standard library (version 6.12.8). It covers the full action
-processing pipeline, all action-related variables, and detailed entries for
-each individual action.
+standard library. It covers the full action processing pipeline, all
+action-related variables, and detailed entries for each individual action.
 
 For broader discussion of how actions work, see Chapter 20 (Actions). For the
 grammar lines that trigger actions, see Appendix A (Grammar). For the library

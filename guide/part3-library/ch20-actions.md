@@ -24,8 +24,7 @@ ultimately becomes an **action**. Actions are the central mechanism by
 which the game world changes. This chapter describes how actions are
 defined, how the library processes them from raw parser output to final
 result, and how game authors can intercept, modify, or initiate actions
-at every stage of the pipeline. The information here is derived from
-`parser.h`, `verblib.h`, and `grammar.h` in library version 6.12.8.
+at every stage of the pipeline.
 
 ## 20.1 What Is an Action?
 

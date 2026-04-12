@@ -22,17 +22,14 @@
 A **library entry point** is a routine that the game author can define
 to customise the library's behaviour at a specific moment during
 execution. The library checks whether each entry point exists (using
-the `Stub` mechanism in `grammar.h` or `#Ifdef` tests) and calls it
-when appropriate. Entry points provide the primary way to hook into
-the library's processing pipeline without modifying the library source
-code.
+the `Stub` mechanism or `#Ifdef` tests) and calls it when appropriate.
+Entry points provide the primary way to hook into the library's
+processing pipeline without modifying the library source code.
 
 This chapter provides a complete reference for every entry point
 recognised by library version 6.12.8. Entry points are listed in
 rough order of when they are called during a game session: startup,
 parsing, action processing, display, turn end, and death/victory.
-The information here is derived from `parser.h`, `verblib.h`, and
-`grammar.h`.
 
 ## 26.1 Entry Point Mechanism
 

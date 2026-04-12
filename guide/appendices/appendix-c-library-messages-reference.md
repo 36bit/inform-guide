@@ -19,12 +19,10 @@
 
 # Appendix C: Library Messages Reference
 
-This appendix provides a complete listing of every customizable library message
-in the Inform 6 standard library (version 6.12.8). Each entry is verified
-against the source code in `english.h`, `verblib.h`, and `parser.h`. For a
-full explanation of the action processing pipeline, see Chapter 20 (Actions).
-For details on customizing messages, see Chapter 32 (Replacing and Extending
-the Library).
+This appendix provides a complete listing of every customizable library
+message in the standard library. For a full explanation of the action
+processing pipeline, see Chapter 20 (Actions). For details on customizing
+messages, see Chapter 32 (Replacing and Extending the Library).
 
 Every message listed here can be intercepted and replaced by game code using
 the `LibraryMessages` object or the `LibraryExtensions` mechanism. The

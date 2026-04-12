@@ -19,11 +19,11 @@
 
 # Chapter 18: Common Properties
 
-The standard library (version 6.12.8) defines a set of **common
-properties** in `linklpa.h` that are available on every object in the
-game. These properties control how objects are named, described, parsed,
-and how they interact with the player and the world model. This chapter
-provides a complete reference for every library-defined common property.
+The standard library defines a set of **common properties** that are
+available on every object in the game. These properties control how objects
+are named, described, parsed, and how they interact with the player and
+the world model. This chapter provides a complete reference for every
+library-defined common property.
 
 ## 18.1 Overview
 

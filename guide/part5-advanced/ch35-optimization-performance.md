@@ -19,13 +19,12 @@
 
 # Chapter 35: Optimization and Performance
 
-The Inform 6 compiler provides a number of facilities for reducing story
-file size, improving text compression, and eliminating unused code. These
-range from text abbreviation systems and economy switches to dead code
-elimination and memory layout tuning. This chapter documents each
-optimization mechanism, the compiler switches and settings that control
-it, and practical guidance for producing compact release builds. Where
-relevant, differences between the Z-machine and Glulx targets are noted.
+The compiler provides a number of facilities for reducing story file size,
+improving text compression, and eliminating unused code. These range from
+text abbreviation systems and economy switches to dead code elimination
+and memory layout tuning. This chapter documents each optimization
+mechanism, the compiler switches and settings that control it, and
+practical guidance for producing compact release builds.
 
 Most of these optimizations are off by default. During development, the
 unoptimized output is easier to debug; for release builds, combining
