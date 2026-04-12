@@ -165,9 +165,10 @@ Array input_buffer buffer 120;
 ];
 ```
 
-Buffer arrays are designed for use with the `read` statement (see §8.8),
-which expects exactly this layout: a word at the start giving the buffer
-capacity, followed by byte-sized character storage.
+Buffer arrays combine word and byte access in a single structure. On
+Glulx, the standard library uses this layout for text input buffers (see
+§8.8), where `buffer-->0` stores a character count and the data bytes
+begin at offset `WORDSIZE`.
 
 Total memory consumed is `WORDSIZE + N` bytes, where `N` is the number of
 data entries.
@@ -568,24 +569,47 @@ themselves) but allows rows of different lengths.
 
 ### 8.8.1 Text Input with Buffer Arrays
 
-The `read` statement (or `aread` on Glulx) expects two arrays: a **text
-buffer** to receive the raw characters typed by the player, and a **parse
-buffer** to receive tokenised words. The text buffer is conventionally a
-buffer array:
+The text-input mechanism differs between platforms. On the Z-machine,
+the `read` statement handles keyboard input. On Glulx, input is
+performed through Glk calls (typically wrapped by the standard library).
+Both platforms expect a text buffer and a parse buffer, but the required
+array layouts differ.
+
+> **[Z-machine]** The Z-machine `read` opcode expects a **byte** array
+> for text input: byte 0 holds the maximum number of characters allowed,
+> and after reading, byte 1 holds the number of characters typed, with
+> characters stored from byte 2 onwards. The standard library declares
+> this as a simple byte array:
+>
+> ```inform6
+> Constant INPUT_BUFFER_LEN = WORDSIZE + 120;
+> Array  buffer  -> INPUT_BUFFER_LEN + 1;
+> ```
+
+> **[Glulx]** The Glulx standard library uses a **buffer** array for text
+> input: `buffer-->0` holds the character count (written back after input),
+> and the data bytes begin at offset `WORDSIZE`.
+>
+> ```inform6
+> Constant INPUT_BUFFER_LEN = WORDSIZE + 256;
+> Array  buffer  buffer (INPUT_BUFFER_LEN - WORDSIZE);
+> ```
+
+Here is a minimal Z-machine example using the `read` statement with the
+correct byte-array layout:
 
 ```inform6
-Array text_buffer buffer 120;
-Array parse_buffer -> 65;      ! Z-machine parse buffer (byte array)
+Array text_buffer -> 123;          ! byte 0 = max chars (120)
+Array parse_buffer -> 65;          ! parse buffer
 
 [ Main;
+    text_buffer->0 = 120;          ! set max characters allowed
     print "What now? ";
     read text_buffer parse_buffer;
+    ! text_buffer->1 now holds the number of characters typed.
+    ! Characters are in text_buffer->2 onwards.
 ];
 ```
-
-After `read` executes, `text_buffer-->0` holds the number of characters
-actually typed, and the characters themselves are stored starting at
-`text_buffer->WORDSIZE`.
 
 ### 8.8.2 Lookup Tables
 
