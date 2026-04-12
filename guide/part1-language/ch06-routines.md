@@ -143,8 +143,8 @@ excess arguments are silently ignored on the Z-machine. They are evaluated
 ### 6.4.2 Local Variable Limits
 
 On the Z-machine, a routine may declare at most **15 local variables**
-(the virtual machine's hard limit). On Glulx, this limit is more generous
-and is controlled by the compiler's memory settings.
+(the virtual machine's hard limit). On Glulx, the limit is **118 local
+variables** — this is a fixed compiler constant, not user-configurable.
 
 ### 6.4.3 Locals Are Not Persistent
 
@@ -168,8 +168,8 @@ The `return` statement exits the routine immediately with the given value:
 ];
 ```
 
-`return` with no expression returns `true` (1) from a stand-alone routine
-and `false` (0) from an embedded routine.
+`return` with no expression returns `true` (1), regardless of whether
+the routine is stand-alone or embedded.
 
 ### 6.5.2 `rtrue` and `rfalse`
 
