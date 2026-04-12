@@ -226,7 +226,7 @@ these constants:
 | `MULTIEXCEPT_TOKEN` | 4     | `multiexcept`    | Multiple objects except the other |
 | `MULTIINSIDE_TOKEN` | 5     | `multiinside`    | Multiple objects inside the other |
 | `CREATURE_TOKEN`    | 6     | `creature`       | An animate object                 |
-| `SPECIAL_TOKEN`     | 7     | `special`        | Calls `ParseNoun` to read input   |
+| `SPECIAL_TOKEN`     | 7     | `special`        | Reads any single word from input  |
 | `NUMBER_TOKEN`      | 8     | `number`         | A decimal number                  |
 | `TOPIC_TOKEN`       | 9     | `topic`          | Remaining words as a topic        |
 | `ENDIT_TOKEN`       | 15    | *(internal)*     | Marks end of token list (GV2)     |
