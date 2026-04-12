@@ -1,6 +1,6 @@
 # Chapter 3: Variables and Scope
 
-This chapter describes how Inform 6 stores and retrieves named data: how
+This chapter describes how named data is stored and retrieved: how
 variables are declared, what limits each target platform imposes, how names
 resolve when locals and globals share the same identifier, and how
 compile-time constants differ from runtime storage. Understanding these

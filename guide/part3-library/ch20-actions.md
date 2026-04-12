@@ -24,8 +24,7 @@ ultimately becomes an **action**. Actions are the central mechanism by
 which the game world changes. This chapter describes how actions are
 defined, how the library processes them from raw parser output to final
 result, and how game authors can intercept, modify, or initiate actions
-at every stage of the pipeline. The information here is derived from
-`parser.h`, `verblib.h`, and `grammar.h` in library version 6.12.8.
+at every stage of the pipeline.
 
 ## 20.1 What Is an Action?
 
@@ -94,8 +93,8 @@ normalise reversed and redirected actions:
   `reverse` (e.g. `* creature held -> Give reverse`) produce `GiveR`
   and `ShowR`. The library swaps `noun` and `second` and changes the
   action to `Give` or `Show`.
-- **`Tell` redirect**: `TELL NPC ABOUT X` becomes `ASK NPC ABOUT X`
-  when the NPC is the actor.
+- **`Tell` redirect**: `NPC, TELL ME ABOUT X` (an order to the NPC)
+  becomes `ASK NPC ABOUT X`, with the player as the actor.
 - **`AskFor` redirect**: `ASK NPC FOR X` becomes an order to the NPC
   to `GIVE X TO ME`.
 
@@ -551,7 +550,7 @@ handlers and end-of-turn processing. Examples: `Take`, `Drop`, `Look`,
 
 Out-of-world commands declared with `Verb meta`. They do not consume a
 game turn and bypass `before`/`after` processing. Examples: `Score`,
-`Save`, `Quit`, `Version`, `Undo`.
+`Save`, `Quit`, `Version`.
 
 ### Group 3: Debug Actions
 

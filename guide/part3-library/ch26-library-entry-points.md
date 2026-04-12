@@ -22,17 +22,14 @@
 A **library entry point** is a routine that the game author can define
 to customise the library's behaviour at a specific moment during
 execution. The library checks whether each entry point exists (using
-the `Stub` mechanism in `grammar.h` or `#Ifdef` tests) and calls it
-when appropriate. Entry points provide the primary way to hook into
-the library's processing pipeline without modifying the library source
-code.
+the `Stub` mechanism or `#Ifdef` tests) and calls it when appropriate.
+Entry points provide the primary way to hook into the library's
+processing pipeline without modifying the library source code.
 
 This chapter provides a complete reference for every entry point
 recognised by library version 6.12.8. Entry points are listed in
 rough order of when they are called during a game session: startup,
 parsing, action processing, display, turn end, and death/victory.
-The information here is derived from `parser.h`, `verblib.h`, and
-`grammar.h`.
 
 ## 26.1 Entry Point Mechanism
 
@@ -41,6 +38,10 @@ Most entry points are declared with the `Stub` directive in
 game does not define the routine:
 
 ```inform6
+Stub AfterLife         0;
+Stub AfterPrompt       0;
+Stub Amusing           0;
+Stub BeforeParsing     0;
 Stub ChooseObjects     2;
 Stub DarkToDark        0;
 Stub DeathMessage      0;
@@ -56,16 +57,39 @@ Stub ParserError       1;
 Stub PrintTaskName     1;
 Stub PrintVerb         1;
 Stub TimePasses        0;
+Stub UnknownVerb       1;
+Stub AfterSave         1;
+Stub AfterRestore      1;
+
+#Ifdef TARGET_GLULX;
+Stub HandleGlkEvent    2;
+Stub IdentifyGlkObject 4;
+Stub InitGlkWindow     1;
+#Endif; ! TARGET_GLULX
 ```
 
 The number after each name is the argument count. `Stub` defines a
 function that takes the specified number of arguments and returns
 `false`.
 
-A few entry points — `Initialise`, `BeforeParsing`, `UnknownVerb`,
-`AfterLife`, `AfterPrompt`, and others — are tested with `#Ifdef`
-rather than `Stub`. The `Initialise` routine is the only **required**
-entry point; the game will not compile without it.
+Two additional entry points use `#Ifndef` with custom default
+implementations rather than `Stub`:
+
+```inform6
+#Ifndef PrintRank;
+[ PrintRank; "."; ];
+#Endif;
+
+#Ifndef ParseNoun;
+[ ParseNoun obj; obj = obj; return -1; ];
+#Endif;
+```
+
+`PrintRank` defaults to printing a full stop after the score line.
+`ParseNoun` defaults to returning −1 (meaning "not handled").
+
+The `Initialise` routine is the only **required** entry point; the
+game will not compile without it.
 
 ## 26.2 `Initialise()`
 
@@ -112,8 +136,15 @@ read, but before the parser begins analysis.
 
 **Arguments:** None.
 
-**Return value:** Not used by the library. The parser proceeds
-regardless of the return value.
+**Return value:**
+
+| Value   | Effect                                                 |
+|-------- |------------------------------------------------------- |
+| `false` | Library extensions' `ext_beforeparsing` hooks also run.|
+| `true`  | Library extensions are skipped.                        |
+
+The parser proceeds regardless of the return value; it controls only
+whether `LibraryExtensions` are given a chance to run.
 
 **Typical usage:** Modifying the raw input buffer before parsing.
 This is useful for implementing command aliases, stripping
@@ -336,8 +367,12 @@ and new locations are dark.
 
 **Arguments:** None.
 
-**Return value:** Not checked by the library in the standard
-implementation.
+**Return value:**
+
+| Value   | Effect                                                 |
+|-------- |------------------------------------------------------- |
+| `false` | Library extensions' `ext_darktodark` hooks also run.   |
+| `true`  | Library extensions are skipped.                        |
 
 **Typical usage:** Warning the player of danger:
 
@@ -362,7 +397,12 @@ description is printed.
 
 **Arguments:** None.
 
-**Return value:** Not checked by the library.
+**Return value:**
+
+| Value   | Effect                                                 |
+|-------- |------------------------------------------------------- |
+| `false` | Library extensions' `ext_newroom` hooks also run.      |
+| `true`  | Library extensions are skipped.                        |
 
 **Typical usage:** Triggering events on entering specific rooms:
 
@@ -388,7 +428,12 @@ values 3 and above, the library calls `DeathMessage()`.
 
 **Arguments:** None (the routine should check `deadflag` itself).
 
-**Return value:** Not checked.
+**Return value:**
+
+| Value   | Effect                                                 |
+|-------- |------------------------------------------------------- |
+| `false` | Library extensions' `ext_deathmessage` hooks also run. |
+| `true`  | Library extensions are skipped.                        |
 
 **Typical usage:**
 
@@ -411,11 +456,12 @@ follow the pattern "You have ..." for consistency.
 
 ## 26.13 `AfterLife()`
 
-Called after the death/victory message has been printed, giving the
-game a chance to resurrect the player or modify the outcome.
+Called after the game loop exits due to `deadflag` being set, giving
+the game a chance to resurrect the player or modify the outcome.
 
-**When called:** After `deadflag` has been set and the death message
-has been printed, but before the "RESTART, RESTORE, QUIT" menu.
+**When called:** After `deadflag` has been set (to any non-zero value
+other than 2), but before the death message is printed. When
+`deadflag` is 2 (victory), `AfterLife` is not called.
 
 **Arguments:** None.
 
@@ -423,8 +469,8 @@ has been printed, but before the "RESTART, RESTORE, QUIT" menu.
 
 | Value   | Effect                                                 |
 |-------- |------------------------------------------------------- |
-| `true`  | The game continues. `deadflag` should be reset to 0.  |
-| `false` | The death/victory sequence proceeds normally.          |
+| `true`  | Library extensions are skipped. If `deadflag` has been reset to 0, the game continues. |
+| `false` | Library extensions' `ext_afterlife` hooks also run. If `deadflag` is still non-zero, the death/victory sequence proceeds. |
 
 **Typical usage:** Giving the player another chance:
 
@@ -450,7 +496,12 @@ immediately before the keyboard input routine is called.
 
 **Arguments:** None.
 
-**Return value:** Not checked.
+**Return value:**
+
+| Value   | Effect                                                 |
+|-------- |------------------------------------------------------- |
+| `false` | Library extensions' `ext_afterprompt` hooks also run.  |
+| `true`  | Library extensions are skipped.                        |
 
 **Typical usage:** Displaying extra information at the prompt, or
 modifying the prompt itself:
@@ -488,9 +539,14 @@ recalculated.
 
 **Arguments:** None.
 
-**Return value:** Not meaningfully checked by the library for
-control flow; the library proceeds regardless. If `TimePasses` returns
-`false`, library extensions are also given a chance to run.
+**Return value:**
+
+| Value   | Effect                                                 |
+|-------- |------------------------------------------------------- |
+| `false` | Library extensions' `ext_timepasses` hooks also run.   |
+| `true`  | Library extensions are skipped.                        |
+
+The main turn sequence proceeds regardless of the return value.
 
 **Typical usage:** Per-turn global events:
 
@@ -516,7 +572,12 @@ have been printed by `LookSub`.
 
 **Arguments:** None.
 
-**Return value:** Not checked.
+**Return value:**
+
+| Value   | Effect                                                 |
+|-------- |------------------------------------------------------- |
+| `false` | Library extensions' `ext_lookroutine` hooks also run.  |
+| `true`  | Library extensions are skipped.                        |
 
 **Typical usage:** Appending extra information to the room
 description:
@@ -616,7 +677,8 @@ completes.
 
 **Return value:** Not checked.
 
-**Notes:** This entry point was added in library 6.12.
+**Notes:** This entry point was added in library 6.12. It is called
+unconditionally, regardless of `deadflag`.
 
 ## 26.22 `AfterRestore()`
 
@@ -625,25 +687,240 @@ Called after a game has been successfully restored from a saved file.
 **When called:** After the `Restore` action succeeds and the game
 state has been loaded.
 
-**Arguments:** None.
+**Arguments:** The `Stub` declaration reserves one local variable,
+but no arguments are passed by the library's callers.
 
-**Return value:** Not checked.
+**Return value:**
+
+| Value   | Effect                                                 |
+|-------- |------------------------------------------------------- |
+| `true`  | The game has handled the restore notification; library extensions' `ext_afterrestore` hooks also run. The default "OK, restored." message is suppressed. |
+| `false` | The library prints its default "OK, restored." message. Library extensions are not run. |
 
 **Typical usage:** Reinitializing state that is not saved (e.g.,
 screen dimensions, Glk window handles):
 
 ```inform6
-#Ifdef AfterRestore;
 [ AfterRestore;
     DrawStatusLine();
+    rtrue;
 ];
-#Endif;
 ```
 
-**Notes:** Unlike the `Stub`-based entry points, `AfterRestore` is
-tested with `#Ifdef`. It is only called if the game defines it.
+**Notes:** `AfterRestore` is declared via `Stub` in library 6.12.8.
+It is also called after a save-and-restore cycle in `SaveSub` (when
+the interpreter resumes from the save point).
 
-## 26.23 Summary Table
+## 26.23 `AfterSave()`
+
+Called after a game has been successfully saved to a file.
+
+**When called:** After the `Save` action succeeds.
+
+**Arguments:** The `Stub` declaration reserves one local variable,
+but no arguments are passed by the library's callers.
+
+**Return value:**
+
+| Value   | Effect                                                 |
+|-------- |------------------------------------------------------- |
+| `true`  | The game has handled the save notification; library extensions' `ext_aftersave` hooks also run. The default "OK, saved." message is suppressed. |
+| `false` | The library prints its default "OK, saved." message. Library extensions are not run. |
+
+**Typical usage:**
+
+```inform6
+[ AfterSave;
+    print "Game saved successfully.^";
+    rtrue;
+];
+```
+
+## 26.24 `ParseNoun(obj)`
+
+Called during noun phrase matching to allow the game to override or
+supplement the standard name-matching algorithm.
+
+**When called:** During `NounDomain()`, for each object being tested
+against the player's noun phrase. Called before the standard dictionary
+word matching.
+
+**Arguments:** `obj` — the object being tested.
+
+**Return value:**
+
+| Value   | Effect                                                 |
+|-------- |------------------------------------------------------- |
+| −1      | The routine has not handled this object; fall through to the standard name-matching algorithm. Library extensions' `ext_parsenoun` hooks are also tried. |
+| 0       | No words matched; this object does not match the input.|
+| *n* > 0 | The number of words in the input that matched this object. |
+
+**Typical usage:** Matching objects whose names are generated
+dynamically or cannot be expressed with the `name` property:
+
+```inform6
+[ ParseNoun obj w;
+    if (obj == numbered_locker) {
+        w = NextWord();
+        if (w == 'locker') {
+            w = TryNumber(wn);
+            if (w == obj.locker_number) { wn++; return 2; }
+            return 1;
+        }
+        return 0;
+    }
+    return -1;
+];
+```
+
+**Notes:** `ParseNoun` uses `#Ifndef` rather than `Stub`. Its default
+implementation returns −1 (not handled). The `wn` variable points to
+the current word position; the routine may advance it.
+
+## 26.25 `PrintRank()`
+
+Called after the score is printed during the `Score` action, to print
+a ranking or comment on the player's score.
+
+**When called:** After `ScoreSub` prints the current score and maximum.
+
+**Arguments:** None.
+
+**Return value:**
+
+| Value   | Effect                                                 |
+|-------- |------------------------------------------------------- |
+| `false` | Library extensions' `ext_printrank` hooks also run.    |
+| `true`  | Library extensions are skipped.                        |
+
+**Typical usage:**
+
+```inform6
+[ PrintRank;
+    print ", earning you the rank of ";
+    if (score >= 100)     "Master Adventurer.";
+    if (score >= 50)      "Seasoned Explorer.";
+    "Novice.";
+];
+```
+
+**Notes:** `PrintRank` uses `#Ifndef` rather than `Stub`. Its default
+implementation simply prints `"."` (a full stop).
+
+## 26.26 `Amusing()`
+
+Called when the player types `AMUSING` at the end-of-game menu after
+winning.
+
+**When called:** During the `AfterGameOver` menu, when `deadflag` is 2
+(victory) and the player selects the `AMUSING` option.
+
+**Arguments:** None.
+
+**Return value:**
+
+| Value   | Effect                                                 |
+|-------- |------------------------------------------------------- |
+| `false` | Library extensions' `ext_amusing` hooks also run.      |
+| `true`  | Library extensions are skipped.                        |
+
+**Typical usage:**
+
+```inform6
+Constant AMUSING_PROVIDED;
+
+[ Amusing;
+    "Did you try typing ~xyzzy~?^
+     Did you find the secret passage behind the bookcase?";
+];
+```
+
+**Notes:** The `AMUSING` option only appears in the end-of-game menu
+if the constant `AMUSING_PROVIDED` is defined. Define it with
+`Constant AMUSING_PROVIDED;` to enable the option. `Amusing` itself is
+declared via `Stub`.
+
+## 26.27 `HandleGlkEvent(event, context, buffer)` *(Glulx only)*
+
+Called when a Glk event is received during input, allowing the game
+to handle or override the event.
+
+**When called:** Inside the Glk event loop, after a `glk_select()`
+call returns an event. Called for character input, line input, and
+timed-input contexts.
+
+**Arguments:**
+
+- `event` — pointer to the Glk event structure.
+- `context` — 0 for line input, 1 for character input.
+
+**Return value:**
+
+| Value   | Effect                                                 |
+|-------- |------------------------------------------------------- |
+| 0       | The event is not handled; library extensions' `ext_handleglkevent` hooks are also tried, then normal processing continues. |
+| 2       | The event has been handled; the value in `gg_arguments-->0` is used as the result. |
+| −1      | Force the input loop to continue waiting (cancel any pending completion). |
+
+**Notes:** Only available when compiling for the Glulx target
+(`TARGET_GLULX`). Declared via `Stub` inside `#Ifdef TARGET_GLULX`.
+
+## 26.28 `IdentifyGlkObject(phase, type, ref, rock)` *(Glulx only)*
+
+Called during Glk object recovery to let the game re-identify its
+custom Glk objects (windows, streams, file references) after a
+restore or restart.
+
+**When called:** During `GGRecoverObjects()`, in three phases:
+
+- Phase 0: Clear all game-held Glk references.
+- Phase 1: Identify a specific Glk object. `type` is 0 for windows,
+  1 for streams, 2 for file references. `ref` is the Glk object
+  reference, `rock` is its rock value.
+- Phase 2: Tie up loose ends after all objects have been identified.
+
+**Arguments:**
+
+- `phase` — 0, 1, or 2 (see above).
+- `type` — object type (only meaningful in phase 1).
+- `ref` — the Glk object reference (only meaningful in phase 1).
+- `rock` — the rock value (only meaningful in phase 1).
+
+**Return value:**
+
+| Value   | Effect                                                 |
+|-------- |------------------------------------------------------- |
+| `false` | Library extensions' `ext_identifyglkobject` hooks also run. |
+| `true`  | Library extensions are skipped for this call.           |
+
+**Notes:** Only available when compiling for the Glulx target
+(`TARGET_GLULX`). Declared via `Stub` with 4 arguments.
+
+## 26.29 `InitGlkWindow(rock)` *(Glulx only)*
+
+Called during Glk window setup to let the game create or customise
+windows.
+
+**When called:** During `GGInitialise()`, when the library is about
+to create or reconfigure Glk windows.
+
+**Arguments:** `rock` — the rock value identifying the window to be
+created. The library uses `GG_MAINWIN_ROCK` for the main story
+window, `GG_STATUSWIN_ROCK` for the status line window,
+`GG_QUOTEWIN_ROCK` for quote box windows, 0 at the start of
+initialisation, and 1 at the end.
+
+**Return value:**
+
+| Value   | Effect                                                 |
+|-------- |------------------------------------------------------- |
+| `false` | Library extensions' `ext_InitGlkWindow` hooks are also tried. If still `false`, the library creates the window with its default settings. |
+| `true`  | The game has handled window creation; the library skips its default window creation for this rock. When `rock` is 0 and `true` is returned, the entire default window setup is skipped. |
+
+**Notes:** Only available when compiling for the Glulx target
+(`TARGET_GLULX`). Declared via `Stub` with 1 argument.
+
+## 26.30 Summary Table
 
 The following table lists all library entry points, their argument
 counts, when they are called, and whether they are required.
@@ -654,6 +931,7 @@ counts, when they are called, and whether they are required.
 | `BeforeParsing`      | 0    | Before each command is parsed        | No        |
 | `UnknownVerb`        | 1    | Verb not found in grammar            | No        |
 | `ParserError`        | 1    | Parser encounters an error           | No        |
+| `ParseNoun`          | 1    | During noun phrase matching          | No        |
 | `ChooseObjects`      | 2    | Disambiguation / "all" selection     | No        |
 | `InScope`            | 1    | Scope computation                    | No        |
 | `GamePreRoutine`     | 0    | Before every action                  | No        |
@@ -661,8 +939,10 @@ counts, when they are called, and whether they are required.
 | `DarkToDark`         | 0    | Moving dark-to-dark                  | No        |
 | `NewRoom`            | 0    | Entering a new room                  | No        |
 | `LookRoutine`        | 0    | After `Look` output                  | No        |
+| `PrintRank`          | 0    | After score is printed               | No        |
 | `DeathMessage`       | 0    | Death/victory (deadflag ≥ 3)         | No        |
-| `AfterLife`          | 0    | After death message                  | No        |
+| `AfterLife`          | 0    | After deadflag set (deadflag ≠ 2)    | No        |
+| `Amusing`            | 0    | Player selects AMUSING after winning | No        |
 | `AfterPrompt`        | 0    | After prompt, before input           | No        |
 | `TimePasses`         | 0    | End-of-turn processing               | No        |
 | `PrintVerb`          | 1    | Printing a verb word                 | No        |
@@ -670,9 +950,13 @@ counts, when they are called, and whether they are required.
 | `ObjectDoesNotFit`   | 2    | Container at capacity                | No        |
 | `ParseNumber`        | 2    | Parsing a non-digit number           | No        |
 | `Epilogue`           | 0    | After game end menu                  | No        |
-| `AfterRestore`       | 0    | After successful restore             | No        |
+| `AfterRestore`       | 1    | After successful restore             | No        |
+| `AfterSave`          | 1    | After successful save                | No        |
+| `HandleGlkEvent`     | 2    | Glk event received (Glulx only)      | No        |
+| `IdentifyGlkObject`  | 4    | Glk object recovery (Glulx only)     | No        |
+| `InitGlkWindow`      | 1    | Glk window setup (Glulx only)        | No        |
 
-## 26.24 Execution Order Summary
+## 26.31 Execution Order Summary
 
 The following diagram shows the order in which entry points are called
 during a single turn of the main game loop (simplified):
@@ -684,8 +968,9 @@ during a single turn of the main game loop (simplified):
 4.  [Parser runs]
     4a. UnknownVerb(word)      — if verb not found
     4b. ParserError(etype)     — if parse fails
-    4c. ChooseObjects(obj,code)— during disambiguation
-    4d. InScope(actor)         — during scope computation
+    4c. ParseNoun(obj)         — during noun matching
+    4d. ChooseObjects(obj,code)— during disambiguation
+    4e. InScope(actor)         — during scope computation
 5.  GamePreRoutine()           — before action
 6.  [before properties]
 7.  [Action routine]
@@ -697,9 +982,12 @@ during a single turn of the main game loop (simplified):
     10c. DarkToDark()          — if dark-to-dark transition
     10d. LookRoutine()         — after Look output
 11. [If deadflag set]
-    11a. DeathMessage()        — custom death text
-    11b. AfterLife()           — chance to resurrect
-    11c. Epilogue()            — after end menu
+    11a. AfterLife()           — chance to resurrect (deadflag ≠ 2)
+    11b. DeathMessage()        — custom death text (deadflag ≥ 3)
+    11c. Epilogue()            — after death message
+    11d. PrintRank()           — after score display
+    11e. [End-of-game menu]
+    11f. Amusing()             — if player selects AMUSING
 ```
 
 This is a simplified view; see §20.2 for the complete action pipeline

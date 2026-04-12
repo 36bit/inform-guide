@@ -36,7 +36,7 @@ layout by replacing the `DrawStatusLine` routine.
 
 ### 34.1.1 The sline1 and sline2 Globals
 
-Two global variables in `parser.h` (lines 190–191) control the values
+Two global variables control the values
 displayed on the right side of the default status line:
 
 ```inform6
@@ -64,8 +64,7 @@ an `each_turn` entry point to show custom information.
 
 ### 34.1.2 The Default DrawStatusLine Routine
 
-The default `DrawStatusLine` routine is defined in `parser.h`
-(lines 6439–6560). Its behaviour depends on the virtual machine and, for
+The default `DrawStatusLine` routine is defined in the library. Its behaviour depends on the virtual machine and, for
 the Z-machine, on the Z-machine version number.
 
 **[Z-machine]** On Z-machine **version 3**, the status line is drawn by the
@@ -118,27 +117,27 @@ For details on Glk windows and styles, see §30.8.
 
 ### 34.1.3 Screen Utility Routines
 
-The library provides several platform-abstracted screen utility routines in
-`parser.h` (lines 6201–6261) that are used internally by `DrawStatusLine`
+The library provides several platform-abstracted screen utility routines
+that are used internally by `DrawStatusLine`
 and the menu system, and are available for game code:
 
-**`ClearScreen(window)`** (`parser.h` line 6201) — clears the specified
+**`ClearScreen(window)`** — clears the specified
 window. On the Z-machine, this compiles to `@erase_window window`. On
 Glulx, it calls `glk_window_clear()` on the appropriate Glk window. The
 `window` parameter is 0 for the main window and 1 for the status window.
 
-**`MoveCursor(line, column)`** (`parser.h` line 6220) — positions the
+**`MoveCursor(line, column)`** — positions the
 cursor to the given line and column within the upper (status) window.
 Coordinates are **1-based**: `MoveCursor(1, 1)` is the top-left corner.
 On the Z-machine, this compiles to `@set_cursor line column`. On Glulx,
 it calls `glk_window_move_cursor(gg_statuswin, column-1, line-1)`,
 adjusting for Glk's 0-based coordinates.
 
-**`MainWindow()`** (`parser.h` line 6240) — switches output back to the
+**`MainWindow()`** — switches output back to the
 main (lower) window. On the Z-machine, this compiles to `@set_window 0`.
 On Glulx, it calls `glk_set_window(gg_mainwin)`.
 
-**`ScreenWidth()`** (`parser.h` lines 6253/6261) — returns the width of
+**`ScreenWidth()`** — returns the width of
 the screen in characters.
 
 **[Z-machine]** On the Z-machine, `ScreenWidth` reads the screen width
@@ -334,7 +333,7 @@ separators in the string.
 
 ### 34.2.3 The LowKey_Menu Fallback
 
-`LowKey_Menu(menu_choices, EntryR, ChoiceR)` (`verblib.h` lines 766–810)
+`LowKey_Menu(menu_choices, EntryR, ChoiceR)`
 provides a text-only menu fallback. It is used automatically on Z-machine
 V3 (which has no upper window support) and on interpreters that lack
 cursor-addressing capabilities. It can also be called directly by game
@@ -358,7 +357,7 @@ works with plain sequential text output and basic keyboard input.
 
 ### 34.2.4 Z-machine Windowed Menu
 
-**[Z-machine]** On V5 and later (`verblib.h` lines 816–926), `DoMenu`
+**[Z-machine]** On V5 and later, `DoMenu`
 uses a graphical windowed menu that takes over the full screen. The
 implementation proceeds through several phases:
 
@@ -402,7 +401,7 @@ normal screen layout:
 
 ### 34.2.5 Glulx Menu
 
-**[Glulx]** The Glulx menu implementation (`verblib.h` lines 932–1036)
+**[Glulx]** The Glulx menu implementation
 uses the Glk API for all display operations. The structure mirrors the
 Z-machine version but uses Glk calls:
 
@@ -545,8 +544,7 @@ use Glulx instead.
 
 ### 34.3.2 Glulx Sound and Graphics
 
-**[Glulx]** Glulx provides sound and graphics through the Glk API,
-defined in `infglk.h`. Unlike the Z-machine's dedicated opcodes, Glk
+**[Glulx]** Glulx provides sound and graphics through the Glk API. Unlike the Z-machine's dedicated opcodes, Glk
 uses an object-oriented model with windows, streams, and channels.
 
 **Capability checking:**
@@ -579,16 +577,16 @@ The second argument to `glk_gestalt()` is a subquery parameter. For
 `wintype_TextBuffer` or `wintype_Graphics`) to check whether images can
 be drawn in that specific window type.
 
-**Graphics functions** (`infglk.h` lines 538–662):
+**Graphics functions:**
 
-- `glk_image_draw(win, image, val1, val2)` (line 544) — draws image
+- `glk_image_draw(win, image, val1, val2)` — draws image
   resource `image` in window `win`. For text buffer windows, `val1` and
   `val2` control alignment. For graphics windows, they specify the x,y
   position.
 - `glk_image_draw_scaled(win, image, val1, val2, width, height)`
-  (line 548) — draws the image scaled to the specified `width` and
+  — draws the image scaled to the specified `width` and
   `height` in pixels.
-- `glk_image_get_info(image, width_ptr, height_ptr)` (line 540) —
+- `glk_image_get_info(image, width_ptr, height_ptr)` —
   retrieves the dimensions of image `image`, storing the width and
   height at the given addresses. Returns true if the image exists.
 
@@ -605,17 +603,17 @@ Example of drawing an image:
 ];
 ```
 
-**Sound channel functions** (`infglk.h` lines 592–620):
+**Sound channel functions:**
 
 Sound in Glk is played through **sound channels**. A game creates one or
 more channels, then plays sounds through them:
 
-- `glk_schannel_create(rock)` (line 592) — creates a new sound channel.
+- `glk_schannel_create(rock)` — creates a new sound channel.
   The `rock` is an arbitrary identifier for the channel. Returns the
   channel reference, or 0 on failure.
-- `glk_schannel_play(chan, sound)` (line 600) — plays sound resource
+- `glk_schannel_play(chan, sound)` — plays sound resource
   `sound` on channel `chan`. Returns true on success.
-- `glk_schannel_play_ext(chan, sound, repeats, notify)` (line 604) —
+- `glk_schannel_play_ext(chan, sound, repeats, notify)` —
   extended play: `repeats` is the number of times to play (1 = once,
   -1 = loop forever), and `notify` is a non-zero value that will be
   included in the sound notification event when playback completes.
@@ -624,7 +622,7 @@ more channels, then plays sounds through them:
 - `glk_schannel_set_volume(chan, vol)` — sets the volume for `chan`.
   Volume is a linear scale where `$10000` (65536) is full volume and
   0 is silence.
-- `glk_sound_load_hint(sound, flag)` (line 620) — hints to the
+- `glk_sound_load_hint(sound, flag)` — hints to the
   interpreter that sound resource `sound` should be preloaded (`flag`
   = 1) or may be unloaded (`flag` = 0). The interpreter may ignore
   this hint.
@@ -694,8 +692,7 @@ communication, transcript output, and command recording.
 
 ### 34.4.1 File Mode and Usage Constants
 
-File operations use mode and usage constants defined in `infglk.h`
-(lines 24–34):
+File operations use mode and usage constants:
 
 **File mode constants** control how a file is opened:
 
@@ -757,30 +754,29 @@ referenced by `fref` exists on the host system.
 ### 34.4.3 Stream Operations
 
 Files are accessed through **streams**, which provide a uniform I/O
-interface. The stream operations are defined in `infglk.h`
-(lines 268–323):
+interface. The stream operations are:
 
 **Opening streams:**
 
-- `glk_stream_open_file(fileref, mode, rock)` (line 280) — opens the
+- `glk_stream_open_file(fileref, mode, rock)` — opens the
   file identified by `fileref` in the given mode. Returns a stream
   reference, or 0 on failure.
-- `glk_stream_open_memory(buf, buflen, mode, rock)` (line 284) — opens
+- `glk_stream_open_memory(buf, buflen, mode, rock)` — opens
   a memory buffer as a stream. Useful for in-memory string construction
   and formatting. `buf` is a byte array, `buflen` is its length.
 
 **Closing streams:**
 
-- `glk_stream_close(stream, result_ptr)` (line 290) — closes the
+- `glk_stream_close(stream, result_ptr)` — closes the
   stream. If `result_ptr` is non-zero, the read and write counts are
   stored at that address.
 
 **Positioning:**
 
-- `glk_stream_set_position(stream, pos, seekmode)` (line 296) — sets
+- `glk_stream_set_position(stream, pos, seekmode)` — sets
   the read/write position. `seekmode` is 0 for absolute, 1 for relative
   to current position, 2 for relative to end.
-- `glk_stream_get_position(stream)` (line 300) — returns the current
+- `glk_stream_get_position(stream)` — returns the current
   position in the stream.
 
 **Reading and writing:**
@@ -850,7 +846,7 @@ Array read_buffer -> 256;
 
 ### 34.4.5 The Glk Wrapper and Output Streams
 
-The Inform 6 veneer includes `Glk__Wrap` (`veneer.c` lines 1974–1984),
+The veneer includes `Glk__Wrap`,
 a wrapper routine that mediates between Inform's `print` statement and
 the Glk I/O system. When the compiler targets Glulx, all `print`
 output is routed through the current Glk stream. The `@glk` opcode
@@ -879,7 +875,7 @@ standard game loop.
 ### 34.5.1 Undo Opcodes
 
 **[Z-machine]** The Z-machine provides two opcodes for undo (available
-from V5 onward, defined in `asm.c` lines 633–634):
+from V5 onward):
 
 - `@save_undo -> result` (EXT opcode 0x09) — saves a snapshot of the
   entire game state (memory, stack, program counter) into an
@@ -912,12 +908,11 @@ the Glulx return values to match the library's internal convention.
 
 ### 34.5.2 Library Undo Globals
 
-The library maintains two global variables in `parser.h` (lines 209–210)
-to track undo state:
+The library maintains two global variables to track undo state:
 
 ```inform6
-Global undo_flag;     ! parser.h line 209
-Global just_undone;   ! parser.h line 210
+Global undo_flag;
+Global just_undone;
 ```
 
 **`undo_flag`** records the current availability of undo:
@@ -937,7 +932,7 @@ point (only one level of undo is maintained).
 ### 34.5.3 Saving Undo State in the Game Loop
 
 The library saves an undo snapshot every turn as part of the main game
-loop (`parser.h` lines 1384–1396). This code runs at the **start** of
+loop. This code runs at the **start** of
 each turn, before the player's command is read, so that the undo point
 captures the state as it was at the beginning of the turn:
 
@@ -977,7 +972,7 @@ This code performs the following steps:
 ### 34.5.4 The PerformUndo Routine
 
 When the player types UNDO, the parser recognises it as a special
-meta-command and calls `PerformUndo` (`parser.h` lines 1499–1512).
+meta-command and calls `PerformUndo`.
 This routine handles all the validation and error reporting:
 
 1. **Check for game start**: if the turn count is at its initial value
@@ -1019,7 +1014,7 @@ This routine handles all the validation and error reporting:
 ### 34.5.5 Undo-Related Library Messages
 
 The undo system communicates with the player through the `Miscellany`
-library message set (defined in `english.h`). These can be customised
+library message set. These can be customised
 through the standard library message interception mechanism
 (see §32.4):
 

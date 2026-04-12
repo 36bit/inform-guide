@@ -19,10 +19,9 @@
 
 # Appendix K: Inform 6 BNF Grammar
 
-This appendix provides a formal grammar specification of the Inform 6 language
-as accepted by the Inform 6.44 compiler targeting both Z-machine and Glulx
-virtual machines. The grammar is expressed in a variant of Backus–Naur Form
-(BNF) and has been derived and verified directly from the compiler source code.
+This appendix provides a formal grammar specification of the language as
+accepted by the compiler targeting both Z-machine and Glulx virtual
+machines. The grammar is expressed in a variant of Backus–Naur Form (BNF).
 
 **Notation conventions:**
 
@@ -39,11 +38,6 @@ virtual machines. The grammar is expressed in a variant of Backus–Naur Form
 | `CAPS` | a terminal token class from the lexer |
 | `(* ... *)` | a prose comment or constraint |
 
-Cross-references to the compiler source are given in parentheses (e.g.,
-`syntax.c:131` means the file `syntax.c`, line 131 in the Inform 6.44
-source). For narrative explanations of these constructs, see the corresponding
-chapters of this guide.
-
 ---
 
 ## §K.1 Program Structure
@@ -52,7 +46,6 @@ A program is a sequence of top-level constructs — directives, routine
 definitions, and class-instantiated object definitions — processed until
 end-of-file or the `End` directive.
 
-*(syntax.c:131–257)*
 
 ```
 program
@@ -83,7 +76,6 @@ class-instantiation
 The `*` debug marker must appear before any local variable names
 (i.e., when no locals have yet been declared).
 
-*(syntax.c:163–233, 235–243, 468–471)*
 
 ---
 
@@ -98,7 +90,6 @@ constants.
 
 ### §K.2.2 Comments
 
-*(lexer.c)*
 
 ```
 line-comment
@@ -126,7 +117,6 @@ Identifiers are case-insensitive. The maximum length is implementation-defined
 
 ### §K.2.4 Numeric Literals
 
-*(lexer.c)*
 
 ```
 numeric-literal
@@ -211,7 +201,6 @@ entries, not character constants.
 
 ### §K.2.8 Hash Tokens
 
-*(lexer.c, header.h:1696–1705)*
 
 ```
 hash-token
@@ -226,7 +215,6 @@ hash-token
 
 ### §K.2.9 System Constants
 
-*(lexer.c:552–583)*
 
 ```
 system-constant
@@ -271,7 +259,6 @@ system-constant-name
 
 ### §K.2.10 Separators and Operators
 
-*(header.h:1655–1709)*
 
 The following separator tokens are recognised by the lexer. Their role as
 operators is defined in §K.7.
@@ -305,23 +292,23 @@ operators is defined in §K.7.
 Keywords are context-sensitive in Inform 6 — the lexer enables and disables
 keyword groups depending on what construct is being parsed.
 
-**Statement keywords** *(lexer.c:532–538)* — active inside routine bodies:
+**Statement keywords** — active inside routine bodies:
 
 > `box` `break` `continue` `default` `do` `else` `font` `for` `give`
 > `if` `inversion` `jump` `move` `new_line` `objectloop` `print`
 > `print_ret` `quit` `read` `remove` `restore` `return` `rfalse`
 > `rtrue` `save` `spaces` `string` `style` `switch` `until` `while`
 
-**Condition keywords** *(lexer.c:541–543)* — active inside expressions:
+**Condition keywords** — active inside expressions:
 
 > `has` `hasnt` `in` `notin` `ofclass` `or` `provides`
 
-**System function keywords** *(lexer.c:546–549)* — active inside expressions:
+**System function keywords** — active inside expressions:
 
 > `child` `children` `elder` `eldest` `indirect` `metaclass` `parent`
 > `random` `sibling` `younger` `youngest` `glk`
 
-**Directive keywords** *(lexer.c:487–496)* — active at the top level:
+**Directive keywords** — active at the top level:
 
 > `abbreviate` `array` `attribute` `class` `constant` `default`
 > `dictionary` `end` `endif` `extend` `fake_action` `global` `ifdef`
@@ -330,18 +317,18 @@ keyword groups depending on what construct is being parsed.
 > `property` `release` `replace` `serial` `switches` `statusline`
 > `stub` `system_file` `trace` `undef` `verb` `version` `zcharacter`
 
-**Segment markers** *(lexer.c:506–508)* — active in object/class bodies:
+**Segment markers** — active in object/class bodies:
 
 > `class` `has` `private` `with`
 
-**Misc keywords** *(lexer.c:525–529)* — active in print statements and
+**Misc keywords** — active in print statements and
 other contexts:
 
 > `char` `name` `the` `a` `an` `The` `number` `roman` `reverse` `bold`
 > `underline` `fixed` `on` `off` `to` `address` `string` `object`
 > `near` `from` `property` `A`
 
-**Directive sub-keywords** *(lexer.c:511–522)*:
+**Directive sub-keywords** :
 
 > `alias` `long` `additive` `score` `time` `noun` `held` `multi`
 > `multiheld` `multiexcept` `multiinside` `creature` `special` `number`
@@ -359,7 +346,6 @@ with `#` when used at the top level. Inside routine bodies and object
 definitions, only certain directives are permitted and must be prefixed
 with `#`.
 
-*(directs.c:51–80)*
 
 ### §K.3.1 Permitted Internal Directives
 
@@ -375,7 +361,6 @@ internal-directive
 
 ### §K.3.2 Abbreviate
 
-*(directs.c:89–114)*
 
 ```
 abbreviate-directive
@@ -387,7 +372,6 @@ Maximum 96 abbreviations in Z-code (64 in version 3).
 
 ### §K.3.3 Array
 
-*(arrays.c:494–765, directs.c:120)*
 
 ```
 array-directive
@@ -416,7 +400,6 @@ byte offset 0.
 
 ### §K.3.4 Attribute
 
-*(objects.c, directs.c:126–127)*
 
 ```
 attribute-directive
@@ -425,7 +408,6 @@ attribute-directive
 
 ### §K.3.5 Class
 
-*(objects.c:1866–2028, directs.c:133–135)*
 
 ```
 class-directive
@@ -438,7 +420,6 @@ instances to create.
 
 ### §K.3.6 Constant
 
-*(directs.c:141–218)*
 
 ```
 constant-directive
@@ -452,7 +433,6 @@ If no value is given, the constant is defined with value 0.
 
 ### §K.3.7 Default
 
-*(directs.c:224–251)*
 
 ```
 default-directive
@@ -463,7 +443,6 @@ Defines a constant only if it has not already been defined.
 
 ### §K.3.8 Dictionary
 
-*(directs.c:259–323)*
 
 ```
 dictionary-directive
@@ -479,7 +458,6 @@ Creates a dictionary entry with optional flag values for `dict_par1` and
 
 ### §K.3.9 End
 
-*(directs.c:329)*
 
 ```
 end-directive
@@ -490,7 +468,6 @@ Terminates compilation immediately.
 
 ### §K.3.10 Extend
 
-*(verbs.c:1456–1575, directs.c:340)*
 
 ```
 extend-directive
@@ -514,7 +491,6 @@ See §K.5 for *grammar-body*.
 
 ### §K.3.11 Fake_Action
 
-*(verbs.c, directs.c:346–347)*
 
 ```
 fake-action-directive
@@ -523,7 +499,6 @@ fake-action-directive
 
 ### §K.3.12 Global
 
-*(arrays.c:312–492, directs.c:353)*
 
 ```
 global-directive
@@ -532,7 +507,6 @@ global-directive
 
 ### §K.3.13 Conditional Compilation
 
-*(directs.c:368–527)*
 
 ```
 ifdef-directive
@@ -572,7 +546,6 @@ levels deep.
 
 ### §K.3.14 Import (Deprecated)
 
-*(directs.c:533–535)*
 
 ```
 import-directive
@@ -582,7 +555,6 @@ import-directive
 
 ### §K.3.15 Include
 
-*(directs.c:544–561)*
 
 ```
 include-directive
@@ -595,7 +567,6 @@ path.
 
 ### §K.3.16 Link (Deprecated)
 
-*(directs.c:567–570)*
 
 ```
 link-directive
@@ -605,7 +576,7 @@ link-directive
 
 ### §K.3.17 Lowstring
 
-*(directs.c:580–596)* — Z-machine only.
+ — Z-machine only.
 
 ```
 lowstring-directive
@@ -614,7 +585,6 @@ lowstring-directive
 
 ### §K.3.18 Message
 
-*(directs.c:605–643)*
 
 ```
 message-directive
@@ -626,19 +596,16 @@ message-directive
 
 ### §K.3.19 Nearby
 
-*(objects.c:2045–2250, directs.c:649–651)*
 
 See §K.4.
 
 ### §K.3.20 Object
 
-*(objects.c:2045–2250, directs.c:657–659)*
 
 See §K.4.
 
 ### §K.3.21 Origsource
 
-*(directs.c:680–722)*
 
 ```
 origsource-directive
@@ -650,7 +617,6 @@ sets the original source filename and optionally line and character number.
 
 ### §K.3.22 Property
 
-*(objects.c, directs.c:731)*
 
 ```
 property-directive
@@ -666,7 +632,6 @@ creates an individual property.
 
 ### §K.3.23 Release
 
-*(directs.c:737–745)*
 
 ```
 release-directive
@@ -675,7 +640,6 @@ release-directive
 
 ### §K.3.24 Replace
 
-*(directs.c:751–805)*
 
 ```
 replace-directive
@@ -687,7 +651,6 @@ identifier receives the original definition of the replaced routine.
 
 ### §K.3.25 Serial
 
-*(directs.c:811–823)*
 
 ```
 serial-directive
@@ -698,7 +661,6 @@ The string must be exactly 6 digits (a date in `YYMMDD` format).
 
 ### §K.3.26 Statusline
 
-*(directs.c:829–838)*
 
 ```
 statusline-directive
@@ -707,7 +669,6 @@ statusline-directive
 
 ### §K.3.27 Stub
 
-*(directs.c:844–900)*
 
 ```
 stub-directive
@@ -719,7 +680,6 @@ The stub is only created if the identifier has not been defined.
 
 ### §K.3.28 Switches (Deprecated)
 
-*(directs.c:907–928)*
 
 ```
 switches-directive
@@ -728,7 +688,6 @@ switches-directive
 
 ### §K.3.29 System_file
 
-*(directs.c:938–939)*
 
 ```
 system-file-directive
@@ -740,7 +699,6 @@ behaviour).
 
 ### §K.3.30 Trace
 
-*(directs.c:957–1065)*
 
 ```
 trace-directive
@@ -757,7 +715,6 @@ a tracing level.
 
 ### §K.3.31 Undef
 
-*(directs.c:1071–1093)*
 
 ```
 undef-directive
@@ -768,13 +725,11 @@ Removes a previously defined constant from the symbol table.
 
 ### §K.3.32 Verb
 
-*(verbs.c:1292–1444, directs.c:1099)*
 
 See §K.5.
 
 ### §K.3.33 Version (Deprecated)
 
-*(directs.c:1105–1161)*
 
 ```
 version-directive
@@ -786,7 +741,7 @@ switches.
 
 ### §K.3.34 Zcharacter
 
-*(directs.c:1170–1254)* — Z-machine only.
+ — Z-machine only.
 
 ```
 zcharacter-directive
@@ -802,7 +757,6 @@ The three-string form defines new Z-machine alphabets A0, A1, and A2.
 
 ## §K.4 Object and Class Definitions
 
-*(objects.c:1790–1835, 2030–2250)*
 
 ### §K.4.1 Object
 
@@ -858,11 +812,9 @@ segment
 Segments may appear in any order and may be separated by commas. Each
 segment is terminated by the start of the next segment, a comma, or `;`.
 
-*(objects.c:1790–1835)*
 
 ### §K.4.4 Property List
 
-*(objects.c:1145–1403)*
 
 ```
 property-list
@@ -889,7 +841,6 @@ classes).
 
 ### §K.4.5 Attribute List
 
-*(objects.c:1661–1715)*
 
 ```
 attribute-list
@@ -901,7 +852,6 @@ rather than setting it.
 
 ### §K.4.6 Class List
 
-*(objects.c:1756–1784)*
 
 ```
 class-list
@@ -914,7 +864,6 @@ A class may not inherit from itself.
 
 ## §K.5 Verb and Grammar Definitions
 
-*(verbs.c:899–1444)*
 
 ### §K.5.1 Verb Directive
 
@@ -950,7 +899,6 @@ only).
 
 ### §K.5.3 Grammar Tokens
 
-*(verbs.c:1014–1148)*
 
 ```
 grammar-token
@@ -979,7 +927,6 @@ position (e.g., `'in'/'inside'/'into'`).
 
 ## §K.6 Routines
 
-*(syntax.c:445–614)*
 
 ### §K.6.1 Routine Definition
 
@@ -1010,7 +957,6 @@ switch on the first argument. This is the "action routine" pattern.
 
 ### §K.6.3 Switch-Case at Routine Level
 
-*(syntax.c:537–607)*
 
 ```
 switch-case
@@ -1030,7 +976,6 @@ case-value
 
 ## §K.7 Expressions
 
-*(expressp.c, expressc.c)*
 
 ### §K.7.1 Expression Grammar
 
@@ -1110,7 +1055,6 @@ The following table gives the complete operator precedence, from lowest
 (level 0) to highest (level 14), as defined in the compiler's operator
 table.
 
-*(expressc.c:92–321, header.h:1716–1801)*
 
 | Level | Operators | Assoc. | Type | Description |
 |-------|-----------|--------|------|-------------|
@@ -1144,7 +1088,6 @@ The compiler internally generates compound operators for assignment and
 increment/decrement applied to array elements and properties. These are
 not directly written in source code but arise from combining operators:
 
-*(header.h:1773–1801)*
 
 | Source Pattern | Internal Operator | Description |
 |----------------|-------------------|-------------|
@@ -1173,7 +1116,6 @@ not directly written in source code but arise from combining operators:
 
 ### §K.7.4 System Function Calls
 
-*(lexer.c:546–549, expressp.c, expressc.c)*
 
 ```
 system-function-call
@@ -1196,7 +1138,6 @@ When `random` is called with multiple arguments, it selects one at random.
 
 ### §K.7.5 Action Expressions
 
-*(states.c:46–246)*
 
 ```
 action-expression
@@ -1227,7 +1168,6 @@ defined constants, and simple arithmetic on constants are permitted.
 
 ## §K.8 Statements
 
-*(states.c)*
 
 ### §K.8.1 Statement Grammar
 
@@ -1347,11 +1287,9 @@ for-statement
 `for` loop, not `;` (semicolon) as in C. A `;` in this position produces
 a warning and is treated as `:`.
 
-*(states.c:11–30)*
 
 ### §K.8.9 Objectloop Statement
 
-*(states.c:1354–1475)*
 
 ```
 objectloop-statement
@@ -1375,7 +1313,6 @@ condition expression.
 
 ### §K.8.10 Print Statement
 
-*(states.c:270–738)*
 
 ```
 print-statement
@@ -1480,7 +1417,6 @@ remove-statement
 
 ### §K.8.16 Read Statement
 
-*(states.c:1498–1538)*
 
 ```
 read-statement
@@ -1582,7 +1518,6 @@ target.
 The compiler parses expressions differently depending on context, affecting
 which operators and forms are permitted.
 
-*(header.h:1287–1292)*
 
 | Context | Description | Restrictions |
 |---------|-------------|--------------|
@@ -1603,7 +1538,6 @@ which operators and forms are permitted.
 The lexer applies several context-dependent disambiguation rules when
 tokenising.
 
-*(expressp.c)*
 
 ### §K.10.1 Unary Minus vs. Binary Minus
 
@@ -1642,7 +1576,6 @@ In assembly context, `->` is a store separator.
 
 ## §K.11 Array Type Summary
 
-*(header.h:1807–1811, arrays.c:263–280)*
 
 | Type | Keyword | Entry Size | Length Prefix |
 |------|---------|------------|---------------|
@@ -1658,7 +1591,6 @@ In assembly context, `->` is a store separator.
 
 ## §K.12 Grammar Version Differences
 
-*(verbs.c:15–29)*
 
 The compiler supports three grammar table encodings, selected by the
 `Grammar__Version` constant:
@@ -1677,7 +1609,6 @@ count is embedded in the action word, eliminating the terminator byte.
 
 ## §K.13 Complete Token Type Summary
 
-*(header.h:1243–1285)*
 
 | Code | Name | Description |
 |------|------|-------------|
@@ -1714,7 +1645,6 @@ count is embedded in the action word, eliminating the terminator byte.
 
 ## §K.14 Symbol Types
 
-*(header.h)*
 
 | Type | Description |
 |------|-------------|

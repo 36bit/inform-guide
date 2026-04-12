@@ -19,12 +19,10 @@
 
 # Chapter 6: Routines
 
-This chapter describes routines (functions) in Inform 6: how they are
-declared, how arguments and local variables work, how values are returned,
-and the calling conventions that govern their behaviour on the Z-machine
-and Glulx virtual machines. The information here is derived from the
-routine parser in the compiler source (`syntax.c`), the code generator
-(`asm.c`), and the I6-Addendum.
+This chapter describes routines (functions): how they are declared, how
+arguments and local variables work, how values are returned, and the
+calling conventions that govern their behaviour on the Z-machine and Glulx
+virtual machines.
 
 ## 6.1 Routine Declaration Syntax
 
@@ -68,7 +66,7 @@ definition. It is callable by name from anywhere in the program:
 ```
 
 Stand-alone routines are the primary mechanism for organising code in
-Inform 6 programs. The name becomes a global constant whose value is the
+programs. The name becomes a global constant whose value is the
 packed address of the routine.
 
 ## 6.3 Embedded Routines
@@ -145,8 +143,8 @@ excess arguments are silently ignored on the Z-machine. They are evaluated
 ### 6.4.2 Local Variable Limits
 
 On the Z-machine, a routine may declare at most **15 local variables**
-(the virtual machine's hard limit). On Glulx, this limit is more generous
-and is controlled by the compiler's memory settings.
+(the virtual machine's hard limit). On Glulx, the limit is **118 local
+variables** — this is a fixed compiler constant, not user-configurable.
 
 ### 6.4.3 Locals Are Not Persistent
 
@@ -170,8 +168,8 @@ The `return` statement exits the routine immediately with the given value:
 ];
 ```
 
-`return` with no expression returns `true` (1) from a stand-alone routine
-and `false` (0) from an embedded routine.
+`return` with no expression returns `true` (1), regardless of whether
+the routine is stand-alone or embedded.
 
 ### 6.5.2 `rtrue` and `rfalse`
 
@@ -380,7 +378,7 @@ can still overflow it.
 
 ### 6.10.2 Tail Recursion
 
-The Inform 6 compiler does not perform tail-call optimisation. A recursive
+The compiler does not perform tail-call optimisation. A recursive
 call in tail position still allocates a new stack frame. If deep recursion
 is needed, consider rewriting the algorithm iteratively:
 

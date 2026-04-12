@@ -1,11 +1,8 @@
 # Chapter 4: Expressions and Operators
 
-This chapter describes every operator in Inform 6, how expressions are
-evaluated, and how the compiler interprets expressions differently
-depending on the context in which they appear. The information here is
-derived directly from the operator table in the compiler source
-(`expressc.c`) and the expression parser (`expressp.c`), supplemented by
-the I6-Addendum's clarifications on precedence and the `or` operator.
+This chapter describes every operator, how expressions are evaluated, and
+how the compiler interprets expressions differently depending on the
+context in which they appear.
 
 ## 4.1 Expression Evaluation
 
@@ -810,8 +807,7 @@ count of the `call_vs2` instruction (up to 7 arguments).
 The following table lists every Inform 6 operator from **lowest** to
 **highest** precedence. Operators at the same precedence level are
 evaluated according to their stated associativity. The precedence numbers
-correspond to the internal levels defined in the compiler's operator table
-(`expressc.c`).
+correspond to the internal levels defined in the compiler's operator table.
 
 | Prec. | Operators | Type | Assoc. | Description |
 | ----- | --------- | ---- | ------ | ----------- |
@@ -839,6 +835,8 @@ correspond to the internal levels defined in the compiler's operator table
 | 9 | `++` `--` (postfix) | Postfix | Right | Post-increment, post-decrement |
 | 10 | `.&` | Infix | Left | Property data address |
 | 10 | `.#` | Infix | Left | Property data length (bytes) |
+| 10 | `..&` | Infix | Left | Individual property data address |
+| 10 | `..#` | Infix | Left | Individual property data length (bytes) |
 | 11 | `()` | — | Left | Function call |
 | 12 | `.` | Infix | Left | Property access / message send |
 | 13 | `::` | Infix | Left | Superclass property access |
@@ -885,7 +883,7 @@ operand.
 
 ## 4.14 Expression Contexts
 
-The Inform 6 compiler evaluates expressions differently depending on the
+The compiler evaluates expressions differently depending on the
 **context** in which they appear. The compiler defines nine expression
 contexts, each with its own rules about what expressions are valid and how
 their values are used.

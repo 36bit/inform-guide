@@ -19,16 +19,11 @@
 
 # Chapter 31: Glulx Instruction Set (Assembly)
 
-**[Glulx]** This chapter documents the Glulx instruction set as
-implemented by the Inform 6.44 compiler. It covers the binary encoding
-of instructions, the complete set of opcodes organised by category,
-function call conventions, search opcodes, and the Inform 6 assembly
-language syntax for embedding Glulx instructions directly in source
-code.
-
-All opcode definitions, encoding rules, and assembly syntax documented
-here have been verified against the compiler source code in `asm.c`
-and the Glulx specification (version 3.1.3).
+**[Glulx]** This chapter documents the Glulx instruction set as supported
+by the compiler. It covers the binary encoding of instructions, the
+complete set of opcodes organised by category, function call conventions,
+search opcodes, and the assembly language syntax for embedding Glulx
+instructions directly in source code.
 
 ## 31.1 Encoding Format
 
@@ -49,8 +44,7 @@ determined by the top two bits of the first byte:
 | `10xxxxxx` | 2 bytes | Value = `(byte1 & 0x3F) << 8 \| byte2` | 0x0000–0x3FFF |
 | `11xxxxxx` | 4 bytes | Value = `(byte1 & 0x0F) << 24 \| byte2 << 16 \| byte3 << 8 \| byte4` | 0x00000000–0x0FFFFFFF |
 
-The compiler implements this encoding in `assembleg_instruction()`
-(`asm.c`, lines 1461–1473):
+The compiler implements this encoding in `assembleg_instruction()`:
 
 - Opcodes 0x00–0x7F are written as a single byte.
 - Opcodes 0x80–0x3FFF are written as two bytes: `0x80 | (code >> 8)`
@@ -67,8 +61,7 @@ encoding.
 ### 31.1.2 Feature Flag Auto-Detection
 
 When the compiler assembles an instruction from a feature-gated opcode
-group, it automatically sets the corresponding feature flag (`asm.c`,
-lines 1436–1453). This ensures the output file's Glulx version number
+group, it automatically sets the corresponding feature flag. This ensures the output file's Glulx version number
 is high enough to support all opcodes used. The six feature groups and
 their flag constants are:
 
@@ -91,8 +84,7 @@ instruction has an odd number of operands, the upper nibble of the
 last mode byte is zero (unused).
 
 The compiler writes placeholder zero bytes for the mode bytes, then
-fills them in as each operand is assembled (`asm.c`, lines 1475–1483,
-1649–1651).
+fills them in as each operand is assembled.
 
 ### 31.2.1 Addressing Mode Table
 
@@ -144,23 +136,22 @@ efficiently:
 
 **Stack pointer (sp):** Variable 0 in the compiler represents the
 stack pointer. It is always encoded as mode 8 (stack pop/push) with
-no data bytes (`asm.c`, lines 1624–1628).
+no data bytes.
 
 **Local variables:** Variables 1 through `no_locals` are encoded as
 local frame offsets. Each local occupies 4 bytes, so variable *n* has
 frame offset `(n-1) × 4`. If the offset fits in one byte (variables 1
-through 64), mode 9 is used; otherwise mode 10 (`asm.c`, lines
-1629–1642).
+through 64), mode 9 is used; otherwise mode 10.
 
 **Global variables:** Global variable *n* is stored in RAM at offset
 `(n - MAX_LOCAL_VARIABLES) × 4` from RAMSTART. The compiler encodes
 this as a RAM-relative address using mode 13 (1-byte offset, up to
 offset 255), mode 14 (2-byte offset, up to 65535), or mode 15
-(4-byte offset) as needed (`asm.c`, lines 1590–1622).
+(4-byte offset) as needed.
 
 ### 31.2.3 Operand Flags in the Opcode Table
 
-Each opcode in the compiler's table (`asm.c`, lines 696–847) has a
+Each opcode in the compiler's table has a
 `flags` field indicating special operand handling:
 
 | Flag | Value | Meaning |
@@ -173,7 +164,7 @@ Each opcode in the compiler's table (`asm.c`, lines 696–847) has a
 ## 31.3 Full Opcode Listing with Semantics
 
 This section provides the complete listing of all Glulx opcodes as
-defined in the compiler's opcode table (`asm.c`, lines 696–847). For
+defined in the compiler's opcode table. For
 each opcode, the following information is given:
 
 - **Code**: The opcode number in hexadecimal.
@@ -401,8 +392,7 @@ detection. Important selectors include:
 This is the sole gateway between the Glulx program and the Glk I/O
 library. Arguments must be pushed onto the stack before the instruction
 executes (last argument pushed first, so the first argument is on top).
-The compiler's internal opcode constant is `glk_gc` (value 68,
-`header.h`, line 1213).
+The compiler's internal opcode constant is `glk_gc` (value 68).
 
 See §30.8 for a detailed discussion of the Glk I/O layer.
 
@@ -581,8 +571,7 @@ paired representation.
 
 The compiler provides four synthetic opcodes that are not real Glulx
 instructions but are expanded into equivalent real instructions during
-assembly. They are defined in the `opmacros_table_g` table (`asm.c`,
-lines 851–856):
+assembly. They are defined in the `opmacros_table_g` table:
 
 | Macro | Expands To | Description |
 |---|---|---|
@@ -614,12 +603,12 @@ initialised to zero.
 stack rather than being copied into locals. The function accesses its
 arguments by popping them from the stack or using `stkpeek`. This type
 is used for Inform functions whose first local is named
-`_vararg_count` (`asm.c`, lines 1772–1775). In the compiled output,
+`_vararg_count`. In the compiled output,
 the compiler emits a `@copy sp _vararg_count;` instruction at the start
 of the function body to move the argument count from the stack into the
-first local (`asm.c`, lines 1909–1913).
+first local.
 
-The compiler writes the function type byte in `asm.c`, lines 1888–1891:
+The compiler writes the function type byte as follows:
 
 ```c
 if (stackargs)
@@ -643,7 +632,7 @@ A function in memory has the following layout:
   Thereafter:   Executable opcodes
 ```
 
-The compiler always uses 4-byte locals (`asm.c`, lines 1900–1904). If
+The compiler always uses 4-byte locals. If
 a function has more than 255 locals, multiple LocalType/LocalCount
 pairs are emitted, each with LocalType = 4 and LocalCount ≤ 255.
 
@@ -766,7 +755,7 @@ The three search opcodes provide efficient searching of structured data
 in memory. They are heavily used by the compiler's veneer routines for
 object property table lookups. The compiler defines internal constants
 for these opcodes: `linearsearch_gc` = 73, `binarysearch_gc` = 74,
-`linkedsearch_gc` = 75 (`header.h`, lines 1218–1220).
+`linkedsearch_gc` = 75.
 
 ### 31.6.1 Common Parameters
 
@@ -828,8 +817,7 @@ match. If `ReturnIndex` is set, returns the index or −1.
 Only `KeyIndirect` and `ReturnIndex` are valid for `binarysearch`.
 The `ZeroKeyTerminates` flag is not supported.
 
-The compiler's veneer uses `binarysearch` for property table lookups,
-as seen in `veneer.c`:
+The compiler's veneer uses `binarysearch` for property table lookups:
 
 ```inform6
 ! Example from the veneer (simplified):
@@ -870,7 +858,7 @@ lists do not have a natural index ordering).
 
 ## 31.7 I/O Through Glk
 
-This section describes how Inform 6 programs interact with the Glk I/O
+This section describes how programs interact with the Glk I/O
 library at the assembly level. For the architectural overview of the
 Glk I/O layer, see §30.8.
 
@@ -934,8 +922,7 @@ call uses Inform's standard calling convention (push all arguments
 including the selector onto the stack), while the `@glk` opcode
 requires the selector as an inline operand.
 
-The `Glk__Wrap` veneer routine (`veneer.c`, lines 1973–1984)
-bridges these calling conventions:
+The `Glk__Wrap` veneer routine bridges these calling conventions:
 
 1. It receives all arguments on the stack (selector + Glk arguments).
 2. It pops the selector into a local variable.

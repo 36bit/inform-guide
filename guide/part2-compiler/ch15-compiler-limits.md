@@ -19,20 +19,18 @@
 
 # Chapter 15: Compiler Limits and Memory Settings
 
-This chapter describes the limits that constrain an Inform 6 program:
-both the hard constraints imposed by the target virtual machine and the
-configurable settings that control the compiler's own behaviour. It
-collects the practical information a programmer needs when a project
-grows beyond default limits, when choosing between Z-machine and Glulx,
-or when fine-tuning the compiler for a production release. The
-information here is derived from the compiler source (`memory.c`,
-`options.c`, `header.h`, `objects.c`, `tables.c`) and the I6-Addendum.
+This chapter describes the limits that constrain a program: both the hard
+constraints imposed by the target virtual machine and the configurable
+settings that control the compiler's own behaviour. It collects the
+practical information a programmer needs when a project grows beyond
+default limits, when choosing between Z-machine and Glulx, or when
+fine-tuning the compiler for a production release.
 
 ---
 
 ## 15.1 Overview
 
-Limits on an Inform 6 program come from two distinct sources:
+Limits on a program come from two distinct sources:
 
 1. **Virtual machine constraints.** The Z-machine and Glulx each define
    a fixed architecture — address widths, object table formats, and
@@ -148,8 +146,9 @@ Z-machine's size constraints. Its limits are far more generous:
   (default 9). Unlike the Z-machine, this is freely adjustable.
   `$DICT_CHAR_SIZE` can be set to 4 for full Unicode dictionary entries.
 
-- **Local variables:** A maximum of 119 local variables per routine
-  (compared to 15 in the Z-machine).
+- **Local variables:** `MAX_LOCAL_VARIABLES` is set to 119 (including the
+  internal `sp` slot), giving a maximum of **118** usable local variables
+  per routine (compared to 15 in the Z-machine).
 
 - **Stack size:** Controlled by `$MAX_STACK_SIZE` (default 4096 bytes).
   This can be increased for deeply recursive programs.

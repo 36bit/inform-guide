@@ -25,8 +25,7 @@ systems form the visibility model that governs what the player can
 perceive and interact with. This chapter provides a complete reference
 for both systems: the scope-determination algorithm, visibility
 ceilings, light propagation, and the routines that query and
-manipulate scope. The information here is derived from `parser.h`,
-`verblib.h`, and `linklpa.h` in library version 6.12.8.
+manipulate scope.
 
 ## 25.1 The Scope Determination Algorithm
 
@@ -66,12 +65,14 @@ transparent, a supporter, or an open container, and stops when it
 reaches an object that blocks visibility:
 
 ```inform6
-[ ScopeCeiling person i;
-    i = parent(person);
+[ ScopeCeiling person act;
+    act = parent(person);
+    if (act == 0) return person;
     if (person == player && location == thedark) return thedark;
-    while (i && IsSeeThrough(i) && parent(i))
-        i = parent(i);
-    return i;
+    while (parent(act)~=0 && (act has transparent || act has supporter ||
+                             (act has container && act has open)))
+        act = parent(act);
+    return act;
 ];
 ```
 
@@ -100,7 +101,7 @@ An object is "see-through" if it is:
 ### 25.1.3 `SearchScope`: The Main Algorithm
 
 The core of the scope system is `SearchScope(domain1, domain2,
-context)`, defined in `parser.h`. It populates the set of in-scope
+context)`. It populates the set of in-scope
 objects by searching two domains (typically the player's location and
 the player object itself) and respecting any custom scope overrides.
 
@@ -315,15 +316,20 @@ light and darkness:
 [ AdjustLight flag i;
     i = lightflag;
     lightflag = OffersLight(parent(player));
-    if (i == lightflag) return;
-    if (lightflag) {
-        LocationLightAcquired();
-        if (location == thedark) ReallyLook();
+
+    if (i == 0 && lightflag == 1) {
+        location = real_location;
+        if (flag == 0) <Look>;
     }
-    else {
-        LocationLightLost();
-        ReallyLook();
+
+    if (i == 1 && lightflag == 0) {
+        real_location = location; location = thedark;
+        if (flag == 0) {
+            NoteArrival();
+            return L__M(##Miscellany, 9);
+        }
     }
+    if (i == 0 && lightflag == 0) location = thedark;
 ];
 ```
 
@@ -332,9 +338,9 @@ and darkness:
 
 - **Light acquired:** `location` is updated from `thedark` to
   `real_location`, and a `Look` is performed to show the room.
-- **Light lost:** `location` is set to `thedark`, the `DarkToDark()`
-  entry point is called (if the previous location was also dark), and
-  a `Look` is performed (which shows the darkness message).
+- **Light lost:** `location` is set to `thedark`, `NoteArrival()` is
+  called to run the `initial` property and `NewRoom()` entry point,
+  and a darkness message is printed.
 
 The global `lightflag` records whether the player's current position
 is lit (`1`) or dark (`0`). The `location` variable holds `thedark`
@@ -563,22 +569,18 @@ actual parent remains unchanged.
 
 ## 25.6 `FindVisibilityLevels()`
 
-The routine `FindVisibilityLevels()`, defined in `verblib.h`,
+The routine `FindVisibilityLevels()`
 determines the **visibility ceiling** for display purposes. It returns
 the nesting depth from the player to the ceiling and stores the
 ceiling object in the global `visibility_ceiling`.
 
 ```inform6
-[ FindVisibilityLevels;
-    visibility_levels = 0;
-    if (location == thedark) {
-        visibility_ceiling = thedark;
-        return 0;
-    }
+[ FindVisibilityLevels visibility_levels;
+    visibility_levels = 1;
     visibility_ceiling = parent(player);
-    while (visibility_ceiling &&
-           IsSeeThrough(visibility_ceiling) &&
-           parent(visibility_ceiling)) {
+    while ((parent(visibility_ceiling)) &&
+           (visibility_ceiling hasnt container ||
+            visibility_ceiling has open or transparent)) {
         visibility_ceiling = parent(visibility_ceiling);
         visibility_levels++;
     }

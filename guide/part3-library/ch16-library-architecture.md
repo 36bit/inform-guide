@@ -19,11 +19,9 @@
 
 # Chapter 16: Library Architecture and Initialization
 
-This chapter describes the overall architecture of the Inform 6 standard
-library (version 6.12.8): how the library files fit together, how the game
-loop operates, and how programs configure and initialize the library. The
-information here is derived from the library source files `parser.h`,
-`verblib.h`, `grammar.h`, and `version.h`.
+This chapter describes the overall architecture of the standard library
+(version 6.12.8): how the library files fit together, how the game loop
+operates, and how programs configure and initialize the library.
 
 ## 16.1 Overview
 
@@ -37,14 +35,14 @@ fiction written in Inform 6. It supplies:
   library messages.
 - **Timekeeping** — turn counting, timers, daemons, and each-turn processing.
 
-Most Inform 6 programs are built on top of this library. A game author
+Most programs are built on top of this library. A game author
 writes objects, rooms, and a handful of entry-point routines; the library
 handles everything else. Understanding the library's architecture makes it
 easier to customize behaviour and debug problems.
 
 ## 16.2 The Three-File Include Pattern
 
-A standard Inform 6 program includes the library in three pieces, in a
+A standard program includes the library in three pieces, in a
 fixed order:
 
 ```inform6
@@ -408,7 +406,7 @@ Message error "This extension requires library 6.12 or later.";
 ```
 
 `Grammar__Version` is used internally to select between grammar table
-formats. Version 2 is standard in all modern Inform 6 programs.
+formats. Version 2 is standard in all modern programs.
 
 ## 16.7 Compilation Constants
 

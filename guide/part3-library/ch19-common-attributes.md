@@ -19,11 +19,11 @@
 
 # Chapter 19: Common Attributes
 
-The standard library (version 6.12.8) defines a set of **common
-attributes** in `linklpa.h` that control the fundamental characteristics
-of every object in the game. Attributes are boolean flags — each object
-either has or lacks a given attribute. This chapter provides a complete
-reference for every library-defined attribute.
+The standard library defines a set of **common attributes** that control
+the fundamental characteristics of every object in the game. Attributes
+are boolean flags — each object either has or lacks a given attribute.
+This chapter provides a complete reference for every library-defined
+attribute.
 
 ## 19.1 Overview
 

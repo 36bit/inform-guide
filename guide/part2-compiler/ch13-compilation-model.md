@@ -19,14 +19,12 @@
 
 # Chapter 13: Compilation Model
 
-This chapter describes how the Inform 6 compiler transforms source code
-into a finished story file. It covers the single-pass architecture, the
+This chapter describes how the compiler transforms source code into a
+finished story file. It covers the single-pass architecture, the
 backpatching mechanism that resolves forward references, the veneer
 routines injected as runtime support, and the construction of the major
 data structures — dictionary, object tree, grammar tables, and memory
-layout — that make up the final output. The information here is derived
-from the compiler source (`inform.c`, `veneer.c`, `tables.c`, `bpatch.c`,
-`text.c`, `objects.c`, `asm.c`, `header.h`).
+layout — that make up the final output.
 
 ---
 
@@ -64,8 +62,7 @@ At a high level, compilation proceeds through three broad stages:
 
 ## 13.2 Compilation Phases
 
-The compiler's top-level entry point is the `compile()` function in
-`inform.c`. It orchestrates the entire process:
+The compiler's top-level entry point is the `compile()` function. It orchestrates the entire process:
 
 ```
 compile()
@@ -197,8 +194,7 @@ Some constructs require their targets to be defined first:
 ## 13.4 Backpatching
 
 Backpatching is the mechanism by which the compiler resolves addresses
-and values that were unknown during the main pass. It is implemented in
-`bpatch.c`.
+and values that were unknown during the main pass.
 
 ### 13.4.1 Backpatch Markers
 
@@ -280,8 +276,8 @@ needed.
 The compiler injects a set of **veneer routines** — small, compiler-
 generated functions that provide runtime support for language features
 that are too complex to expand inline. These routines are defined in
-`veneer.c` as Inform source text, compiled by the compiler itself during
-the finalization phase.
+the compiler's veneer source module as Inform source text, compiled by
+the compiler itself during the finalization phase.
 
 ### 13.5.1 Why Veneer Routines Exist
 
@@ -332,8 +328,8 @@ veneer routines; a minimal program may need only a handful.
 ### 13.5.3 Catalogue of Veneer Routines
 
 The following table lists the major categories of veneer routines. The
-full set of 48 is defined in the `VRs_z[]` and `VRs_g[]` arrays in
-`veneer.c`.
+full set of 48 is defined in the `VRs_z[]` and `VRs_g[]` arrays in the
+compiler's veneer module.
 
 **Statement support:**
 
@@ -440,8 +436,7 @@ pass and sorts it during finalization.
 Every time the compiler encounters a dictionary word — in a `Verb`
 directive, a `name` property, a `'word'` literal, or a `Dictionary`
 directive — it inserts the word into a **red-black tree** (a self-
-balancing binary search tree). This data structure, implemented in
-`text.c`, ensures that insertion and lookup are O(log n) operations
+balancing binary search tree). This data structure ensures that insertion and lookup are O(log n) operations
 even as the dictionary grows to thousands of entries.
 
 Each tree node stores left/right child indices and a colour bit. The
@@ -634,7 +629,7 @@ file, and its starting address is recorded in the file header.
 ## 13.9 Code Area, String Area, and Static Data Layout
 
 The final story file is a single binary blob with a carefully specified
-layout. The compiler's `construct_storyfile()` function (in `tables.c`)
+layout. The compiler's `construct_storyfile()` function
 assembles all the pieces.
 
 ### 13.9.1 Z-Machine Story File Layout
@@ -773,7 +768,7 @@ compiler performs the following steps after the main pass:
 
 4. **Mark unreachable routines.** Any routine not reachable from an
    entry point is marked as dead. The function `locate_dead_functions()`
-   in `inform.c` orchestrates this process.
+   orchestrates this process.
 
 5. **Strip dead code.** During story file construction, dead routines
    are omitted from the code area. The backpatcher uses

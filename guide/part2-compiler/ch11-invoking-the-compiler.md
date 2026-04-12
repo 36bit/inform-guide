@@ -19,13 +19,11 @@
 
 # Chapter 11: Invoking the Compiler
 
-The Inform 6 compiler translates source files written in the Inform
-language into story files for either the Z-machine or Glulx virtual
-machine. This chapter describes how to invoke the compiler from the
-command line, how it locates source and output files, and how to control
-its behaviour through switches, path settings, and configuration files.
-The information here is derived from the compiler source (`inform.c`,
-`header.h`) and the I6-Addendum.
+The compiler translates source files written in the Inform language into
+story files for either the Z-machine or Glulx virtual machine. This
+chapter describes how to invoke the compiler from the command line, how it
+locates source and output files, and how to control its behaviour through
+switches, path settings, and configuration files.
 
 ---
 
@@ -375,21 +373,18 @@ inform -v5 -v8 adventure.inf
 
 This compiles to version 8, because `-v8` appears after `-v5`.
 
-As of compiler 6.44, command-line options take precedence over `!%`
-options. In earlier versions (through 6.43), the opposite was true — `!%`
-options in the source file would override the command line. The current
-behaviour is more intuitive: what you type on the command line is the
-final word.
+In the compiler's execution order, command-line options are processed
+first, followed by `!%` options in the source file. This means `!%`
+options override command-line settings, since they are applied later.
 
-For example, if `adventure.inf` begins with `!% -v5`, you can still
-override it:
+For example, if `adventure.inf` begins with `!% -v5`, and you run:
 
 ```
 inform -v8 adventure.inf
 ```
 
-This produces a version-8 story file because the command-line `-v8`
-overrides the in-file `!% -v5`.
+This produces a version-5 story file because the `!% -v5` header in the
+source file is processed after the command-line `-v8`, overriding it.
 
 ### 11.7.3 The `-i` Switch
 

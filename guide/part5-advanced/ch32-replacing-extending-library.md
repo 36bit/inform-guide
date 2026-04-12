@@ -19,14 +19,12 @@
 
 # Chapter 32: Replacing and Extending the Library
 
-The Inform 6 library provides a comprehensive framework for interactive
-fiction, but nearly every game needs to customise it in some way. This
-chapter covers the compiler directives and design patterns that allow a
-game to replace individual library routines, define new actions and verbs,
-extend the class hierarchy, intercept library messages, and write reusable
-library extensions. These mechanisms range from simple overrides (replacing
-a single routine) to structural extensions (adding entirely new verbs and
-grammar).
+The library provides a comprehensive framework for interactive fiction,
+but nearly every game needs to customise it in some way. This chapter
+covers the compiler directives and design patterns that allow a game to
+replace individual library routines, define new actions and verbs, extend
+the class hierarchy, intercept library messages, and write reusable
+library extensions.
 
 ## 32.1 The Replace Directive
 
@@ -50,9 +48,9 @@ reaches the closing `]` — and uses the game's own definition instead.
 
 The key mechanism works as follows:
 
-1. The `Replace` directive (handled in `directs.c`) sets
+1. The `Replace` directive sets
    `symbols[token_value].flags |= REPLACE_SFLAG` on the named symbol.
-2. When the compiler begins parsing a routine definition (in `syntax.c`),
+2. When the compiler begins parsing a routine definition,
    it checks whether the symbol has `REPLACE_SFLAG` set **and** the
    current file is a system file (via `is_systemfile()`).
 3. If both conditions are true and there is no rename mapping, the
@@ -78,7 +76,7 @@ Replace Banner OriginalBanner;
 This tells the compiler to do everything the one-argument form does, but
 additionally to compile the system file's definition under the name
 `preserved_name` rather than discarding it. The replacement mapping is
-stored in an array of `value_pair_t` structures (defined in `symbols.c`):
+stored in an array of `value_pair_t` structures:
 
 ```c
 typedef struct value_pair_struct {
@@ -128,7 +126,7 @@ Include "VerbLib";
 Include "Grammar";
 ```
 
-The library's own `Banner` routine (defined in `verblibm.h`, which is
+The library's own `Banner` routine (which is
 included via `VerbLib`) is skipped because `Replace Banner` was issued
 before the `Include`. The game's `Banner` routine is compiled in its
 place.
@@ -140,7 +138,7 @@ practical patterns for replacing library routines.
 
 ### 32.2.1 The Standard Template
 
-The standard Inform 6 source file structure places `Replace` directives
+The standard source file structure places `Replace` directives
 at the very top, before any library includes:
 
 ```inform6
@@ -246,7 +244,7 @@ variables the stub routine should declare.
 
 ### 32.3.1 Compiler Mechanics
 
-When the compiler processes a `Stub` directive (in `directs.c`):
+When the compiler processes a `Stub` directive:
 
 1. It checks whether `routine_name` already exists in the symbol table as
    a defined routine.
@@ -613,7 +611,7 @@ Attributes are inherited from all listed classes via a union — if any
 class provides an attribute, the inheriting object receives it.
 
 The compiler tracks class information through an internal `classinfo`
-structure (defined in `objects.c`):
+structure:
 
 ```c
 static int   *classes_to_inherit_from;
@@ -946,7 +944,7 @@ action to fail, while in others it may be a count of items.
 ### 32.7.5 LanguageLM and Internationalisation
 
 The default message handler, `LanguageLM`, is defined in `english.h`
-(approximately lines 797–1370) and contains a large switch statement
+and contains a large switch statement
 covering every action that the library can generate. Each case handles the
 various `lm_n` sub-messages for that action:
 

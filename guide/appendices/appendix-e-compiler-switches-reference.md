@@ -20,12 +20,11 @@
 # Appendix E: Compiler Switches Reference
 
 This appendix provides a complete reference for every command-line switch,
-path option, and configuration command accepted by the Inform 6.44 compiler.
-Each entry is verified against the compiler source code. For detailed
-discussion of compiler invocation, see Chapter 11 (Invoking the Compiler)
-and Chapter 12 (Compiler Switches and Settings). For the full reference on
-`$SETTING=value` memory settings, see Appendix D (Compiler Memory Settings
-Reference).
+path option, and configuration command accepted by the compiler. For
+detailed discussion of compiler invocation, see Chapter 11 (Invoking the
+Compiler) and Chapter 12 (Compiler Switches and Settings). For the full
+reference on `$SETTING=value` memory settings, see Appendix D (Compiler
+Memory Settings Reference).
 
 ---
 
@@ -66,7 +65,7 @@ lower-precedence source.
 The `Switches` directive can appear in Inform source code:
 
 ```inform6
-Switches "dexs";
+Switches dexs;
 ```
 
 However, this directive is **deprecated** as of Inform 6.44. The compiler
@@ -99,9 +98,7 @@ Lowercase dash switches control compilation behavior, diagnostic output, and
 target version selection. Multiple switches can be combined in a single dash
 group (e.g., `-dexs`).
 
-The following table lists all lowercase switches as implemented in the
-`switches()` function (`inform.c`). The "Default" column shows the value set
-by `reset_switch_settings()`.
+The following table lists all lowercase switches. The "Default" column shows the initial value.
 
 | Switch | Values | Variable | Default | Description |
 |--------|--------|----------|---------|-------------|
@@ -209,8 +206,7 @@ before comparison).
 
 ### Path Variables
 
-The following eight path and filename variables are recognized, as
-implemented in `set_path_command()` (`inform.c`):
+The following eight path and filename variables are recognized:
 
 | Variable | Type | Description |
 |----------|------|-------------|
@@ -289,7 +285,7 @@ or both [All].
 ## §E.6 Dollar Special Commands
 
 Beyond `$SETTING=value`, the dollar-sign prefix introduces several special
-commands. These are processed by `execute_dollar_command()` (`memory.c`).
+commands. These are processed internally by the compiler.
 
 | Command | Description |
 |---------|-------------|
@@ -327,8 +323,7 @@ Trace options provide detailed diagnostic output from various compiler
 subsystems. They are set using the `$!TRACEOPT` or `$!TRACEOPT=N` syntax.
 Higher numeric levels produce more verbose output.
 
-The following table lists all 18 trace options as implemented in
-`set_trace_option()` (`memory.c`). The "Synonyms" column lists alternative
+The following table lists all 18 trace options. The "Synonyms" column lists alternative
 names accepted for each option. Trace option names are case-insensitive (they
 must be uppercase or are uppercased before matching).
 
@@ -368,8 +363,7 @@ The compiler accepts GNU-style double-dash options as an alternative to the
 traditional single-character switch syntax. Each long-form option is
 internally converted to its equivalent ICL command before execution.
 
-The following table lists all 11 long-form options as implemented in
-`execute_dashdash_command()` (`inform.c`):
+The following table lists all 11 long-form options:
 
 | Long Option | Argument | Equivalent | Description |
 |-------------|----------|------------|-------------|

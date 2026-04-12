@@ -19,13 +19,12 @@
 
 # Chapter 35: Optimization and Performance
 
-The Inform 6 compiler provides a number of facilities for reducing story
-file size, improving text compression, and eliminating unused code. These
-range from text abbreviation systems and economy switches to dead code
-elimination and memory layout tuning. This chapter documents each
-optimization mechanism, the compiler switches and settings that control
-it, and practical guidance for producing compact release builds. Where
-relevant, differences between the Z-machine and Glulx targets are noted.
+The compiler provides a number of facilities for reducing story file size,
+improving text compression, and eliminating unused code. These range from
+text abbreviation systems and economy switches to dead code elimination
+and memory layout tuning. This chapter documents each optimization
+mechanism, the compiler switches and settings that control it, and
+practical guidance for producing compact release builds.
 
 Most of these optimizations are off by default. During development, the
 unoptimized output is easier to debug; for release builds, combining
@@ -58,7 +57,7 @@ two abbreviations could apply to the same text span.
 ### 35.1.2 The Abbreviation Structure
 
 Internally, the compiler maintains an array of abbreviation records. Each
-entry has the following fields (from `header.h:780-786`):
+entry has the following fields:
 
 ```c
 typedef struct abbreviation_s {
@@ -78,7 +77,7 @@ provides no benefit and the compiler issues a warning.
 
 ### 35.1.3 Creating Abbreviations: make_abbreviation()
 
-The `make_abbreviation()` function (`text.c:221`) processes each
+The `make_abbreviation()` function processes each
 `Abbreviate` argument. It performs the following steps:
 
 1. Checks that the maximum abbreviation count (`$MAX_ABBREVS`) has not
@@ -100,7 +99,7 @@ ones. This process is thorough but computationally expensive — it
 analyses every string in the game to find substrings that would yield the
 greatest total compression.
 
-The optimization algorithm (`text.c:1592+`) works as follows:
+The optimization algorithm works as follows:
 
 1. **Candidate generation**: the compiler examines all game text to
    identify frequently occurring substrings. Three-letter blocks are used
@@ -148,7 +147,7 @@ inform6 -eu game.inf    ! Economy mode + compute abbreviations
 ### 35.1.5 $MAX_ABBREVS
 
 The `$MAX_ABBREVS` setting controls the maximum number of abbreviations
-the compiler will use. The default is 96.
+the compiler will use. The default is 64.
 
 **[Z-machine]** The Z-machine architecture supports exactly 96
 abbreviations, arranged in three groups of 32. This is a hard limit
@@ -199,15 +198,14 @@ encoding.
 
 ### 35.2.1 The economy_switch Variable
 
-The `economy_switch` variable (`inform.c:258`) controls whether
+The `economy_switch` variable controls whether
 abbreviation substitution is active:
 
-- Initialized to `FALSE` (`inform.c:324`).
-- Set to `TRUE` when the `-e` switch is provided on the command line
-  (`inform.c:1362`).
-- Checked in `make_abbreviation()` (`text.c:221`): if `!economy_switch`,
+- Initialized to `FALSE`.
+- Set to `TRUE` when the `-e` switch is provided on the command line.
+- Checked in `make_abbreviation()`: if `!economy_switch`,
   the function returns immediately without recording the abbreviation.
-- Checked during text translation (`text.c:400+`): when true, the
+- Checked during text translation: when true, the
   compiler scans each text segment against the abbreviation table for
   potential substitution.
 
@@ -288,7 +286,7 @@ formatting of the game's output, so it should be tested before use.
 
 ## 35.3 Dead Code Elimination
 
-The Inform 6 compiler performs basic dead code elimination by tracking
+The compiler performs basic dead code elimination by tracking
 the reachability of each statement during assembly. When a statement is
 determined to be unreachable — because it follows an unconditional return,
 jump, or other flow-terminating opcode — the compiler can skip it
@@ -298,8 +296,8 @@ entirely, reducing the size of the compiled output.
 
 The compiler maintains an execution state for the current point in the
 code being assembled. This state is stored in the
-`execution_never_reaches_here` variable (`asm.c:27`) and uses a set of
-flag constants defined in `header.h:2010-2014`:
+`execution_never_reaches_here` variable and uses a set of
+flag constants:
 
 | Constant | Value | Meaning |
 |----------|-------|---------|
@@ -337,7 +335,7 @@ The assembler updates the execution state as it processes opcodes:
 
 ### 35.3.3 $STRIP_UNREACHABLE_LABELS
 
-The `$STRIP_UNREACHABLE_LABELS` setting (`options.c:327-333`) controls
+The `$STRIP_UNREACHABLE_LABELS` setting controls
 whether labels in unreachable code are themselves stripped:
 
 - **Default: 1 (on)**. When enabled, labels that appear in unreachable
@@ -349,7 +347,7 @@ whether labels in unreachable code are themselves stripped:
   they appear in unreachable code. This ensures that jumps to those
   labels remain valid, at the cost of retaining some dead code.
 
-The stripping logic (`asm.c:1716`) checks three conditions before
+The stripping logic checks three conditions before
 removing a label:
 
 1. The label is not referenced by any reachable jump or branch.
@@ -365,7 +363,7 @@ setting `$STRIP_UNREACHABLE_LABELS=0` preserves all labels.
 ### 35.3.4 Unused Routine Detection
 
 The compiler can detect and optionally remove routines that are never
-called. Two settings control this behaviour (`options.c:307-318`):
+called. Two settings control this behaviour:
 
 **`$WARN_UNUSED_ROUTINES`** controls warning generation:
 
@@ -424,7 +422,7 @@ indirectly.
 
 ## 35.4 Memory Setting Tuning
 
-The Inform 6 compiler uses a set of configurable memory settings that
+The compiler uses a set of configurable memory settings that
 control the sizes of internal tables, buffers, and limits. These settings
 can be adjusted to accommodate larger or more complex games, or to
 fine-tune the compiler's resource usage.
@@ -453,16 +451,15 @@ commands.
 
 ### 35.4.2 Key Memory Settings
 
-The following table lists the most commonly tuned memory settings
-(`options.c:74-130`, `memory.c:250-280`):
+The following table lists the most commonly tuned memory settings:
 
 | Setting | Default (Z-code) | Default (Glulx) | Description |
 |---------|------------------|-----------------|-------------|
-| `MAX_ABBREVS` | 96 | 96 | Maximum number of text abbreviations |
+| `MAX_ABBREVS` | 64 | 64 | Maximum number of text abbreviations |
 | `HASH_TAB_SIZE` | 512 | 512 | Size of the symbol hash table |
-| `MAX_DYNAMIC_STRINGS` | 100 | 100 | Maximum number of `@NN` dynamic strings |
+| `MAX_DYNAMIC_STRINGS` | 32 | 100 | Maximum number of `@NN` dynamic strings |
 | `MAX_STACK_SIZE` | N/A | 4096 | Glulx interpreter stack size (in bytes) |
-| `MAX_LOCAL_VARIABLES` | 16 | 119 | Maximum local variables per routine |
+| `MAX_LOCAL_VARIABLES` | 16 | 118 | Maximum local variables per routine (obsolete in 6.44; compiled-in limit) |
 | `MEMORY_MAP_EXTENSION` | N/A | 0 | Extra zero-bytes appended to Glulx story file |
 | `DICT_WORD_SIZE` | 6 (V3) / 9 (V5+) | varies | Dictionary word resolution length |
 
@@ -604,7 +601,7 @@ dictionary flexibility.
 
 ### 35.6.1 $OMIT_SYMBOL_TABLE
 
-The `$OMIT_SYMBOL_TABLE` setting (`options.c:337-343`) controls whether
+The `$OMIT_SYMBOL_TABLE` setting controls whether
 the compiler includes symbolic debugging information in the story file.
 
 | Value | Behaviour |
@@ -658,7 +655,7 @@ Or in source:
 
 **[Z-machine]** only.
 
-The `$ZCODE_LESS_DICT_DATA` setting (`options.c:228-232`) reduces the
+The `$ZCODE_LESS_DICT_DATA` setting reduces the
 size of each dictionary entry by one byte.
 
 | Value | Behaviour |
@@ -713,7 +710,7 @@ Or in source:
 
 **[Z-machine]** only.
 
-The `$ZCODE_COMPACT_GLOBALS` setting (`options.c:246-251`) enables a more
+The `$ZCODE_COMPACT_GLOBALS` setting enables a more
 efficient memory layout for the global variable area in Z-code story
 files.
 
@@ -753,14 +750,14 @@ memory area.
 
 The compact layout requires adjustments in several parts of the compiler:
 
-- **Array allocation** (`arrays.c:72, 292, 299, 364, 869`): the starting
+- **Array allocation**: the starting
   offset for arrays is calculated based on the actual number of globals
   rather than the fixed maximum of 240.
-- **Backpatching** (`bpatch.c`): references to array addresses are
+- **Backpatching**: references to array addresses are
   adjusted to account for the compact layout. The backpatcher must use
   the correct base offset when resolving symbolic references to array
   elements.
-- **Table generation** (`tables.c:521, 559`): the final story file
+- **Table generation**: the final story file
   tables are assembled using the compact offsets.
 
 The Z-machine itself is unaware of the compact layout; it accesses

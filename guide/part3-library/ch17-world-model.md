@@ -23,12 +23,12 @@ The standard library models the interactive fiction world as a tree of
 objects connected by containment relationships. Rooms form the geography,
 items populate the landscape, and a set of attributes and properties give
 objects their physical characteristics — light, openability, wearability,
-and so on. This chapter describes the world model that the library
-(version 6.12.8) builds on top of the Inform 6 object system.
+and so on. This chapter describes the world model that the library builds
+on top of the object system.
 
 ## 17.1 The Object Tree
 
-Every object in an Inform 6 program exists in a single global **object
+Every object in a program exists in a single global **object
 tree**. The tree is rooted at a virtual object 0 (the "root object"),
 which is never referenced directly. Each object has exactly one parent
 (or no parent, meaning it sits at the top level), and may have children
@@ -130,9 +130,10 @@ SelfClass selfobj "(self object)";
 
 `selfobj` is an instance of the internal `SelfClass`, which provides
 defaults for `short_name` (`YOURSELF__TX`, typically "yourself"),
-`capacity` (`MAX_CARRIED`, default 100), and `narrative_voice` (2, for
-second person). The global variable `player` is set to `selfobj` during
-initialization. Game code normally refers to `player`, not `selfobj`.
+`capacity` (100), and `narrative_voice` (2, for second person). During
+initialization, `selfobj.capacity` is set to `MAX_CARRIED` (which also
+defaults to 100), and the global variable `player` is set to `selfobj`.
+Game code normally refers to `player`, not `selfobj`.
 
 ### 17.3.1 Reassigning the Player
 
@@ -604,7 +605,7 @@ Object  sky "sky"
         found_in  garden courtyard cliff_edge,
   has   scenery;
 
-! Appear in all outdoor rooms (using a class)
+! Appear in all outdoor rooms (using a routine)
 Object  birdsong "birdsong"
   with  name 'birdsong' 'bird' 'song' 'singing',
         description "A pleasant chorus of birdsong.",

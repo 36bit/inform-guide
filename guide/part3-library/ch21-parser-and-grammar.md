@@ -19,13 +19,11 @@
 
 # Chapter 21: The Parser and Grammar
 
-The parser is the largest and most complex component of the Inform 6
-standard library. It reads the player's typed input, matches it against
-grammar definitions, resolves noun phrases to objects, and produces an
-action with its arguments. This chapter explains how the parser works,
-how grammar is defined, and how game authors can customise parsing
-behaviour. The information here is derived from `parser.h` and
-`grammar.h` in library version 6.12.8.
+The parser is the largest and most complex component of the standard
+library. It reads the player's typed input, matches it against grammar
+definitions, resolves noun phrases to objects, and produces an action with
+its arguments. This chapter explains how the parser works, how grammar is
+defined, and how game authors can customise parsing behaviour.
 
 ## 21.1 How the Parser Works
 
@@ -435,10 +433,12 @@ matched, or `0` to decline (letting the parser use its own matching).
 ];
 ```
 
-`ParseNoun` is called **before** `parse_name` and the standard name
-matching. If it returns a positive value, that match is used. If it
-returns `0`, parsing continues normally. It returns `-1` if the object
-should not be considered at all.
+`ParseNoun` is called **after** `parse_name` but before the standard
+`name` word matching. If it returns a positive value, that many words
+are consumed as a match. If it returns `0`, the object is treated as
+not matching (zero words matched). If it returns `-1`, the routine is
+declining to handle this object, and the parser falls through to the
+standard name-word matching instead.
 
 ## 21.7 Disambiguation
 
@@ -627,7 +627,7 @@ WordAddress(n)      ! Returns the buffer address of word n.
 WordLength(n)       ! Returns the length of word n.
 
 NumberWord(n)       ! Parses word n as a number; returns the value
-                    ! or -1000 on failure.
+                    ! or 0 if not found.
 ```
 
 ### Manipulating Input

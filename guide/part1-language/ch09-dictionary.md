@@ -19,13 +19,11 @@
 
 # Chapter 9: The Dictionary
 
-This chapter describes the dictionary in Inform 6: a compile-time data
-structure that maps textual words to compact binary entries used by the
-parser at runtime. Every single-quoted word that appears in source code
-creates or references an entry in the dictionary, and the parser consults
-this table to recognize words typed by the player. The information here is
-derived from the compiler source (`text.c`, `tables.c`, `directs.c`,
-`options.c`) and the I6-Addendum.
+This chapter describes the dictionary: a compile-time data structure that
+maps textual words to compact binary entries used by the parser at runtime.
+Every single-quoted word that appears in source code creates or references
+an entry in the dictionary, and the parser consults this table to recognize
+words typed by the player.
 
 ## 9.1 Overview
 
@@ -388,6 +386,9 @@ encoding transparently.
 
 > **[Glulx]** Each dictionary entry on Glulx contains:
 >
+> - **Type tag**: `DICT_CHAR_SIZE` bytes (1 byte with the default char
+>   size). The first byte contains `$60`, identifying this as a dictionary
+>   word.
 > - **Encoded word**: `DICT_WORD_SIZE × DICT_CHAR_SIZE` bytes. With the
 >   defaults (word size 9, char size 1), this is 9 bytes. With Unicode
 >   support (char size 4), it is 36 bytes.
@@ -396,7 +397,7 @@ encoding transparently.
 >   - `#dict_par2` (2 bytes) — verb number
 >   - `#dict_par3` (2 bytes) — preposition/adjective data
 >
-> With defaults, the total entry size is 15 bytes (9 + 6).
+> With defaults, the total entry size is 16 bytes (1 + 9 + 6).
 
 Glulx stores dictionary characters without compression: each character
 occupies either 1 byte (Latin) or 4 bytes (Unicode), depending on
@@ -410,8 +411,9 @@ The dictionary table begins with a short header describing its structure:
 > characters, the separator characters themselves, the byte length of each
 > entry, and the number of entries.
 
-> **[Glulx]** The header contains: the number of entries (4 bytes) and the
-> byte length of each entry (4 bytes).
+> **[Glulx]** The header contains: the number of entries (4 bytes). The
+> entries follow immediately after the header, each with the same fixed
+> byte length.
 
 The `#dictionary_table` compiler constant (§9.8) gives the address of this
 header.
