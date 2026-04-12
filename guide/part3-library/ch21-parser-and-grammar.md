@@ -434,10 +434,11 @@ matched, or `0` to decline (letting the parser use its own matching).
 ```
 
 `ParseNoun` is called **after** `parse_name` but before the standard
-`name` word matching. If it returns a positive value, that match is
-used. If it returns `0`, parsing continues normally. If it returns
-`-1`, the routine is declining to handle this object, and the parser
-falls through to the standard name-word matching instead.
+`name` word matching. If it returns a positive value, that many words
+are consumed as a match. If it returns `0`, the object is treated as
+not matching (zero words matched). If it returns `-1`, the routine is
+declining to handle this object, and the parser falls through to the
+standard name-word matching instead.
 
 ## 21.7 Disambiguation
 
