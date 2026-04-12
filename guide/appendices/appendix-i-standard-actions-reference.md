@@ -36,8 +36,8 @@ Properties).
 The standard library defines two categories of actions:
 
 - **Player actions** — triggered by parsed player input and defined in
-  `grammar.h` with corresponding handler routines in `verblib.h` and
-  `parser.h`. Standard game actions are listed alphabetically in §I.3;
+  the library with corresponding handler routines. Standard game actions
+  are listed alphabetically in §I.3;
   meta actions (game-control and debug commands) are in §I.4.
 - **Fake actions** — generated internally by the library to communicate
   between objects. They have no grammar and no `*Sub` routine. These are
@@ -57,7 +57,7 @@ Each action entry in §I.3 and §I.4 uses the following format:
 > - **Routine:** `ActionNameSub` — the default handler routine called when
 >   the action fires.
 > - **Meta:** Yes/No — whether the action is a meta-command.
-> - **Grammar:** The `Verb` lines from `grammar.h` that can trigger this
+> - **Grammar:** The `Verb` lines that can trigger this
 >   action, or "None (Fake_Action)" for internally generated actions.
 > - **Default Behavior:** What the handler routine does when no `before`
 >   rule intercepts the action.
@@ -106,67 +106,59 @@ life [;
 ## §I.2 Action Processing Pipeline Summary
 
 This section documents the full action processing pipeline as implemented in
-`parser.h` of library 6.12.8. Understanding this pipeline is essential for
+the library. Understanding this pipeline is essential for
 writing correct `before`, `after`, `react_before`, `react_after`, and `life`
 rules.
 
 ### §I.2.1 Execution Sequence
 
 When an action fires, the library executes the following sequence (from
-`begin_action` in `parser.h`, line 5315):
+`begin_action`):
 
 1. **Save state** — The current values of `action`, `noun`, and `second` are
-   saved onto temporary variables (line 5316).
+   saved onto temporary variables.
 2. **Set new values** — The new action, noun, and second are installed into
-   the globals (line 5317).
+   the globals.
 3. **Debug trace** — If `debug_flag` is set, the action and its arguments are
-   printed to aid debugging (lines 5318–5322).
-4. **Before routines** — For non-meta actions, `BeforeRoutines()` is called
-   (line 5325/5336). If any before routine returns true, the action is
+   printed to aid debugging.
+4. **Before routines** — For non-meta actions, `BeforeRoutines()` is called.
+   If any before routine returns true, the action is
    intercepted and the handler is never called.
 5. **Action handler** — If `BeforeRoutines()` returns false (action not
-   intercepted), `ActionPrimitive()` is called to execute the handler
-   (line 5332/5343).
-6. **Restore state** — The saved action, noun, and second are restored
-   (line 5347).
+   intercepted), `ActionPrimitive()` is called to execute the handler.
+6. **Restore state** — The saved action, noun, and second are restored.
 
-**BeforeRoutines** (`parser.h`, line 5608) runs the following checks in
+**BeforeRoutines** runs the following checks in
 order. If any routine returns true, processing stops and the action is
 considered handled:
 
-1. `GamePreRoutine()` — game-wide pre-action hook (line 5609).
-2. `LibraryExtensions.RunWhile(ext_gamepreroutine)` — extension hook
-   (line 5610).
-3. `RunRoutines(player, orders)` — the player object's `orders` property
-   (line 5612).
+1. `GamePreRoutine()` — game-wide pre-action hook.
+2. `LibraryExtensions.RunWhile(ext_gamepreroutine)` — extension hook.
+3. `RunRoutines(player, orders)` — the player object's `orders` property.
 4. `SearchScope` with `REACT_BEFORE_REASON` — runs the `react_before`
-   property on every object currently in scope (lines 5613–5616).
+   property on every object currently in scope.
 5. `RunRoutines(location, before)` — the current location's `before`
-   property (line 5617).
-6. `RunRoutines(inp1, before)` — the first noun's `before` property
-   (line 5618).
+   property.
+6. `RunRoutines(inp1, before)` — the first noun's `before` property.
 
-**ActionPrimitive** (`parser.h`, line 5493) looks up and calls the action's
+**ActionPrimitive** looks up and calls the action's
 handler routine from the actions table:
 
 - [Z-machine]: `(#actions_table-->action)()` — direct lookup by action number.
 - [Glulx]: `(#actions_table-->(action+1))()` — Glulx uses an offset of 1
   because entry 0 stores the table length.
 
-**AfterRoutines** (`parser.h`, line 5622) are called by the action handler
+**AfterRoutines** are called by the action handler
 itself (typically at the end of a successful action). The sequence is:
 
 1. `SearchScope` with `REACT_AFTER_REASON` — runs the `react_after` property
-   on every object currently in scope (lines 5623–5625).
-2. `RunRoutines(location, after)` — the current location's `after` property
-   (line 5626).
-3. `RunRoutines(inp1, after)` — the first noun's `after` property
-   (line 5627).
-4. `GamePostRoutine()` — game-wide post-action hook (line 5628).
-5. `LibraryExtensions.RunWhile(ext_gamepostroutine)` — extension hook
-   (line 5629).
+   on every object currently in scope.
+2. `RunRoutines(location, after)` — the current location's `after` property.
+3. `RunRoutines(inp1, after)` — the first noun's `after` property.
+4. `GamePostRoutine()` — game-wide post-action hook.
+5. `LibraryExtensions.RunWhile(ext_gamepostroutine)` — extension hook.
 
-**R_Process** (`parser.h`, line 5577) is the entry point used by the `<>`
+**R_Process** is the entry point used by the `<>`
 action-invocation syntax:
 
 - `<action noun second>` — calls `begin_action` directly.
@@ -175,33 +167,31 @@ action-invocation syntax:
 
 ### §I.2.2 Action Variables
 
-The following global variables are relevant to action processing (declared in
-`parser.h`):
+The following global variables are relevant to action processing:
 
-| Variable | Type | Declared | Description |
-|----------|------|----------|-------------|
-| `action` | Global | parser.h:398 | Current action being performed |
-| `inp1` | Global | parser.h:399 | First input: 0 (nothing), 1 (number), or object |
-| `inp2` | Global | parser.h:400 | Second input: 0 (nothing), 1 (number), or object |
-| `noun` | Global | parser.h:401 | First noun or numerical value |
-| `second` | Global | parser.h:402 | Second noun or numerical value |
-| `actor` | Global | parser.h:436 | Person asked to perform action |
-| `meta` | Global | parser.h:438 | True if action is a meta-command |
-| `keep_silent` | Global | parser.h:404 | If true, suppress default messages |
-| `reason_code` | Global | parser.h:408 | Reason for calling a `life` rule |
-| `receive_action` | Global | parser.h:411 | `##PutOn` or `##Insert` during Receive fake action |
-| `action_to_be` | Global | parser.h:527 | Action from the grammar line being tested |
-| `action_reversed` | Global | parser.h:528 | True if grammar line uses `reverse` |
-| `multiflag` | Global | parser.h:445 | True during multi-object action processing |
-| `no_implicit_actions` | Global | parser.h:415 | If true, don't perform implicit takes/opens |
-| `consult_from` | Global | parser.h:453 | Starting word of a `topic` token |
-| `consult_words` | Global | parser.h:454 | Number of words in the `topic` |
+| Variable | Type | Description |
+|----------|------|-------------|
+| `action` | Global | Current action being performed |
+| `inp1` | Global | First input: 0 (nothing), 1 (number), or object |
+| `inp2` | Global | Second input: 0 (nothing), 1 (number), or object |
+| `noun` | Global | First noun or numerical value |
+| `second` | Global | Second noun or numerical value |
+| `actor` | Global | Person asked to perform action |
+| `meta` | Global | True if action is a meta-command |
+| `keep_silent` | Global | If true, suppress default messages |
+| `reason_code` | Global | Reason for calling a `life` rule |
+| `receive_action` | Global | `##PutOn` or `##Insert` during Receive fake action |
+| `action_to_be` | Global | Action from the grammar line being tested |
+| `action_reversed` | Global | True if grammar line uses `reverse` |
+| `multiflag` | Global | True during multi-object action processing |
+| `no_implicit_actions` | Global | If true, don't perform implicit takes/opens |
+| `consult_from` | Global | Starting word of a `topic` token |
+| `consult_words` | Global | Number of words in the `topic` |
 
 ### §I.2.3 Scope Reason Constants
 
 When `SearchScope` is called, it passes a reason code that determines which
-property is invoked on in-scope objects. The constants are defined in
-`parser.h` (lines 598–606):
+property is invoked on in-scope objects. The constants are:
 
 | Constant | Value | Purpose |
 |----------|-------|---------|
@@ -215,7 +205,7 @@ property is invoked on in-scope objects. The constants are defined in
 
 ### §I.2.4 RunLife and the life Property
 
-The `RunLife` routine (`parser.h`, line 5633) is the library's mechanism for
+The `RunLife` routine is the library's mechanism for
 dispatching actions to an NPC's `life` property. It is used by communication
 actions (`Ask`, `Tell`, `Answer`) and physical interaction actions (`Kiss`,
 `Attack`, `ThrowAt`, `Give`, `Show`).
@@ -251,8 +241,8 @@ shown). The variable `receive_action` is set to `##Give` or `##Show` so the
 ## §I.3 Standard Game Actions
 
 This section documents all non-meta game actions in alphabetical order. Each
-action is triggered by player input matching a grammar line in `grammar.h` and
-handled by a corresponding `*Sub` routine in `verblib.h`.
+action is triggered by player input matching a grammar line and handled by a
+corresponding `*Sub` routine.
 
 For meta actions (game-control and debug commands), see §I.4.
 
@@ -260,10 +250,10 @@ For meta actions (game-control and debug commands), see §I.4.
 
 ### Answer
 
-- **Routine:** `AnswerSub` (verblib.h:2696)
+- **Routine:** `AnswerSub`
 - **Meta:** No
 
-**Grammar** (grammar.h:189–190):
+**Grammar**:
 
 ```inform6
 Verb 'answer' 'say' 'shout' 'speak'
@@ -294,10 +284,10 @@ Verb 'answer' 'say' 'shout' 'speak'
 
 ### Ask
 
-- **Routine:** `AskSub` (verblib.h:2701)
+- **Routine:** `AskSub`
 - **Meta:** No
 
-**Grammar** (grammar.h:192–193):
+**Grammar**:
 
 ```inform6
 Verb 'ask'
@@ -327,10 +317,10 @@ Verb 'ask'
 
 ### AskFor
 
-- **Routine:** `AskForSub` (verblib.h:2706)
+- **Routine:** `AskForSub`
 - **Meta:** No
 
-**Grammar** (grammar.h:192, 194):
+**Grammar**:
 
 ```inform6
 Verb 'ask'
@@ -360,10 +350,10 @@ Verb 'ask'
 
 ### AskTo
 
-- **Routine:** `AskToSub` (verblib.h:2711)
+- **Routine:** `AskToSub`
 - **Meta:** No
 
-**Grammar** (grammar.h:192, 195–196):
+**Grammar**:
 
 ```inform6
 Verb 'ask'
@@ -392,10 +382,10 @@ Verb 'ask'
 
 ### Attack
 
-- **Routine:** `AttackSub` (verblib.h:2713)
+- **Routine:** `AttackSub`
 - **Meta:** No
 
-**Grammar** (grammar.h:198–201):
+**Grammar**:
 
 ```inform6
 Verb 'attack' 'break' 'crack' 'destroy' 'fight' 'hit' 'kill'
@@ -433,10 +423,10 @@ Verb 'attack' 'break' 'crack' 'destroy' 'fight' 'hit' 'kill'
 
 ### Blow
 
-- **Routine:** `BlowSub` (verblib.h:2719)
+- **Routine:** `BlowSub`
 - **Meta:** No
 
-**Grammar** (grammar.h:203–204):
+**Grammar**:
 
 ```inform6
 Verb 'blow'
@@ -467,10 +457,10 @@ behavior (e.g., blowing a whistle).
 
 ### Burn
 
-- **Routine:** `BurnSub` (verblib.h:2721)
+- **Routine:** `BurnSub`
 - **Meta:** No
 
-**Grammar** (grammar.h:210–212):
+**Grammar**:
 
 ```inform6
 Verb 'burn' 'light'
@@ -508,10 +498,10 @@ combustion.
 
 ### Buy
 
-- **Routine:** `BuySub` (verblib.h:2726)
+- **Routine:** `BuySub`
 - **Meta:** No
 
-**Grammar** (grammar.h:214–215):
+**Grammar**:
 
 ```inform6
 Verb 'buy' 'purchase'
@@ -540,10 +530,10 @@ This is a pure stub. Override to implement commerce.
 
 ### Climb
 
-- **Routine:** `ClimbSub` (verblib.h:2728)
+- **Routine:** `ClimbSub`
 - **Meta:** No
 
-**Grammar** (grammar.h:222–224):
+**Grammar**:
 
 ```inform6
 Verb 'climb' 'scale'
@@ -580,10 +570,10 @@ This is a stub. Override to let the player climb specific objects.
 
 ### Close
 
-- **Routine:** `CloseSub` (verblib.h:2633)
+- **Routine:** `CloseSub`
 - **Meta:** No
 
-**Grammar** (grammar.h:226–228):
+**Grammar**:
 
 ```inform6
 Verb 'close' 'cover' 'shut'
@@ -630,10 +620,10 @@ Verb 'close' 'cover' 'shut'
 
 ### Consult
 
-- **Routine:** `ConsultSub` (verblib.h:2733)
+- **Routine:** `ConsultSub`
 - **Meta:** No
 
-**Grammar** (grammar.h:231–233):
+**Grammar**:
 
 ```inform6
 Verb 'consult'
@@ -666,10 +656,10 @@ implement look-up behavior (e.g., consulting a book about a subject).
 
 ### Cut
 
-- **Routine:** `CutSub` (verblib.h:2735)
+- **Routine:** `CutSub`
 - **Meta:** No
 
-**Grammar** (grammar.h:235–236):
+**Grammar**:
 
 ```inform6
 Verb 'cut' 'chop' 'prune' 'slice'
@@ -705,10 +695,10 @@ This is a stub. Override to implement cutting.
 
 ### Dig
 
-- **Routine:** `DigSub` (verblib.h:2740)
+- **Routine:** `DigSub`
 - **Meta:** No
 
-**Grammar** (grammar.h:238–242):
+**Grammar**:
 
 ```inform6
 Verb 'dig'
@@ -740,10 +730,10 @@ This is a pure stub. Override to implement digging.
 
 ### Disrobe
 
-- **Routine:** `DisrobeSub` (verblib.h:2643)
+- **Routine:** `DisrobeSub`
 - **Meta:** No
 
-**Grammar** (grammar.h:245–246, 393–394):
+**Grammar**:
 
 ```inform6
 Verb 'disrobe' 'doff' 'shed'
@@ -790,10 +780,10 @@ Verb 'remove'
 
 ### Drink
 
-- **Routine:** `DrinkSub` (verblib.h:2742)
+- **Routine:** `DrinkSub`
 - **Meta:** No
 
-**Grammar** (grammar.h:248–249):
+**Grammar**:
 
 ```inform6
 Verb 'drink' 'sip' 'swallow'
@@ -822,10 +812,10 @@ This is a pure stub. Override to implement drinking.
 
 ### Drop
 
-- **Routine:** `DropSub` (verblib.h:1890)
+- **Routine:** `DropSub`
 - **Meta:** No
 
-**Grammar** (grammar.h:251–252, 381, 385–386):
+**Grammar**:
 
 ```inform6
 Verb 'drop' 'discard'
@@ -883,10 +873,10 @@ Verb 'put'
 
 ### Eat
 
-- **Routine:** `EatSub` (verblib.h:2672)
+- **Routine:** `EatSub`
 - **Meta:** No
 
-**Grammar** (grammar.h:256–257):
+**Grammar**:
 
 ```inform6
 Verb 'eat'
@@ -933,10 +923,10 @@ Verb 'eat'
 
 ### Empty
 
-- **Routine:** `EmptySub` (verblib.h:2017)
+- **Routine:** `EmptySub`
 - **Meta:** No
 
-**Grammar** (grammar.h:259–262):
+**Grammar**:
 
 ```inform6
 Verb 'empty'
@@ -966,10 +956,10 @@ before delegating to `EmptyT`.
 
 ### EmptyT
 
-- **Routine:** `EmptyTSub` (verblib.h:2019)
+- **Routine:** `EmptyTSub`
 - **Meta:** No
 
-**Grammar** (grammar.h:259, 263):
+**Grammar**:
 
 ```inform6
 Verb 'empty'
@@ -1024,10 +1014,10 @@ Verb 'empty'
 
 ### Enter
 
-- **Routine:** `EnterSub` (verblib.h:2085)
+- **Routine:** `EnterSub`
 - **Meta:** No
 
-**Grammar** (grammar.h:265, 267, 281, 283, 420–422, 440):
+**Grammar**:
 
 ```inform6
 Verb 'enter' 'cross'
@@ -1097,10 +1087,10 @@ Verb 'stand'
 
 ### Examine
 
-- **Routine:** `ExamineSub` (verblib.h:2519)
+- **Routine:** `ExamineSub`
 - **Meta:** No
 
-**Grammar** (grammar.h:269–270, 388–389):
+**Grammar**:
 
 ```inform6
 Verb 'examine' 'x//' 'check' 'describe' 'watch'
@@ -1150,10 +1140,10 @@ Verb 'read'
 
 ### Exit
 
-- **Routine:** `ExitSub` (verblib.h:2135)
+- **Routine:** `ExitSub`
 - **Meta:** No
 
-**Grammar** (grammar.h:272–274, 437–439):
+**Grammar**:
 
 ```inform6
 Verb 'exit' 'out' 'outside'
@@ -1218,10 +1208,10 @@ Verb 'stand'
 
 ### Fill
 
-- **Routine:** `FillSub` (verblib.h:2744)
+- **Routine:** `FillSub`
 - **Meta:** No
 
-**Grammar** (grammar.h:276–278):
+**Grammar**:
 
 ```inform6
 Verb 'fill'
@@ -1253,10 +1243,10 @@ This is a pure stub action — it performs no world-model changes and exists onl
 
 ### GetOff
 
-- **Routine:** `GetOffSub` (verblib.h:2130)
+- **Routine:** `GetOffSub`
 - **Meta:** No
 
-**Grammar** (grammar.h:280, 284):
+**Grammar**:
 
 ```inform6
 Verb 'get'
@@ -1284,10 +1274,10 @@ Verb 'get'
 
 ### Give
 
-- **Routine:** `GiveSub` (verblib.h:2057)
+- **Routine:** `GiveSub`
 - **Meta:** No
 
-**Grammar** (grammar.h:287–290):
+**Grammar**:
 
 ```inform6
 Verb 'give' 'feed' 'offer' 'pay'
@@ -1326,7 +1316,7 @@ The `reverse` token on the first grammar line swaps `noun` and `second` so that 
 
 ### GiveR
 
-- **Routine:** `GiveRSub` (verblib.h:2070)
+- **Routine:** `GiveRSub`
 - **Meta:** No
 
 **Grammar:** (no direct grammar — reached via internal routing when the `reverse` token swaps arguments)
@@ -1347,10 +1337,10 @@ The `reverse` token on the first grammar line swaps `noun` and `second` so that 
 
 ### Go
 
-- **Routine:** `GoSub` (verblib.h:2167)
+- **Routine:** `GoSub`
 - **Meta:** No
 
-**Grammar** (grammar.h:292, 294):
+**Grammar**:
 
 ```inform6
 Verb 'go' 'run' 'walk'
@@ -1395,10 +1385,10 @@ Verb 'go' 'run' 'walk'
 
 ### GoIn
 
-- **Routine:** `GoInSub` (verblib.h:2165)
+- **Routine:** `GoInSub`
 - **Meta:** No
 
-**Grammar** (grammar.h:265–266, 292/297, 305–306):
+**Grammar**:
 
 ```inform6
 Verb 'enter' 'cross'
@@ -1425,10 +1415,10 @@ Verb 'in' 'inside'
 
 ### Insert
 
-- **Routine:** `InsertSub` (verblib.h:1943)
+- **Routine:** `InsertSub`
 - **Meta:** No
 
-**Grammar** (grammar.h:251/253, 308–309, 381–382):
+**Grammar**:
 
 ```inform6
 Verb 'drop' 'discard'
@@ -1479,10 +1469,10 @@ Verb 'put'
 
 ### Inv
 
-- **Routine:** `InvSub` (verblib.h:1523)
+- **Routine:** `InvSub`
 - **Meta:** No
 
-**Grammar** (grammar.h:311–312; also 217/220, 300/303, 456/460):
+**Grammar**:
 
 ```inform6
 Verb 'inventory' 'inv' 'i//'
@@ -1525,10 +1515,10 @@ Verb 'take'
 
 ### InvTall
 
-- **Routine:** `InvTallSub` (verblib.h:1515)
+- **Routine:** `InvTallSub`
 - **Meta:** No
 
-**Grammar** (grammar.h:311, 313):
+**Grammar**:
 
 ```inform6
 Verb 'inventory' 'inv' 'i//'
@@ -1552,10 +1542,10 @@ Verb 'inventory' 'inv' 'i//'
 
 ### InvWide
 
-- **Routine:** `InvWideSub` (verblib.h:1507)
+- **Routine:** `InvWideSub`
 - **Meta:** No
 
-**Grammar** (grammar.h:311, 314):
+**Grammar**:
 
 ```inform6
 Verb 'inventory' 'inv' 'i//'
@@ -1579,10 +1569,10 @@ Verb 'inventory' 'inv' 'i//'
 
 ### Jump
 
-- **Routine:** `JumpSub` (verblib.h:2749)
+- **Routine:** `JumpSub`
 - **Meta:** No
 
-**Grammar** (grammar.h:316–317):
+**Grammar**:
 
 ```inform6
 Verb 'jump' 'hop' 'skip'
@@ -1611,10 +1601,10 @@ This is a pure stub action — it performs no world-model changes and exists onl
 
 ### JumpIn
 
-- **Routine:** `JumpInSub` (verblib.h:2751)
+- **Routine:** `JumpInSub`
 - **Meta:** No
 
-**Grammar** (grammar.h:316, 318–319):
+**Grammar**:
 
 ```inform6
 Verb 'jump' 'hop' 'skip'
@@ -1645,10 +1635,10 @@ Verb 'jump' 'hop' 'skip'
 
 ### JumpOn
 
-- **Routine:** `JumpOnSub` (verblib.h:2757)
+- **Routine:** `JumpOnSub`
 - **Meta:** No
 
-**Grammar** (grammar.h:316, 320–321):
+**Grammar**:
 
 ```inform6
 Verb 'jump' 'hop' 'skip'
@@ -1679,10 +1669,10 @@ Verb 'jump' 'hop' 'skip'
 
 ### JumpOver
 
-- **Routine:** `JumpOverSub` (verblib.h:2763)
+- **Routine:** `JumpOverSub`
 - **Meta:** No
 
-**Grammar** (grammar.h:316, 322):
+**Grammar**:
 
 ```inform6
 Verb 'jump' 'hop' 'skip'
@@ -1713,10 +1703,10 @@ This is a pure stub action — it provides default refusal messages and performs
 
 ### Kiss
 
-- **Routine:** `KissSub` (verblib.h:2768)
+- **Routine:** `KissSub`
 - **Meta:** No
 
-**Grammar** (grammar.h:324–325):
+**Grammar**:
 
 ```inform6
 Verb 'kiss' 'embrace' 'hug'
@@ -1747,10 +1737,10 @@ Verb 'kiss' 'embrace' 'hug'
 
 ### Listen
 
-- **Routine:** `ListenSub` (verblib.h:2775)
+- **Routine:** `ListenSub`
 - **Meta:** No
 
-**Grammar** (grammar.h:333–336):
+**Grammar**:
 
 ```inform6
 Verb 'listen' 'hear'
@@ -1781,10 +1771,10 @@ This is a pure stub action — it performs no world-model changes and exists onl
 
 ### Lock
 
-- **Routine:** `LockSub` (verblib.h:2579)
+- **Routine:** `LockSub`
 - **Meta:** No
 
-**Grammar** (grammar.h:338–339):
+**Grammar**:
 
 ```inform6
 Verb 'lock'
@@ -1824,10 +1814,10 @@ Verb 'lock'
 
 ### Look
 
-- **Routine:** `LookSub` (verblib.h:2446)
+- **Routine:** `LookSub`
 - **Meta:** No
 
-**Grammar** (grammar.h:341–342):
+**Grammar**:
 
 ```inform6
 Verb 'look' 'l//'
@@ -1871,10 +1861,10 @@ Verb 'look' 'l//'
 
 ### LookUnder
 
-- **Routine:** `LookUnderSub` (verblib.h:2534)
+- **Routine:** `LookUnderSub`
 - **Meta:** No
 
-**Grammar** (grammar.h:341, 345):
+**Grammar**:
 
 ```inform6
 Verb 'look' 'l//'
@@ -1905,10 +1895,10 @@ This is a pure stub action — it performs no world-model changes and exists onl
 
 ### Mild
 
-- **Routine:** `MildSub` (verblib.h:2777)
+- **Routine:** `MildSub`
 - **Meta:** No
 
-**Grammar** (grammar.h:206–208):
+**Grammar**:
 
 ```inform6
 Verb 'bother' 'curses' 'darn' 'drat'
@@ -1936,10 +1926,10 @@ Verb 'bother' 'curses' 'darn' 'drat'
 
 ### No
 
-- **Routine:** `NoSub` (verblib.h:2779)
+- **Routine:** `NoSub`
 - **Meta:** No
 
-**Grammar** (grammar.h:350–351):
+**Grammar**:
 
 ```inform6
 Verb 'no'
@@ -1966,10 +1956,10 @@ Verb 'no'
 
 ### Open
 
-- **Routine:** `OpenSub` (verblib.h:2614)
+- **Routine:** `OpenSub`
 - **Meta:** No
 
-**Grammar** (grammar.h:353–354):
+**Grammar**:
 
 ```inform6
 Verb 'open' 'uncover' 'undo' 'unwrap'
@@ -2006,10 +1996,10 @@ Verb 'open' 'uncover' 'undo' 'unwrap'
 
 ### Pray
 
-- **Routine:** `PraySub` (verblib.h:2781)
+- **Routine:** `PraySub`
 - **Meta:** No
 
-**Grammar** (grammar.h:365–366):
+**Grammar**:
 
 ```inform6
 Verb 'pray'
@@ -2034,10 +2024,10 @@ Verb 'pray'
 
 ### Pull
 
-- **Routine:** `PullSub` (verblib.h:2783)
+- **Routine:** `PullSub`
 - **Meta:** No
 
-**Grammar** (grammar.h:373–374):
+**Grammar**:
 
 ```inform6
 Verb 'pull' 'drag'
@@ -2073,10 +2063,10 @@ Verb 'pull' 'drag'
 
 ### Push
 
-- **Routine:** `PushSub` (verblib.h:2793)
+- **Routine:** `PushSub`
 - **Meta:** No
 
-**Grammar** (grammar.h:376–377):
+**Grammar**:
 
 ```inform6
 Verb 'push' 'clear' 'move' 'press' 'shift'
@@ -2111,10 +2101,10 @@ Verb 'push' 'clear' 'move' 'press' 'shift'
 
 ### PushDir
 
-- **Routine:** `PushDirSub` (verblib.h:2803)
+- **Routine:** `PushDirSub`
 - **Meta:** No
 
-**Grammar** (grammar.h:376, 378):
+**Grammar**:
 
 ```inform6
 Verb 'push' 'clear' 'move' 'press' 'shift'
@@ -2125,7 +2115,7 @@ Verb 'push' 'clear' 'move' 'press' 'shift'
 
 1. Prints `L__M(##PushDir, 1, noun)`.
 
-This is always the default response. The game must provide a `before` rule calling `AllowPushDir()` (verblib.h:2687) for pushing objects between rooms to work.
+This is always the default response. The game must provide a `before` rule calling `AllowPushDir()` for pushing objects between rooms to work.
 
 **Checks performed:** None.
 
@@ -2143,10 +2133,10 @@ This is always the default response. The game must provide a `before` rule calli
 
 ### PutOn
 
-- **Routine:** `PutOnSub` (verblib.h:1905)
+- **Routine:** `PutOnSub`
 - **Meta:** No
 
-**Grammar** (grammar.h:251, 254 and 381, 383):
+**Grammar**:
 
 ```inform6
 Verb 'drop' 'discard'
@@ -2193,10 +2183,10 @@ Verb 'put'
 
 ### Remove
 
-- **Routine:** `RemoveSub` (verblib.h:1868)
+- **Routine:** `RemoveSub`
 - **Meta:** No
 
-**Grammar** (grammar.h:217, 219 and 280, 285 and 393, 395–396 and 456, 459):
+**Grammar**:
 
 ```inform6
 Verb 'carry'
@@ -2242,10 +2232,10 @@ Verb 'take'
 
 ### Rub
 
-- **Routine:** `RubSub` (verblib.h:2805)
+- **Routine:** `RubSub`
 - **Meta:** No
 
-**Grammar** (grammar.h:398–400):
+**Grammar**:
 
 ```inform6
 Verb 'rub' 'clean' 'dust' 'polish' 'scrub' 'shine' 'sweep' 'wipe'
@@ -2273,10 +2263,10 @@ Verb 'rub' 'clean' 'dust' 'polish' 'scrub' 'shine' 'sweep' 'wipe'
 
 ### Search
 
-- **Routine:** `SearchSub` (verblib.h:2544)
+- **Routine:** `SearchSub`
 - **Meta:** No
 
-**Grammar** (grammar.h:341, 344 and 402–403):
+**Grammar**:
 
 ```inform6
 Verb 'look' 'l//'
@@ -2317,10 +2307,10 @@ Verb 'search'
 
 ### Set
 
-- **Routine:** `SetSub` (verblib.h:2811)
+- **Routine:** `SetSub`
 - **Meta:** No
 
-**Grammar** (grammar.h:405–406):
+**Grammar**:
 
 ```inform6
 Verb 'set' 'adjust'
@@ -2347,10 +2337,10 @@ Verb 'set' 'adjust'
 
 ### SetTo
 
-- **Routine:** `SetToSub` (verblib.h:2813)
+- **Routine:** `SetToSub`
 - **Meta:** No
 
-**Grammar** (grammar.h:405, 407):
+**Grammar**:
 
 ```inform6
 Verb 'set' 'adjust'
@@ -2379,10 +2369,10 @@ The `special_word` and `special_number` globals contain the parsed value.
 
 ### Show
 
-- **Routine:** `ShowSub` (verblib.h:2072)
+- **Routine:** `ShowSub`
 - **Meta:** No
 
-**Grammar** (grammar.h:413–415):
+**Grammar**:
 
 ```inform6
 Verb 'show' 'display' 'present'
@@ -2416,7 +2406,7 @@ The grammar uses `reverse` so that "show creature held" swaps `noun` and `second
 
 ### ShowR
 
-- **Routine:** `ShowRSub` (verblib.h:2079)
+- **Routine:** `ShowRSub`
 - **Meta:** No
 
 **Grammar:** (No direct grammar — reached via internal routing.)
@@ -2437,10 +2427,10 @@ The grammar uses `reverse` so that "show creature held" swaps `noun` and `second
 
 ### Sing
 
-- **Routine:** `SingSub` (verblib.h:2815)
+- **Routine:** `SingSub`
 - **Meta:** No
 
-**Grammar** (grammar.h:417–418):
+**Grammar**:
 
 ```inform6
 Verb 'sing'
@@ -2465,10 +2455,10 @@ Verb 'sing'
 
 ### Sleep
 
-- **Routine:** `SleepSub` (verblib.h:2817)
+- **Routine:** `SleepSub`
 - **Meta:** No
 
-**Grammar** (grammar.h:424–425):
+**Grammar**:
 
 ```inform6
 Verb 'sleep' 'nap'
@@ -2493,10 +2483,10 @@ Verb 'sleep' 'nap'
 
 ### Smell
 
-- **Routine:** `SmellSub` (verblib.h:2819)
+- **Routine:** `SmellSub`
 - **Meta:** No
 
-**Grammar** (grammar.h:427–429):
+**Grammar**:
 
 ```inform6
 Verb 'smell' 'sniff'
@@ -2524,10 +2514,10 @@ Verb 'smell' 'sniff'
 
 ### Sorry
 
-- **Routine:** `SorrySub` (verblib.h:2824)
+- **Routine:** `SorrySub`
 - **Meta:** No
 
-**Grammar** (grammar.h:431–432):
+**Grammar**:
 
 ```inform6
 Verb 'sorry'
@@ -2552,10 +2542,10 @@ Verb 'sorry'
 
 ### Squeeze
 
-- **Routine:** `SqueezeSub` (verblib.h:2826)
+- **Routine:** `SqueezeSub`
 - **Meta:** No
 
-**Grammar** (grammar.h:434–435):
+**Grammar**:
 
 ```inform6
 Verb 'squeeze' 'squash'
@@ -2583,10 +2573,10 @@ Verb 'squeeze' 'squash'
 
 ### Strong
 
-- **Routine:** `StrongSub` (verblib.h:2832)
+- **Routine:** `StrongSub`
 - **Meta:** No
 
-**Grammar** (grammar.h:409–411):
+**Grammar**:
 
 ```inform6
 Verb 'shit' 'damn' 'fuck' 'sod'
@@ -2614,10 +2604,10 @@ Verb 'shit' 'damn' 'fuck' 'sod'
 
 ### Swim
 
-- **Routine:** `SwimSub` (verblib.h:2834)
+- **Routine:** `SwimSub`
 - **Meta:** No
 
-**Grammar** (grammar.h:442–443):
+**Grammar**:
 
 ```inform6
 Verb 'swim' 'dive'
@@ -2642,10 +2632,10 @@ Verb 'swim' 'dive'
 
 ### Swing
 
-- **Routine:** `SwingSub` (verblib.h:2836)
+- **Routine:** `SwingSub`
 - **Meta:** No
 
-**Grammar** (grammar.h:445–447):
+**Grammar**:
 
 ```inform6
 Verb 'swing'
@@ -2670,10 +2660,10 @@ Verb 'swing'
 ---
 ### SwitchOff
 
-- **Routine:** `SwitchOffSub` (verblib.h:2604)
+- **Routine:** `SwitchOffSub`
 - **Meta:** No
 
-**Grammar** (grammar.h:226,229,449,452,454,487,490,492):
+**Grammar**:
 
 ```inform6
 Verb 'close' 'cover' 'shut'
@@ -2714,10 +2704,10 @@ Verb 'turn' 'rotate' 'screw' 'twist' 'unscrew'
 
 ### SwitchOn
 
-- **Routine:** `SwitchOnSub` (verblib.h:2594)
+- **Routine:** `SwitchOnSub`
 - **Meta:** No
 
-**Grammar** (grammar.h:449–451,453,487,489,491):
+**Grammar**:
 
 ```inform6
 Verb 'switch'
@@ -2756,10 +2746,10 @@ Verb 'turn' 'rotate' 'screw' 'twist' 'unscrew'
 
 ### Take
 
-- **Routine:** `TakeSub` (verblib.h:1858)
+- **Routine:** `TakeSub`
 - **Meta:** No
 
-**Grammar** (grammar.h:217–218,280,282,357–359,361–363,456–457):
+**Grammar**:
 
 ```inform6
 Verb 'carry'
@@ -2799,7 +2789,7 @@ Verb 'take'
 |---------|-----------|
 | `L__M(##Take, 1)` | `noun` is already held by `actor` |
 
-> **Note:** `AttemptToTakeObject()` (verblib.h:1811) handles the complex taking logic including capacity checks, the `Receive` fake action, and most Take messages (`L__M(##Take, 2–13)`).
+> **Note:** `AttemptToTakeObject()` handles the complex taking logic including capacity checks, the `Receive` fake action, and most Take messages (`L__M(##Take, 2–13)`).
 
 **Related actions:** Drop, Remove, PutOn, Insert, Give
 
@@ -2807,10 +2797,10 @@ Verb 'take'
 
 ### Taste
 
-- **Routine:** `TasteSub` (verblib.h:2838)
+- **Routine:** `TasteSub`
 - **Meta:** No
 
-**Grammar** (grammar.h:462–463):
+**Grammar**:
 
 ```inform6
 Verb 'taste'
@@ -2840,10 +2830,10 @@ Verb 'taste'
 
 ### Tell
 
-- **Routine:** `TellSub` (verblib.h:2844)
+- **Routine:** `TellSub`
 - **Meta:** No
 
-**Grammar** (grammar.h:465–466):
+**Grammar**:
 
 ```inform6
 Verb 'tell'
@@ -2872,10 +2862,10 @@ Verb 'tell'
 
 ### Think
 
-- **Routine:** `ThinkSub` (verblib.h:2850)
+- **Routine:** `ThinkSub`
 - **Meta:** No
 
-**Grammar** (grammar.h:469–470):
+**Grammar**:
 
 ```inform6
 Verb 'think'
@@ -2902,10 +2892,10 @@ Verb 'think'
 
 ### ThrowAt
 
-- **Routine:** `ThrowAtSub` (verblib.h:2852)
+- **Routine:** `ThrowAtSub`
 - **Meta:** No
 
-**Grammar** (grammar.h:472–474):
+**Grammar**:
 
 ```inform6
 Verb 'throw'
@@ -2943,10 +2933,10 @@ Verb 'throw'
 
 ### Tie
 
-- **Routine:** `TieSub` (verblib.h:2866)
+- **Routine:** `TieSub`
 - **Meta:** No
 
-**Grammar** (grammar.h:476–478):
+**Grammar**:
 
 ```inform6
 Verb 'tie' 'attach' 'connect' 'fasten' 'fix'
@@ -2976,10 +2966,10 @@ Verb 'tie' 'attach' 'connect' 'fasten' 'fix'
 
 ### Touch
 
-- **Routine:** `TouchSub` (verblib.h:2871)
+- **Routine:** `TouchSub`
 - **Meta:** No
 
-**Grammar** (grammar.h:480–481):
+**Grammar**:
 
 ```inform6
 Verb 'touch' 'feel' 'fondle' 'grope'
@@ -3011,10 +3001,10 @@ Verb 'touch' 'feel' 'fondle' 'grope'
 
 ### Transfer
 
-- **Routine:** `TransferSub` (verblib.h:1984)
+- **Routine:** `TransferSub`
 - **Meta:** No
 
-**Grammar** (grammar.h:376,379,483–484):
+**Grammar**:
 
 ```inform6
 Verb 'push' 'clear' 'move' 'press' 'shift'
@@ -3048,10 +3038,10 @@ Verb 'transfer'
 
 ### Turn
 
-- **Routine:** `TurnSub` (verblib.h:2878)
+- **Routine:** `TurnSub`
 - **Meta:** No
 
-**Grammar** (grammar.h:487–488):
+**Grammar**:
 
 ```inform6
 Verb 'turn' 'rotate' 'screw' 'twist' 'unscrew'
@@ -3086,10 +3076,10 @@ Verb 'turn' 'rotate' 'screw' 'twist' 'unscrew'
 
 ### Unlock
 
-- **Routine:** `UnlockSub` (verblib.h:2564)
+- **Routine:** `UnlockSub`
 - **Meta:** No
 
-**Grammar** (grammar.h:353,355,368–371,494–495):
+**Grammar**:
 
 ```inform6
 Verb 'open' 'uncover' 'undo' 'unwrap'
@@ -3133,10 +3123,10 @@ Verb 'unlock'
 
 ### VagueGo
 
-- **Routine:** `VagueGoSub` (verblib.h:2163)
+- **Routine:** `VagueGoSub`
 - **Meta:** No
 
-**Grammar** (grammar.h:292–293,327–328):
+**Grammar**:
 
 ```inform6
 Verb 'go' 'run' 'walk'
@@ -3168,10 +3158,10 @@ Verb 'leave'
 
 ### Wait
 
-- **Routine:** `WaitSub` (verblib.h:2888)
+- **Routine:** `WaitSub`
 - **Meta:** No
 
-**Grammar** (grammar.h:497–498):
+**Grammar**:
 
 ```inform6
 Verb 'wait' 'z//'
@@ -3201,10 +3191,10 @@ Verb 'wait' 'z//'
 
 ### Wake
 
-- **Routine:** `WakeSub` (verblib.h:2893)
+- **Routine:** `WakeSub`
 - **Meta:** No
 
-**Grammar** (grammar.h:500–502):
+**Grammar**:
 
 ```inform6
 Verb 'wake' 'awake' 'awaken'
@@ -3232,10 +3222,10 @@ Verb 'wake' 'awake' 'awaken'
 
 ### WakeOther
 
-- **Routine:** `WakeOtherSub` (verblib.h:2895)
+- **Routine:** `WakeOtherSub`
 - **Meta:** No
 
-**Grammar** (grammar.h:500,503–505):
+**Grammar**:
 
 ```inform6
 Verb 'wake' 'awake' 'awaken'
@@ -3265,10 +3255,10 @@ Verb 'wake' 'awake' 'awaken'
 
 ### Wave
 
-- **Routine:** `WaveSub` (verblib.h:2901)
+- **Routine:** `WaveSub`
 - **Meta:** No
 
-**Grammar** (grammar.h:507,509–510):
+**Grammar**:
 
 ```inform6
 Verb 'wave'
@@ -3301,10 +3291,10 @@ Verb 'wave'
 
 ### WaveHands
 
-- **Routine:** `WaveHandsSub` (verblib.h:2908)
+- **Routine:** `WaveHandsSub`
 - **Meta:** No
 
-**Grammar** (grammar.h:507–508,511):
+**Grammar**:
 
 ```inform6
 Verb 'wave'
@@ -3334,10 +3324,10 @@ Verb 'wave'
 
 ### Wear
 
-- **Routine:** `WearSub` (verblib.h:2653)
+- **Routine:** `WearSub`
 - **Meta:** No
 
-**Grammar** (grammar.h:381,384,513–514):
+**Grammar**:
 
 ```inform6
 Verb 'put'
@@ -3382,10 +3372,10 @@ Verb 'wear' 'don'
 
 ### Yes
 
-- **Routine:** `YesSub` (verblib.h:2912)
+- **Routine:** `YesSub`
 - **Meta:** No
 
-**Grammar** (grammar.h:516–517):
+**Grammar**:
 
 ```inform6
 Verb 'yes' 'y//'
@@ -3412,7 +3402,7 @@ Verb 'yes' 'y//'
 ## §I.4 Meta Actions
 
 Meta actions are game-control commands that do not consume a game turn. They are
-declared with `Verb meta` in `grammar.h`. The action processing pipeline skips
+declared with `Verb meta`. The action processing pipeline skips
 `BeforeRoutines()` for meta actions — the `*Sub` routine is called directly.
 
 This section covers standard meta actions (§I.4.1) and debug-only meta actions
@@ -3424,10 +3414,10 @@ This section covers standard meta actions (§I.4.1) and debug-only meta actions
 
 #### CommandsOff
 
-- **Routine:** `CommandsOffSub` (`verblib.h`:1203 [Z] / 1314 [Glulx])
+- **Routine:** `CommandsOffSub`
 - **Meta:** Yes
 - **Grammar:** `Verb meta 'recording', * 'off' -> CommandsOff`
-  (`grammar.h`:51,54)
+
 - **Default Behavior:** [Z-machine] Calls `@output_stream -4`. Sets
   `xcommsdir = 0`. Prints `L__M(##CommandsOff, 1)`. [Glulx] If
   `gg_commandstr` is active, closes stream. If `gg_command_reading`, clears
@@ -3439,10 +3429,10 @@ This section covers standard meta actions (§I.4.1) and debug-only meta actions
 
 #### CommandsOn
 
-- **Routine:** `CommandsOnSub` (`verblib.h`:1197 [Z] / 1300 [Glulx])
+- **Routine:** `CommandsOnSub`
 - **Meta:** Yes
 - **Grammar:** `Verb meta 'recording', * -> CommandsOn, * 'on' -> CommandsOn`
-  (`grammar.h`:51–53)
+
 - **Default Behavior:** [Z-machine] Calls `@output_stream 4`. Sets
   `xcommsdir = 1`. Prints `L__M(##CommandsOn, 1)`. [Glulx] Uses Glk file
   dialogs to open command recording file. Prints `L__M(##CommandsOn, 1–4)`.
@@ -3453,9 +3443,9 @@ This section covers standard meta actions (§I.4.1) and debug-only meta actions
 
 #### CommandsRead
 
-- **Routine:** `CommandsReadSub` (`verblib.h`:1209 [Z] / 1323 [Glulx])
+- **Routine:** `CommandsReadSub`
 - **Meta:** Yes
-- **Grammar:** `Verb meta 'replay', * -> CommandsRead` (`grammar.h`:56–57)
+- **Grammar:** `Verb meta 'replay', * -> CommandsRead`
 - **Default Behavior:** [Z-machine] Calls `@input_stream 1`. Sets
   `xcommsdir = 2`. Prints `L__M(##CommandsRead, 1)`. [Glulx] Uses Glk file
   dialogs to open command replay file. Sets `gg_command_reading = true`.
@@ -3467,10 +3457,10 @@ This section covers standard meta actions (§I.4.1) and debug-only meta actions
 
 #### FullScore
 
-- **Routine:** `FullScoreSub` (`verblib.h`:1481)
+- **Routine:** `FullScoreSub`
 - **Meta:** Yes
 - **Grammar:** `Verb meta 'fullscore' 'full', * -> FullScore, * 'score' -> FullScore`
-  (`grammar.h`:71–73)
+
 - **Default Behavior:** Prints `L__M(##FullScore, 1)`. If `TASKS_PROVIDED`
   is defined, iterates through tasks and prints completed ones via
   `TaskScore()`/`PrintTaskName()`. Prints `things_score` and
@@ -3484,9 +3474,9 @@ This section covers standard meta actions (§I.4.1) and debug-only meta actions
 
 #### LMode1
 
-- **Routine:** `LMode1Sub` (`verblib.h`:2397)
+- **Routine:** `LMode1Sub`
 - **Meta:** Yes
-- **Grammar:** `Verb meta 'brief', * -> LMode1` (`grammar.h`:28–29)
+- **Grammar:** `Verb meta 'brief', * -> LMode1`
 - **Default Behavior:** Sets `lookmode = 1`. Prints `L__M(##LMode1)`.
 - **Effects:** `lookmode = 1` (brief — full descriptions only on first visit)
 - **Messages:** `L__M(##LMode1)`
@@ -3496,9 +3486,9 @@ This section covers standard meta actions (§I.4.1) and debug-only meta actions
 
 #### LMode2
 
-- **Routine:** `LMode2Sub` (`verblib.h`:2399)
+- **Routine:** `LMode2Sub`
 - **Meta:** Yes
-- **Grammar:** `Verb meta 'verbose' 'long', * -> LMode2` (`grammar.h`:31–32)
+- **Grammar:** `Verb meta 'verbose' 'long', * -> LMode2`
 - **Default Behavior:** Sets `lookmode = 2`. Prints `L__M(##LMode2)`.
 - **Effects:** `lookmode = 2` (verbose — always print full descriptions)
 - **Messages:** `L__M(##LMode2)`
@@ -3508,10 +3498,10 @@ This section covers standard meta actions (§I.4.1) and debug-only meta actions
 
 #### LMode3
 
-- **Routine:** `LMode3Sub` (`verblib.h`:2401)
+- **Routine:** `LMode3Sub`
 - **Meta:** Yes
 - **Grammar:** `Verb meta 'superbrief' 'short', * -> LMode3`
-  (`grammar.h`:34–35)
+
 - **Default Behavior:** Sets `lookmode = 3`. Prints `L__M(##LMode3)`.
 - **Effects:** `lookmode = 3` (superbrief — never print full descriptions
   automatically)
@@ -3522,9 +3512,9 @@ This section covers standard meta actions (§I.4.1) and debug-only meta actions
 
 #### LModeNormal
 
-- **Routine:** `LModeNormalSub` (`verblib.h`:2403)
+- **Routine:** `LModeNormalSub`
 - **Meta:** Yes
-- **Grammar:** `Verb meta 'normal', * -> LModeNormal` (`grammar.h`:37–38)
+- **Grammar:** `Verb meta 'normal', * -> LModeNormal`
 - **Default Behavior:** Checks `initial_lookmode`. If 1, redirects to
   `<<LMode1>>`. If 3, redirects to `<<LMode3>>`. Otherwise redirects to
   `<<LMode2>>`.
@@ -3535,10 +3525,10 @@ This section covers standard meta actions (§I.4.1) and debug-only meta actions
 
 #### NotifyOff
 
-- **Routine:** `NotifyOffSub` (`verblib.h`:1340)
+- **Routine:** `NotifyOffSub`
 - **Meta:** Yes
 - **Grammar:** `Verb meta 'notify', * 'off' -> NotifyOff`
-  (`grammar.h`:40,43)
+
 - **Default Behavior:** Sets `notify_mode = false`. Prints
   `L__M(##NotifyOff)`.
 - **Effects:** `notify_mode = false`
@@ -3549,10 +3539,10 @@ This section covers standard meta actions (§I.4.1) and debug-only meta actions
 
 #### NotifyOn
 
-- **Routine:** `NotifyOnSub` (`verblib.h`:1339)
+- **Routine:** `NotifyOnSub`
 - **Meta:** Yes
 - **Grammar:** `Verb meta 'notify', * -> NotifyOn, * 'on' -> NotifyOn`
-  (`grammar.h`:40–42)
+
 - **Default Behavior:** Sets `notify_mode = true`. Prints
   `L__M(##NotifyOn)`.
 - **Effects:** `notify_mode = true`
@@ -3563,9 +3553,9 @@ This section covers standard meta actions (§I.4.1) and debug-only meta actions
 
 #### Objects
 
-- **Routine:** `ObjectsSub` (`verblib.h`:46); `Objects1Sub` (`verblib.h`:1388)
+- **Routine:** `ObjectsSub`; `Objects1Sub`
 - **Meta:** Yes
-- **Grammar:** `Verb meta 'objects', * -> Objects` (`grammar.h`:90–91)
+- **Grammar:** `Verb meta 'objects', * -> Objects`
 - **Default Behavior:** `ObjectsSub` delegates to `Objects1Sub`. Lists all
   objects that have been moved, showing current locations. For each moved
   object, shows where it is (carried, worn, in/on something, in a room,
@@ -3579,11 +3569,11 @@ This section covers standard meta actions (§I.4.1) and debug-only meta actions
 
 #### ObjectsTall
 
-- **Routine:** `ObjectsTallSub` (`verblib.h`:47); `Objects1TallSub`
-  (`verblib.h`:1378)
+- **Routine:** `ObjectsTallSub`; `Objects1TallSub`
+ 
 - **Meta:** Yes
 - **Grammar:** `Verb meta 'objects', * 'tall' -> ObjectsTall`
-  (`grammar.h`:90,92)
+
 - **Default Behavior:** Sets
   `objects_style = NEWLINE_BIT+INDENT_BIT+FULLINV_BIT`. Calls `<Objects>`.
 - **Related Actions:** `Objects`, `ObjectsWide`
@@ -3592,11 +3582,11 @@ This section covers standard meta actions (§I.4.1) and debug-only meta actions
 
 #### ObjectsWide
 
-- **Routine:** `ObjectsWideSub` (`verblib.h`:48); `Objects1WideSub`
-  (`verblib.h`:1383)
+- **Routine:** `ObjectsWideSub`; `Objects1WideSub`
+ 
 - **Meta:** Yes
 - **Grammar:** `Verb meta 'objects', * 'wide' -> ObjectsWide`
-  (`grammar.h`:90,93)
+
 - **Default Behavior:** Sets `objects_style = ENGLISH_BIT+FULLINV_BIT`. Calls
   `<Objects>`.
 - **Related Actions:** `Objects`, `ObjectsTall`
@@ -3605,9 +3595,9 @@ This section covers standard meta actions (§I.4.1) and debug-only meta actions
 
 #### Places
 
-- **Routine:** `PlacesSub` (`verblib.h`:49); `Places1Sub` (`verblib.h`:1352)
+- **Routine:** `PlacesSub`; `Places1Sub`
 - **Meta:** Yes
-- **Grammar:** `Verb meta 'places', * -> Places` (`grammar.h`:94–95)
+- **Grammar:** `Verb meta 'places', * -> Places`
 - **Default Behavior:** `PlacesSub` delegates to `Places1Sub`. Lists all
   rooms with `visited` attribute. Shows count at end.
 - **Checks:** `visited` attribute
@@ -3618,11 +3608,11 @@ This section covers standard meta actions (§I.4.1) and debug-only meta actions
 
 #### PlacesTall
 
-- **Routine:** `PlacesTallSub` (`verblib.h`:50); `Places1TallSub`
-  (`verblib.h`:1342)
+- **Routine:** `PlacesTallSub`; `Places1TallSub`
+ 
 - **Meta:** Yes
 - **Grammar:** `Verb meta 'places', * 'tall' -> PlacesTall`
-  (`grammar.h`:94,96)
+
 - **Default Behavior:** Sets
   `places_style = NEWLINE_BIT+INDENT_BIT+FULLINV_BIT`. Calls `<Places>`.
 - **Related Actions:** `Places`, `PlacesWide`
@@ -3631,11 +3621,11 @@ This section covers standard meta actions (§I.4.1) and debug-only meta actions
 
 #### PlacesWide
 
-- **Routine:** `PlacesWideSub` (`verblib.h`:51); `Places1WideSub`
-  (`verblib.h`:1347)
+- **Routine:** `PlacesWideSub`; `Places1WideSub`
+ 
 - **Meta:** Yes
 - **Grammar:** `Verb meta 'places', * 'wide' -> PlacesWide`
-  (`grammar.h`:94,97)
+
 - **Default Behavior:** Sets `places_style = ENGLISH_BIT+FULLINV_BIT`. Calls
   `<Places>`.
 - **Related Actions:** `Places`, `PlacesTall`
@@ -3644,23 +3634,23 @@ This section covers standard meta actions (§I.4.1) and debug-only meta actions
 
 #### Pronouns
 
-- **Routine:** `PronounsSub` (`parser.h`:4997)
+- **Routine:** `PronounsSub`
 - **Meta:** Yes
 - **Grammar:** `Verb meta 'pronouns' 'nouns', * -> Pronouns`
-  (`grammar.h`:45–46)
+
 - **Default Behavior:** Iterates through `LanguagePronouns` table and prints
   current pronoun bindings. Shows what "it", "him", "her", "them" refer to.
   Also shows "me" → `player`.
-- **Notes:** Routine is in `parser.h`, not `verblib.h`.
+- **Notes:** Routine is defined in the parser, not the verb library.
 
 ---
 
 #### Quit
 
-- **Routine:** `QuitSub` (`verblib.h`:1122 [Z] / 1217 [Glulx])
+- **Routine:** `QuitSub`
 - **Meta:** Yes
 - **Grammar:** `Verb meta 'quit' 'q//' 'die', * -> Quit`
-  (`grammar.h`:48–49)
+
 - **Default Behavior:** Prints `L__M(##Quit, 2)` (confirmation prompt).
   Calls `YesOrNo()`. If yes, calls `quit` opcode.
 - **Messages:** `L__M(##Quit, 2)`
@@ -3669,9 +3659,9 @@ This section covers standard meta actions (§I.4.1) and debug-only meta actions
 
 #### Restart
 
-- **Routine:** `RestartSub` (`verblib.h`:1127 [Z] / 1222 [Glulx])
+- **Routine:** `RestartSub`
 - **Meta:** Yes
-- **Grammar:** `Verb meta 'restart', * -> Restart` (`grammar.h`:59–60)
+- **Grammar:** `Verb meta 'restart', * -> Restart`
 - **Default Behavior:** Prints `L__M(##Restart, 1)` (confirmation). If
   `YesOrNo()`, calls `@restart`. If restart fails, prints
   `L__M(##Restart, 2)`.
@@ -3681,9 +3671,9 @@ This section covers standard meta actions (§I.4.1) and debug-only meta actions
 
 #### Restore
 
-- **Routine:** `RestoreSub` (`verblib.h`:1132 [Z] / 1227 [Glulx])
+- **Routine:** `RestoreSub`
 - **Meta:** Yes
-- **Grammar:** `Verb meta 'restore', * -> Restore` (`grammar.h`:62–63)
+- **Grammar:** `Verb meta 'restore', * -> Restore`
 - **Default Behavior:** [Z-machine] Calls `@restore` opcode. On failure
   prints `L__M(##Restore, 1)`. On success, calls `AfterRestore()`.
   [Glulx] Uses Glk file dialogs for file selection and `@restore` opcode.
@@ -3695,9 +3685,9 @@ This section covers standard meta actions (§I.4.1) and debug-only meta actions
 
 #### Save
 
-- **Routine:** `SaveSub` (`verblib.h`:1142 [Z] / 1240 [Glulx])
+- **Routine:** `SaveSub`
 - **Meta:** Yes
-- **Grammar:** `Verb meta 'save', * -> Save` (`grammar.h`:65–66)
+- **Grammar:** `Verb meta 'save', * -> Save`
 - **Default Behavior:** [Z-machine] Calls `@save` opcode. On failure prints
   `L__M(##Save, 1)`. On success prints `L__M(##Save, 2)`. Also detects
   restore-after-save (prints `L__M(##Restore, 2)`). [Glulx] Uses Glk file
@@ -3711,9 +3701,9 @@ This section covers standard meta actions (§I.4.1) and debug-only meta actions
 
 #### Score
 
-- **Routine:** `ScoreSub` (`verblib.h`:1445)
+- **Routine:** `ScoreSub`
 - **Meta:** Yes
-- **Grammar:** `Verb meta 'score', * -> Score` (`grammar.h`:68–69)
+- **Grammar:** `Verb meta 'score', * -> Score`
 - **Default Behavior:** If `NO_SCORE` defined, prints `L__M(##Score, 2)`.
   Otherwise prints `L__M(##Score, 1)`. Calls `PrintRank()` and
   `LibraryExtensions.RunAll(ext_printrank)`.
@@ -3724,11 +3714,11 @@ This section covers standard meta actions (§I.4.1) and debug-only meta actions
 
 #### ScriptOff
 
-- **Routine:** `ScriptOffSub` (`verblib.h`:1188 [Z] / 1293 [Glulx])
+- **Routine:** `ScriptOffSub`
 - **Meta:** Yes
 - **Grammar:** `Verb meta 'script' 'transcript' * 'off' -> ScriptOff`
-  (`grammar.h`:75,78); `Verb meta 'noscript' 'unscript' * -> ScriptOff`
-  (`grammar.h`:80–81)
+ ; `Verb meta 'noscript' 'unscript' * -> ScriptOff`
+
 - **Default Behavior:** [Z-machine] Checks `transcript_mode`. If not on,
   prints `L__M(##ScriptOff, 1)`. Otherwise calls `@output_stream -2`, sets
   `transcript_mode = false`, prints `L__M(##ScriptOff, 2)`. [Glulx] Checks
@@ -3741,10 +3731,10 @@ This section covers standard meta actions (§I.4.1) and debug-only meta actions
 
 #### ScriptOn
 
-- **Routine:** `ScriptOnSub` (`verblib.h`:1179 [Z] / 1278 [Glulx])
+- **Routine:** `ScriptOnSub`
 - **Meta:** Yes
 - **Grammar:** `Verb meta 'script' 'transcript' * -> ScriptOn, * 'on' -> ScriptOn`
-  (`grammar.h`:75–77)
+
 - **Default Behavior:** [Z-machine] Checks `transcript_mode` and
   `HDR_GAMEFLAGS`. If already on, prints `L__M(##ScriptOn, 1)`. Otherwise
   calls `@output_stream 2`, sets `transcript_mode = true`, prints
@@ -3757,9 +3747,9 @@ This section covers standard meta actions (§I.4.1) and debug-only meta actions
 
 #### Verify
 
-- **Routine:** `VerifySub` (`verblib.h`:1170 [Z] / 1272 [Glulx])
+- **Routine:** `VerifySub`
 - **Meta:** Yes
-- **Grammar:** `Verb meta 'verify', * -> Verify` (`grammar.h`:83–84)
+- **Grammar:** `Verb meta 'verify', * -> Verify`
 - **Default Behavior:** [Z-machine] Calls `@verify` opcode. Prints
   `L__M(##Verify, 1)` on success or `L__M(##Verify, 2)` on failure.
   [Glulx] Calls `@verify` opcode. Same messages.
@@ -3769,9 +3759,9 @@ This section covers standard meta actions (§I.4.1) and debug-only meta actions
 
 #### Version
 
-- **Routine:** `VersionSub` (`verblib.h`:109)
+- **Routine:** `VersionSub`
 - **Meta:** Yes
-- **Grammar:** `Verb meta 'version', * -> Version` (`grammar.h`:86–87)
+- **Grammar:** `Verb meta 'version', * -> Version`
 - **Default Behavior:** Calls `Banner()`. Prints interpreter and VM
   information. Prints library serial number and language version. Has
   Z-machine and Glulx specific output sections.
@@ -3789,10 +3779,10 @@ The following actions are only available when the game is compiled with the
 
 #### ActionsOff
 
-- **Routine:** `ActionsOffSub` (`verblib.h`:2949)
+- **Routine:** `ActionsOffSub`
 - **Meta:** Yes
 - **Grammar:** `Verb meta 'actions' * 'off' -> ActionsOff`
-  (`grammar.h`:105,108)
+
 - **Default Behavior:** Clears `DEBUG_ACTIONS` from `debug_flag`. Prints
   `"[Actions listing off.]"`
 
@@ -3800,10 +3790,10 @@ The following actions are only available when the game is compiled with the
 
 #### ActionsOn
 
-- **Routine:** `ActionsOnSub` (`verblib.h`:2944)
+- **Routine:** `ActionsOnSub`
 - **Meta:** Yes
 - **Grammar:** `Verb meta 'actions' * -> ActionsOn, * 'on' -> ActionsOn`
-  (`grammar.h`:105–107)
+
 - **Default Behavior:** Sets `DEBUG_ACTIONS` in `debug_flag`. Prints
   `"[Actions listing on.]"`
 
@@ -3811,10 +3801,10 @@ The following actions are only available when the game is compiled with the
 
 #### ChangesOff
 
-- **Routine:** `ChangesOffSub` (`verblib.h`:2967)
+- **Routine:** `ChangesOffSub`
 - **Meta:** Yes
 - **Grammar:** `Verb meta 'changes' * 'off' -> ChangesOff`
-  (`grammar.h`:110,113)
+
 - **Default Behavior:** Clears `DEBUG_CHANGES` from `debug_flag`. Prints
   `"[Changes listing off.]"`
 - **Notes:** Requires compiler >= 6.2 (`VN_1610`).
@@ -3823,10 +3813,10 @@ The following actions are only available when the game is compiled with the
 
 #### ChangesOn
 
-- **Routine:** `ChangesOnSub` (`verblib.h`:2966)
+- **Routine:** `ChangesOnSub`
 - **Meta:** Yes
 - **Grammar:** `Verb meta 'changes' * -> ChangesOn, * 'on' -> ChangesOn`
-  (`grammar.h`:110–112)
+
 - **Default Behavior:** Sets `DEBUG_CHANGES` in `debug_flag`. Prints
   `"[Changes listing on.]"`
 - **Notes:** Requires compiler >= 6.2 (`VN_1610`).
@@ -3835,9 +3825,9 @@ The following actions are only available when the game is compiled with the
 
 #### GlkList
 
-- **Routine:** `GlkListSub` (`verblib.h`:3062)
+- **Routine:** `GlkListSub`
 - **Meta:** Yes
-- **Grammar:** `Verb meta 'glklist' * -> Glklist` (`grammar.h`:174–175)
+- **Grammar:** `Verb meta 'glklist' * -> Glklist`
 - **Default Behavior:** Lists all Glk windows, streams, file references, and
   sound channels using Glk iteration functions.
 - **Notes:** Only compiled for Glulx target.
@@ -3846,10 +3836,10 @@ The following actions are only available when the game is compiled with the
 
 #### GoNear
 
-- **Routine:** `GoNearSub` (`verblib.h`:3044)
+- **Routine:** `GoNearSub`
 - **Meta:** Yes
 - **Grammar:** `Verb meta 'gonear' * anynumber -> GoNear, * noun -> GoNear`
-  (`grammar.h`:115–117)
+
 - **Default Behavior:** Finds the room containing `noun` by walking up parent
   chain. Teleports player to that room via `PlayerTo()`.
 
@@ -3857,9 +3847,9 @@ The following actions are only available when the game is compiled with the
 
 #### Goto
 
-- **Routine:** `GotoSub` (`verblib.h`:3039)
+- **Routine:** `GotoSub`
 - **Meta:** Yes
-- **Grammar:** `Verb meta 'goto' * anynumber -> Goto` (`grammar.h`:120–121)
+- **Grammar:** `Verb meta 'goto' * anynumber -> Goto`
 - **Default Behavior:** Teleports player directly to `noun` via
   `PlayerTo(noun)`. Validates `noun` is an Object.
 
@@ -3867,9 +3857,9 @@ The following actions are only available when the game is compiled with the
 
 #### Predictable
 
-- **Routine:** `PredictableSub` (`verblib.h`:2979 [Z] / 2986 [Glulx])
+- **Routine:** `PredictableSub`
 - **Meta:** Yes
-- **Grammar:** `Verb meta 'random' * -> Predictable` (`grammar.h`:123–124)
+- **Grammar:** `Verb meta 'random' * -> Predictable`
 - **Default Behavior:** Seeds random number generator to produce predictable
   sequence. [Z-machine] Uses `@random 0`. [Glulx] Uses `@setrandom 0`.
 
@@ -3877,10 +3867,10 @@ The following actions are only available when the game is compiled with the
 
 #### RoutinesOff
 
-- **Routine:** `RoutinesOffSub` (`verblib.h`:2934)
+- **Routine:** `RoutinesOffSub`
 - **Meta:** Yes
 - **Grammar:** `Verb meta 'routines' 'messages' * 'off' -> RoutinesOff`
-  (`grammar.h`:126,130)
+
 - **Default Behavior:** Clears `DEBUG_MESSAGES` from `debug_flag`. Prints
   `"[Message listing off.]"`
 
@@ -3888,10 +3878,10 @@ The following actions are only available when the game is compiled with the
 
 #### RoutinesOn
 
-- **Routine:** `RoutinesOnSub` (`verblib.h`:2929)
+- **Routine:** `RoutinesOnSub`
 - **Meta:** Yes
 - **Grammar:** `Verb meta 'routines' 'messages' * -> RoutinesOn, * 'on' -> RoutinesOn`
-  (`grammar.h`:126–128)
+
 - **Default Behavior:** Sets `DEBUG_MESSAGES` in `debug_flag`. Prints
   `"[Message listing on.]"`
 
@@ -3899,10 +3889,10 @@ The following actions are only available when the game is compiled with the
 
 #### RoutinesVerbose
 
-- **Routine:** `RoutinesVerboseSub` (`verblib.h`:2939)
+- **Routine:** `RoutinesVerboseSub`
 - **Meta:** Yes
 - **Grammar:** `Verb meta 'routines' 'messages' * 'verbose' -> RoutinesVerbose`
-  (`grammar.h`:126,129)
+
 - **Default Behavior:** Sets `DEBUG_VERBOSE|DEBUG_MESSAGES` in `debug_flag`.
   Prints `"[Message listing on, verbose mode.]"`
 
@@ -3910,10 +3900,10 @@ The following actions are only available when the game is compiled with the
 
 #### Scope
 
-- **Routine:** `ScopeSub` (`verblib.h`:3053)
+- **Routine:** `ScopeSub`
 - **Meta:** Yes
 - **Grammar:** `Verb meta 'scope' * -> Scope, * anynumber -> Scope, * noun -> Scope`
-  (`grammar.h`:132–135)
+
 - **Default Behavior:** Calls `LoopOverScope()` to list all objects in scope
   of `noun` (or `player` if no noun). Prints count.
 
@@ -3921,47 +3911,47 @@ The following actions are only available when the game is compiled with the
 
 #### ShowDict
 
-- **Routine:** `ShowDictSub` (`parser.h`:6133)
+- **Routine:** `ShowDictSub`
 - **Meta:** Yes
 - **Grammar:** `Verb meta 'showdict' 'dict' * -> ShowDict, * topic -> ShowDict`
-  (`grammar.h`:137–139)
+
 - **Default Behavior:** Dumps dictionary entries with flag information
   (noun/verb/meta/plural/etc.). Can show all or filter by topic.
-- **Notes:** Routine is in `parser.h`.
+- **Notes:** Routine is defined in the parser.
 
 ---
 
 #### ShowObj
 
-- **Routine:** `ShowObjSub` (`parser.h`:6065)
+- **Routine:** `ShowObjSub`
 - **Meta:** Yes
 - **Grammar:** `Verb meta 'showobj' * -> ShowObj, * anynumber -> ShowObj, * multi -> ShowObj`
-  (`grammar.h`:141–144)
+
 - **Default Behavior:** Displays detailed object info: name, location, class,
   attributes, and property values.
-- **Notes:** Routine is in `parser.h`.
+- **Notes:** Routine is defined in the parser.
 
 ---
 
 #### ShowVerb
 
-- **Routine:** `ShowVerbSub` (`parser.h`:6018 [Z] / 6039 [Glulx])
+- **Routine:** `ShowVerbSub`
 - **Meta:** Yes
 - **Grammar:** `Verb meta 'showverb' * special -> ShowVerb`
-  (`grammar.h`:146–147)
+
 - **Default Behavior:** Looks up verb in grammar table and displays all
   grammar lines. Shows meta flag and all verb aliases.
-- **Notes:** Routine is in `parser.h`. Has separate Z-machine and Glulx
+- **Notes:** Routine is defined in the parser. Has separate Z-machine and Glulx
   implementations.
 
 ---
 
 #### TimersOff
 
-- **Routine:** `TimersOffSub` (`verblib.h`:2959)
+- **Routine:** `TimersOffSub`
 - **Meta:** Yes
 - **Grammar:** `Verb meta 'timers' 'daemons' * 'off' -> TimersOff`
-  (`grammar.h`:149,152)
+
 - **Default Behavior:** Clears `DEBUG_TIMERS` from `debug_flag`. Prints
   `"[Timers listing off.]"`
 
@@ -3969,10 +3959,10 @@ The following actions are only available when the game is compiled with the
 
 #### TimersOn
 
-- **Routine:** `TimersOnSub` (`verblib.h`:2954)
+- **Routine:** `TimersOnSub`
 - **Meta:** Yes
 - **Grammar:** `Verb meta 'timers' 'daemons' * -> TimersOn, * 'on' -> TimersOn`
-  (`grammar.h`:149–151)
+
 - **Default Behavior:** Sets `DEBUG_TIMERS` in `debug_flag`. Prints
   `"[Timers listing on.]"`
 
@@ -3980,10 +3970,10 @@ The following actions are only available when the game is compiled with the
 
 #### TraceLevel
 
-- **Routine:** `TraceLevelSub` (`verblib.h`:2922)
+- **Routine:** `TraceLevelSub`
 - **Meta:** Yes
 - **Grammar:** `Verb meta 'trace' * number -> TraceLevel`
-  (`grammar.h`:154,156)
+
 - **Default Behavior:** Sets `parser_trace = noun`. Prints
   `"[Parser tracing set to level N.]"`
 
@@ -3991,29 +3981,29 @@ The following actions are only available when the game is compiled with the
 
 #### TraceOff
 
-- **Routine:** `TraceOffSub` (`verblib.h`:2927)
+- **Routine:** `TraceOffSub`
 - **Meta:** Yes
-- **Grammar:** `Verb meta 'trace' * 'off' -> TraceOff` (`grammar.h`:154,158)
+- **Grammar:** `Verb meta 'trace' * 'off' -> TraceOff`
 - **Default Behavior:** Sets `parser_trace = 0`. Prints `"Trace off."`
 
 ---
 
 #### TraceOn
 
-- **Routine:** `TraceOnSub` (`verblib.h`:2920)
+- **Routine:** `TraceOnSub`
 - **Meta:** Yes
 - **Grammar:** `Verb meta 'trace' * -> TraceOn, * 'on' -> TraceOn`
-  (`grammar.h`:154–155,157)
+
 - **Default Behavior:** Sets `parser_trace = 1`. Prints `"[Trace on.]"`
 
 ---
 
 #### XAbstract
 
-- **Routine:** `XAbstractSub` (`verblib.h`:3011)
+- **Routine:** `XAbstractSub`
 - **Meta:** Yes
 - **Grammar:** `Verb meta 'abstract' * anynumber 'to' anynumber -> XAbstract, * noun 'to' noun -> XAbstract`
-  (`grammar.h`:160–162)
+
 - **Default Behavior:** Validates `noun` is an Object. Calls
   `XTestMove(noun, second)`. Moves `noun` to `second`.
 
@@ -4021,10 +4011,10 @@ The following actions are only available when the game is compiled with the
 
 #### XPurloin
 
-- **Routine:** `XPurloinSub` (`verblib.h`:3005)
+- **Routine:** `XPurloinSub`
 - **Meta:** Yes
 - **Grammar:** `Verb meta 'purloin' * anynumber -> XPurloin, * multi -> XPurloin`
-  (`grammar.h`:164–166)
+
 - **Default Behavior:** Validates `noun` is an Object. Calls
   `XTestMove(noun, player)`. Moves `noun` to `player`. Gives `noun`
   `moved`, gives `noun` `~concealed`.
@@ -4034,10 +4024,10 @@ The following actions are only available when the game is compiled with the
 
 #### XTree
 
-- **Routine:** `XTreeSub` (`verblib.h`:3030)
+- **Routine:** `XTreeSub`
 - **Meta:** Yes
 - **Grammar:** `Verb meta 'tree' * -> XTree, * anynumber -> XTree, * noun -> XTree`
-  (`grammar.h`:168–171)
+
 - **Default Behavior:** If no `noun`, prints full object tree from all
   parentless objects. If `noun` specified, prints subtree from `noun`.
 ---
@@ -4050,18 +4040,18 @@ solely as constants that can be checked in `before`, `after`, `life`, and
 `orders` property routines. The library generates fake actions internally to
 notify objects of events that are not directly triggered by player input.
 
-All fake actions are declared in `parser.h` (lines 151–166).
+All fake actions are declared in the library.
 
 ---
 
 ### LetGo
 
-- **Declaration:** `Fake_Action LetGo;` (parser.h:151)
+- **Declaration:** `Fake_Action LetGo;`
 
 **Purpose:** Notifies a container or supporter that an object is being removed
 from it.
 
-**Generated by:** `AttemptToTakeObject()` in `verblib.h` (~line 1811) when
+**Generated by:** `AttemptToTakeObject()` when
 taking an object from a container or supporter. The container's `before`
 property is called with `action` temporarily set to `##LetGo`.
 
@@ -4077,12 +4067,12 @@ global is not relevant here.
 
 ### Receive
 
-- **Declaration:** `Fake_Action Receive;` (parser.h:152)
+- **Declaration:** `Fake_Action Receive;`
 
 **Purpose:** Notifies a container or supporter that an object is being placed
 into or onto it.
 
-**Generated by:** `InsertSub` and `PutOnSub` in `verblib.h` when inserting or
+**Generated by:** `InsertSub` and `PutOnSub` when inserting or
 placing objects. The container/supporter's `before` property is called with
 `action` temporarily set to `##Receive`.
 
@@ -4099,11 +4089,11 @@ the placement is blocked.
 
 ### ThrownAt
 
-- **Declaration:** `Fake_Action ThrownAt;` (parser.h:153)
+- **Declaration:** `Fake_Action ThrownAt;`
 
 **Purpose:** Notifies an inanimate target that something is being thrown at it.
 
-**Generated by:** `ThrowAtSub` in `verblib.h` (line 2852) when the target
+**Generated by:** `ThrowAtSub` when the target
 (`second`) does not have the `animate` attribute.
 
 **Where intercepted:** `before` property of the target (`second`) object.
@@ -4118,7 +4108,7 @@ temporarily sets `action` to `##ThrownAt` and calls
 
 ### Order
 
-- **Declaration:** `Fake_Action Order;` (parser.h:154)
+- **Declaration:** `Fake_Action Order;`
 
 **Purpose:** Represents a command given to an NPC (e.g., "Fred, take the
 lamp").
@@ -4139,7 +4129,7 @@ prints `L__M(##Order, 1)`.
 
 ### TheSame
 
-- **Declaration:** `Fake_Action TheSame;` (parser.h:155)
+- **Declaration:** `Fake_Action TheSame;`
 
 **Purpose:** Allows objects to declare themselves identical for disambiguation
 purposes.
@@ -4160,7 +4150,7 @@ distinguishable. Any other return value is ignored.
 
 ### PluralFound
 
-- **Declaration:** `Fake_Action PluralFound;` (parser.h:156)
+- **Declaration:** `Fake_Action PluralFound;`
 
 **Purpose:** Signals to a `parse_name` routine that a plural word has been
 matched.
@@ -4179,13 +4169,13 @@ object's `parse_name` routine. The `parse_name` routine can check
 
 ### ListMiscellany
 
-- **Declaration:** `Fake_Action ListMiscellany;` (parser.h:157)
+- **Declaration:** `Fake_Action ListMiscellany;`
 
 **Purpose:** Used by the list-writing module to generate miscellaneous list
 formatting messages.
 
-**Generated by:** `WriteListFrom()` and related list-writing routines in
-`verblib.h`.
+**Generated by:** `WriteListFrom()` and related list-writing routines in the
+library.
 
 **Where intercepted:** Via `L__M(##ListMiscellany, N)` calls — not directly
 intercepted by game objects.
@@ -4199,7 +4189,7 @@ and locked", etc.
 
 ### Miscellany
 
-- **Declaration:** `Fake_Action Miscellany;` (parser.h:158)
+- **Declaration:** `Fake_Action Miscellany;`
 
 **Purpose:** General-purpose message namespace for miscellaneous library
 messages.
@@ -4218,7 +4208,7 @@ communications.
 
 ### RunTimeError
 
-- **Declaration:** `Fake_Action RunTimeError;` (parser.h:159)
+- **Declaration:** `Fake_Action RunTimeError;`
 
 **Purpose:** Message namespace for runtime error diagnostics.
 
@@ -4236,7 +4226,7 @@ messages. These are generated by the `RT__Err` veneer routine.
 
 ### Prompt
 
-- **Declaration:** `Fake_Action Prompt;` (parser.h:160)
+- **Declaration:** `Fake_Action Prompt;`
 
 **Purpose:** Allows customization of the command prompt.
 
@@ -4253,7 +4243,7 @@ customize this by intercepting `##Prompt` in a `LibraryMessages` object.
 
 ### NotUnderstood
 
-- **Declaration:** `Fake_Action NotUnderstood;` (parser.h:161)
+- **Declaration:** `Fake_Action NotUnderstood;`
 
 **Purpose:** Notifies an NPC's `orders`/`life` routines that a command directed
 at them was not understood.
@@ -4272,11 +4262,11 @@ match to any grammar line, the library generates `##NotUnderstood`. The NPC's
 
 ### Going
 
-- **Declaration:** `Fake_Action Going;` (parser.h:162)
+- **Declaration:** `Fake_Action Going;`
 
 **Purpose:** Notifies objects that the player is about to leave a location.
 
-**Generated by:** `GoSub` in `verblib.h` (line 2167) during the `Go` action
+**Generated by:** `GoSub` during the `Go` action
 processing.
 
 **Where intercepted:** `before` property of objects in the current location
@@ -4296,7 +4286,7 @@ direction lookup.
 
 ### Places
 
-- **Declaration:** `Fake_Action Places;` (parser.h:165) — **conditional**
+- **Declaration:** `Fake_Action Places;` — **conditional**
 
 **Purpose:** When the game defines `NO_PLACES`, the `Places` action and its
 grammar are not compiled. The fake action declaration prevents compiler errors
@@ -4309,7 +4299,7 @@ safeguard.
 (without `NO_PLACES`), `Places` is a real meta action handled by `PlacesSub`.
 
 **Semantics:** This declaration is conditional. It appears inside an
-`#Ifdef NO_PLACES` block (parser.h:164). When `NO_PLACES` is defined, the
+`#Ifdef NO_PLACES` block. When `NO_PLACES` is defined, the
 normal `Places` verb grammar and `PlacesSub` routine are omitted. Declaring
 `Places` as a fake action ensures that any `##Places` references in game code
 still compile, even though the action has no effect.
@@ -4318,7 +4308,7 @@ still compile, even though the action has no effect.
 
 ### Objects
 
-- **Declaration:** `Fake_Action Objects;` (parser.h:166) — **conditional**
+- **Declaration:** `Fake_Action Objects;` — **conditional**
 
 **Purpose:** Same as `Places` — prevents compiler errors when `NO_PLACES`
 removes the real `Objects` action.
@@ -4330,7 +4320,7 @@ safeguard.
 (without `NO_PLACES`), `Objects` is a real meta action handled by `ObjectsSub`.
 
 **Semantics:** This declaration is conditional, appearing inside the same
-`#Ifdef NO_PLACES` block as `Places` (parser.h:164). When `NO_PLACES` is
+`#Ifdef NO_PLACES` block as `Places`. When `NO_PLACES` is
 defined, the normal `Objects` verb grammar and `ObjectsSub` routine are
 omitted. Declaring `Objects` as a fake action ensures that any `##Objects`
 references in game code still compile, even though the action has no effect.
@@ -4338,232 +4328,232 @@ references in game code still compile, even though the action has no effect.
 
 ## §I.6 Verb Synonym Quick-Reference Table
 
-This table lists every verb word defined in `grammar.h` alphabetically, showing
+This table lists every verb word defined in the library alphabetically, showing
 which action(s) it maps to. Verb words marked with `//` are abbreviations (e.g.,
 `'i//'` matches just the letter "i").
 
-| Verb Word | Action(s) | Meta | Source |
-|-----------|-----------|------|--------|
-| `'abstract'` | `XAbstract` | ✓ debug | `grammar.h:160` |
-| `'actions'` | `ActionsOn`, `ActionsOff` | ✓ debug | `grammar.h:105` |
-| `'answer'` | `Answer` | | `grammar.h:189` |
-| `'ask'` | `Ask`, `AskFor`, `AskTo` | | `grammar.h:192` |
-| `'attach'` | `Tie` | | `grammar.h:476` |
-| `'attack'` | `Attack` | | `grammar.h:198` |
-| `'awake'` | `Wake`, `WakeOther` | | `grammar.h:500` |
-| `'awaken'` | `Wake`, `WakeOther` | | `grammar.h:500` |
-| `'blow'` | `Blow` | | `grammar.h:203` |
-| `'bother'` | `Mild` | | `grammar.h:206` |
-| `'break'` | `Attack` | | `grammar.h:198` |
-| `'brief'` | `LMode1` | ✓ | `grammar.h:28` |
-| `'burn'` | `Burn` | | `grammar.h:210` |
-| `'buy'` | `Buy` | | `grammar.h:214` |
-| `'carry'` | `Take`, `Remove`, `Inv` | | `grammar.h:217` |
-| `'changes'` | `ChangesOn`, `ChangesOff` | ✓ debug | `grammar.h:110` |
-| `'check'` | `Examine` | | `grammar.h:269` |
-| `'chop'` | `Cut` | | `grammar.h:235` |
-| `'clean'` | `Rub` | | `grammar.h:398` |
-| `'clear'` | `Push`, `PushDir`, `Transfer` | | `grammar.h:376` |
-| `'climb'` | `Climb` | | `grammar.h:222` |
-| `'close'` | `Close`, `SwitchOff` | | `grammar.h:226` |
-| `'connect'` | `Tie` | | `grammar.h:476` |
-| `'consult'` | `Consult` | | `grammar.h:231` |
-| `'cover'` | `Close`, `SwitchOff` | | `grammar.h:226` |
-| `'crack'` | `Attack` | | `grammar.h:198` |
-| `'cross'` | `Enter`, `GoIn` | | `grammar.h:265` |
-| `'curses'` | `Mild` | | `grammar.h:206` |
-| `'cut'` | `Cut` | | `grammar.h:235` |
-| `'daemons'` | `TimersOn`, `TimersOff` | ✓ debug | `grammar.h:149` |
-| `'damn'` | `Strong` | | `grammar.h:409` |
-| `'darn'` | `Mild` | | `grammar.h:206` |
-| `'describe'` | `Examine` | | `grammar.h:269` |
-| `'destroy'` | `Attack` | | `grammar.h:198` |
-| `'dict'` | `ShowDict` | ✓ debug | `grammar.h:137` |
-| `'dig'` | `Dig` | | `grammar.h:238` |
-| `'discard'` | `Drop`, `Insert`, `PutOn` | | `grammar.h:251` |
-| `'disrobe'` | `Disrobe` | | `grammar.h:245` |
-| `'display'` | `Show` | | `grammar.h:413` |
-| `'dive'` | `Swim` | | `grammar.h:442` |
-| `'doff'` | `Disrobe` | | `grammar.h:245` |
-| `'don'` | `Wear` | | `grammar.h:513` |
-| `'drag'` | `Pull` | | `grammar.h:373` |
-| `'drat'` | `Mild` | | `grammar.h:206` |
-| `'drink'` | `Drink` | | `grammar.h:248` |
-| `'drop'` | `Drop`, `Insert`, `PutOn` | | `grammar.h:251` |
-| `'dust'` | `Rub` | | `grammar.h:398` |
-| `'eat'` | `Eat` | | `grammar.h:256` |
-| `'embrace'` | `Kiss` | | `grammar.h:324` |
-| `'empty'` | `Empty`, `EmptyT` | | `grammar.h:259` |
-| `'enter'` | `Enter`, `GoIn` | | `grammar.h:265` |
-| `'examine'` | `Examine` | | `grammar.h:269` |
-| `'exit'` | `Exit` | | `grammar.h:272` |
-| `'fasten'` | `Tie` | | `grammar.h:476` |
-| `'feed'` | `Give` | | `grammar.h:287` |
-| `'feel'` | `Touch` | | `grammar.h:480` |
-| `'fight'` | `Attack` | | `grammar.h:198` |
-| `'fill'` | `Fill` | | `grammar.h:276` |
-| `'fix'` | `Tie` | | `grammar.h:476` |
-| `'fondle'` | `Touch` | | `grammar.h:480` |
-| `'force'` | `Unlock` | | `grammar.h:368` |
-| `'fuck'` | `Strong` | | `grammar.h:409` |
-| `'full'` | `FullScore` | ✓ | `grammar.h:71` |
-| `'fullscore'` | `FullScore` | ✓ | `grammar.h:71` |
-| `'get'` | `Take`, `Remove`, `GetOff`, `Enter`, `Inv` | | `grammar.h:280` |
-| `'give'` | `Give` | | `grammar.h:287` |
-| `'glklist'` | `Glklist` | ✓ debug | `grammar.h:174` |
-| `'go'` | `Go`, `GoIn`, `VagueGo` | | `grammar.h:292` |
-| `'gonear'` | `GoNear` | ✓ debug | `grammar.h:115` |
-| `'goto'` | `Goto` | ✓ debug | `grammar.h:120` |
-| `'grope'` | `Touch` | | `grammar.h:480` |
-| `'hear'` | `Listen` | | `grammar.h:333` |
-| `'hit'` | `Attack` | | `grammar.h:198` |
-| `'hold'` | `Take`, `Remove`, `Inv` | | `grammar.h:300` |
-| `'hop'` | `Jump`, `JumpIn`, `JumpOn`, `JumpOver` | | `grammar.h:316` |
-| `'hug'` | `Kiss` | | `grammar.h:324` |
-| `'i//'` | `Inv`, `InvTall`, `InvWide` | | `grammar.h:311` |
-| `'in'` | `GoIn` | | `grammar.h:305` |
-| `'insert'` | `Insert` | | `grammar.h:308` |
-| `'inside'` | `GoIn` | | `grammar.h:305` |
-| `'inv'` | `Inv`, `InvTall`, `InvWide` | | `grammar.h:311` |
-| `'inventory'` | `Inv`, `InvTall`, `InvWide` | | `grammar.h:311` |
-| `'jemmy'` | `Unlock` | | `grammar.h:368` |
-| `'jump'` | `Jump`, `JumpIn`, `JumpOn`, `JumpOver` | | `grammar.h:316` |
-| `'kill'` | `Attack` | | `grammar.h:198` |
-| `'kiss'` | `Kiss` | | `grammar.h:324` |
-| `'l//'` | `Look`, `Search`, `LookUnder` | | `grammar.h:341` |
-| `'leave'` | `VagueGo`, `Exit` | | `grammar.h:327` |
-| `'lever'` | `Unlock` | | `grammar.h:368` |
-| `'lie'` | `Enter` | | `grammar.h:420` |
-| `'light'` | `Burn` | | `grammar.h:210` |
-| `'listen'` | `Listen` | | `grammar.h:333` |
-| `'lock'` | `Lock` | | `grammar.h:338` |
-| `'long'` | `LMode2` | ✓ | `grammar.h:31` |
-| `'look'` | `Look`, `Search`, `LookUnder`, `Examine` | | `grammar.h:341` |
-| `'messages'` | `RoutinesOn`, `RoutinesOff`, `RoutinesVerbose` | ✓ debug | `grammar.h:126` |
-| `'move'` | `Push`, `PushDir`, `Transfer` | | `grammar.h:376` |
-| `'murder'` | `Attack` | | `grammar.h:198` |
-| `'nap'` | `Sleep` | | `grammar.h:424` |
-| `'no'` | `No` | | `grammar.h:350` |
-| `'normal'` | `LModeNormal` | ✓ | `grammar.h:37` |
-| `'noscript'` | `ScriptOff` | ✓ | `grammar.h:80` |
-| `'nouns'` | `Pronouns` | ✓ | `grammar.h:45` |
-| `'notify'` | `NotifyOn`, `NotifyOff` | ✓ | `grammar.h:40` |
-| `'objects'` | `Objects`, `ObjectsTall`, `ObjectsWide` | ✓ | `grammar.h:90` |
-| `'offer'` | `Give` | | `grammar.h:287` |
-| `'open'` | `Open`, `Unlock` | | `grammar.h:353` |
-| `'out'` | `Exit` | | `grammar.h:272` |
-| `'outside'` | `Exit` | | `grammar.h:272` |
-| `'pay'` | `Give` | | `grammar.h:287` |
-| `'peel'` | `Take` | | `grammar.h:357` |
-| `'pick'` | `Take` | | `grammar.h:361` |
-| `'places'` | `Places`, `PlacesTall`, `PlacesWide` | ✓ | `grammar.h:94` |
-| `'polish'` | `Rub` | | `grammar.h:398` |
-| `'pray'` | `Pray` | | `grammar.h:365` |
-| `'present'` | `Show` | | `grammar.h:413` |
-| `'press'` | `Push`, `PushDir`, `Transfer` | | `grammar.h:376` |
-| `'prise'` | `Unlock` | | `grammar.h:368` |
-| `'prize'` | `Unlock` | | `grammar.h:368` |
-| `'pronouns'` | `Pronouns` | ✓ | `grammar.h:45` |
-| `'prune'` | `Cut` | | `grammar.h:235` |
-| `'pry'` | `Unlock` | | `grammar.h:368` |
-| `'pull'` | `Pull` | | `grammar.h:373` |
-| `'punch'` | `Attack` | | `grammar.h:198` |
-| `'purchase'` | `Buy` | | `grammar.h:214` |
-| `'purloin'` | `XPurloin` | ✓ debug | `grammar.h:164` |
-| `'push'` | `Push`, `PushDir`, `Transfer` | | `grammar.h:376` |
-| `'put'` | `Insert`, `PutOn`, `Wear`, `Drop` | | `grammar.h:381` |
-| `'q//'` | `Quit` | ✓ | `grammar.h:48` |
-| `'quit'` | `Quit` | ✓ | `grammar.h:48` |
-| `'random'` | `Predictable` | ✓ debug | `grammar.h:123` |
-| `'read'` | `Examine`, `Consult` | | `grammar.h:388` |
-| `'recording'` | `CommandsOn`, `CommandsOff` | ✓ | `grammar.h:51` |
-| `'remove'` | `Disrobe`, `Remove` | | `grammar.h:393` |
-| `'replay'` | `CommandsRead` | ✓ | `grammar.h:56` |
-| `'restart'` | `Restart` | ✓ | `grammar.h:59` |
-| `'restore'` | `Restore` | ✓ | `grammar.h:62` |
-| `'rotate'` | `Turn`, `SwitchOn`, `SwitchOff` | | `grammar.h:487` |
-| `'routines'` | `RoutinesOn`, `RoutinesOff`, `RoutinesVerbose` | ✓ debug | `grammar.h:126` |
-| `'rub'` | `Rub` | | `grammar.h:398` |
-| `'run'` | `Go`, `GoIn`, `VagueGo` | | `grammar.h:292` |
-| `'save'` | `Save` | ✓ | `grammar.h:65` |
-| `'say'` | `Answer` | | `grammar.h:189` |
-| `'scale'` | `Climb` | | `grammar.h:222` |
-| `'scope'` | `Scope` | ✓ debug | `grammar.h:132` |
-| `'score'` | `Score` | ✓ | `grammar.h:68` |
-| `'script'` | `ScriptOn`, `ScriptOff` | ✓ | `grammar.h:75` |
-| `'scrub'` | `Rub` | | `grammar.h:398` |
-| `'screw'` | `Turn`, `SwitchOn`, `SwitchOff` | | `grammar.h:487` |
-| `'search'` | `Search` | | `grammar.h:402` |
-| `'set'` | `Set`, `SetTo` | | `grammar.h:405` |
-| `'shed'` | `Disrobe` | | `grammar.h:245` |
-| `'shift'` | `Push`, `PushDir`, `Transfer` | | `grammar.h:376` |
-| `'shine'` | `Rub` | | `grammar.h:398` |
-| `'shit'` | `Strong` | | `grammar.h:409` |
-| `'short'` | `LMode3` | ✓ | `grammar.h:34` |
-| `'shout'` | `Answer` | | `grammar.h:189` |
-| `'show'` | `Show` | | `grammar.h:413` |
-| `'showdict'` | `ShowDict` | ✓ debug | `grammar.h:137` |
-| `'showobj'` | `ShowObj` | ✓ debug | `grammar.h:141` |
-| `'showverb'` | `ShowVerb` | ✓ debug | `grammar.h:146` |
-| `'shut'` | `Close`, `SwitchOff` | | `grammar.h:226` |
-| `'sing'` | `Sing` | | `grammar.h:417` |
-| `'sip'` | `Drink` | | `grammar.h:248` |
-| `'sit'` | `Enter` | | `grammar.h:420` |
-| `'skip'` | `Jump`, `JumpIn`, `JumpOn`, `JumpOver` | | `grammar.h:316` |
-| `'sleep'` | `Sleep` | | `grammar.h:424` |
-| `'slice'` | `Cut` | | `grammar.h:235` |
-| `'smash'` | `Attack` | | `grammar.h:198` |
-| `'smell'` | `Smell` | | `grammar.h:427` |
-| `'sniff'` | `Smell` | | `grammar.h:427` |
-| `'sod'` | `Strong` | | `grammar.h:409` |
-| `'sorry'` | `Sorry` | | `grammar.h:431` |
-| `'speak'` | `Answer` | | `grammar.h:189` |
-| `'squash'` | `Squeeze` | | `grammar.h:434` |
-| `'squeeze'` | `Squeeze` | | `grammar.h:434` |
-| `'stand'` | `Exit`, `Enter` | | `grammar.h:437` |
-| `'superbrief'` | `LMode3` | ✓ | `grammar.h:34` |
-| `'swallow'` | `Drink` | | `grammar.h:248` |
-| `'sweep'` | `Rub` | | `grammar.h:398` |
-| `'swim'` | `Swim` | | `grammar.h:442` |
-| `'swing'` | `Swing` | | `grammar.h:445` |
-| `'switch'` | `SwitchOn`, `SwitchOff` | | `grammar.h:449` |
-| `'take'` | `Take`, `Remove`, `Inv` | | `grammar.h:456` |
-| `'taste'` | `Taste` | | `grammar.h:462` |
-| `'tell'` | `Tell` | | `grammar.h:465` |
-| `'think'` | `Think` | | `grammar.h:469` |
-| `'throw'` | `ThrowAt` | | `grammar.h:472` |
-| `'thump'` | `Attack` | | `grammar.h:198` |
-| `'tie'` | `Tie` | | `grammar.h:476` |
-| `'timers'` | `TimersOn`, `TimersOff` | ✓ debug | `grammar.h:149` |
-| `'torture'` | `Attack` | | `grammar.h:198` |
-| `'touch'` | `Touch` | | `grammar.h:480` |
-| `'trace'` | `TraceOn`, `TraceOff`, `TraceLevel` | ✓ debug | `grammar.h:154` |
-| `'transcript'` | `ScriptOn`, `ScriptOff` | ✓ | `grammar.h:75` |
-| `'transfer'` | `Transfer` | | `grammar.h:483` |
-| `'tree'` | `XTree` | ✓ debug | `grammar.h:168` |
-| `'turn'` | `Turn`, `SwitchOn`, `SwitchOff` | | `grammar.h:487` |
-| `'twist'` | `Turn`, `SwitchOn`, `SwitchOff` | | `grammar.h:487` |
-| `'uncover'` | `Open`, `Unlock` | | `grammar.h:353` |
-| `'undo'` | `Open`, `Unlock` | | `grammar.h:353` |
-| `'unlock'` | `Unlock` | | `grammar.h:494` |
-| `'unscrew'` | `Turn`, `SwitchOn`, `SwitchOff` | | `grammar.h:487` |
-| `'unscript'` | `ScriptOff` | ✓ | `grammar.h:80` |
-| `'unwrap'` | `Open`, `Unlock` | | `grammar.h:353` |
-| `'verbose'` | `LMode2` | ✓ | `grammar.h:31` |
-| `'verify'` | `Verify` | ✓ | `grammar.h:83` |
-| `'version'` | `Version` | ✓ | `grammar.h:86` |
-| `'wait'` | `Wait` | | `grammar.h:497` |
-| `'wake'` | `Wake`, `WakeOther` | | `grammar.h:500` |
-| `'walk'` | `Go`, `GoIn`, `VagueGo` | | `grammar.h:292` |
-| `'watch'` | `Examine` | | `grammar.h:269` |
-| `'wave'` | `Wave`, `WaveHands` | | `grammar.h:507` |
-| `'wear'` | `Wear` | | `grammar.h:513` |
-| `'wipe'` | `Rub` | | `grammar.h:398` |
-| `'wreck'` | `Attack` | | `grammar.h:198` |
-| `'x//'` | `Examine` | | `grammar.h:269` |
-| `'y//'` | `Yes` | | `grammar.h:516` |
-| `'yes'` | `Yes` | | `grammar.h:516` |
-| `'z//'` | `Wait` | | `grammar.h:497` |
+| Verb Word | Action(s) | Meta |
+|-----------|-----------|------|
+| `'abstract'` | `XAbstract` | ✓ debug |
+| `'actions'` | `ActionsOn`, `ActionsOff` | ✓ debug |
+| `'answer'` | `Answer` | |
+| `'ask'` | `Ask`, `AskFor`, `AskTo` | |
+| `'attach'` | `Tie` | |
+| `'attack'` | `Attack` | |
+| `'awake'` | `Wake`, `WakeOther` | |
+| `'awaken'` | `Wake`, `WakeOther` | |
+| `'blow'` | `Blow` | |
+| `'bother'` | `Mild` | |
+| `'break'` | `Attack` | |
+| `'brief'` | `LMode1` | ✓ |
+| `'burn'` | `Burn` | |
+| `'buy'` | `Buy` | |
+| `'carry'` | `Take`, `Remove`, `Inv` | |
+| `'changes'` | `ChangesOn`, `ChangesOff` | ✓ debug |
+| `'check'` | `Examine` | |
+| `'chop'` | `Cut` | |
+| `'clean'` | `Rub` | |
+| `'clear'` | `Push`, `PushDir`, `Transfer` | |
+| `'climb'` | `Climb` | |
+| `'close'` | `Close`, `SwitchOff` | |
+| `'connect'` | `Tie` | |
+| `'consult'` | `Consult` | |
+| `'cover'` | `Close`, `SwitchOff` | |
+| `'crack'` | `Attack` | |
+| `'cross'` | `Enter`, `GoIn` | |
+| `'curses'` | `Mild` | |
+| `'cut'` | `Cut` | |
+| `'daemons'` | `TimersOn`, `TimersOff` | ✓ debug |
+| `'damn'` | `Strong` | |
+| `'darn'` | `Mild` | |
+| `'describe'` | `Examine` | |
+| `'destroy'` | `Attack` | |
+| `'dict'` | `ShowDict` | ✓ debug |
+| `'dig'` | `Dig` | |
+| `'discard'` | `Drop`, `Insert`, `PutOn` | |
+| `'disrobe'` | `Disrobe` | |
+| `'display'` | `Show` | |
+| `'dive'` | `Swim` | |
+| `'doff'` | `Disrobe` | |
+| `'don'` | `Wear` | |
+| `'drag'` | `Pull` | |
+| `'drat'` | `Mild` | |
+| `'drink'` | `Drink` | |
+| `'drop'` | `Drop`, `Insert`, `PutOn` | |
+| `'dust'` | `Rub` | |
+| `'eat'` | `Eat` | |
+| `'embrace'` | `Kiss` | |
+| `'empty'` | `Empty`, `EmptyT` | |
+| `'enter'` | `Enter`, `GoIn` | |
+| `'examine'` | `Examine` | |
+| `'exit'` | `Exit` | |
+| `'fasten'` | `Tie` | |
+| `'feed'` | `Give` | |
+| `'feel'` | `Touch` | |
+| `'fight'` | `Attack` | |
+| `'fill'` | `Fill` | |
+| `'fix'` | `Tie` | |
+| `'fondle'` | `Touch` | |
+| `'force'` | `Unlock` | |
+| `'fuck'` | `Strong` | |
+| `'full'` | `FullScore` | ✓ |
+| `'fullscore'` | `FullScore` | ✓ |
+| `'get'` | `Take`, `Remove`, `GetOff`, `Enter`, `Inv` | |
+| `'give'` | `Give` | |
+| `'glklist'` | `Glklist` | ✓ debug |
+| `'go'` | `Go`, `GoIn`, `VagueGo` | |
+| `'gonear'` | `GoNear` | ✓ debug |
+| `'goto'` | `Goto` | ✓ debug |
+| `'grope'` | `Touch` | |
+| `'hear'` | `Listen` | |
+| `'hit'` | `Attack` | |
+| `'hold'` | `Take`, `Remove`, `Inv` | |
+| `'hop'` | `Jump`, `JumpIn`, `JumpOn`, `JumpOver` | |
+| `'hug'` | `Kiss` | |
+| `'i//'` | `Inv`, `InvTall`, `InvWide` | |
+| `'in'` | `GoIn` | |
+| `'insert'` | `Insert` | |
+| `'inside'` | `GoIn` | |
+| `'inv'` | `Inv`, `InvTall`, `InvWide` | |
+| `'inventory'` | `Inv`, `InvTall`, `InvWide` | |
+| `'jemmy'` | `Unlock` | |
+| `'jump'` | `Jump`, `JumpIn`, `JumpOn`, `JumpOver` | |
+| `'kill'` | `Attack` | |
+| `'kiss'` | `Kiss` | |
+| `'l//'` | `Look`, `Search`, `LookUnder` | |
+| `'leave'` | `VagueGo`, `Exit` | |
+| `'lever'` | `Unlock` | |
+| `'lie'` | `Enter` | |
+| `'light'` | `Burn` | |
+| `'listen'` | `Listen` | |
+| `'lock'` | `Lock` | |
+| `'long'` | `LMode2` | ✓ |
+| `'look'` | `Look`, `Search`, `LookUnder`, `Examine` | |
+| `'messages'` | `RoutinesOn`, `RoutinesOff`, `RoutinesVerbose` | ✓ debug |
+| `'move'` | `Push`, `PushDir`, `Transfer` | |
+| `'murder'` | `Attack` | |
+| `'nap'` | `Sleep` | |
+| `'no'` | `No` | |
+| `'normal'` | `LModeNormal` | ✓ |
+| `'noscript'` | `ScriptOff` | ✓ |
+| `'nouns'` | `Pronouns` | ✓ |
+| `'notify'` | `NotifyOn`, `NotifyOff` | ✓ |
+| `'objects'` | `Objects`, `ObjectsTall`, `ObjectsWide` | ✓ |
+| `'offer'` | `Give` | |
+| `'open'` | `Open`, `Unlock` | |
+| `'out'` | `Exit` | |
+| `'outside'` | `Exit` | |
+| `'pay'` | `Give` | |
+| `'peel'` | `Take` | |
+| `'pick'` | `Take` | |
+| `'places'` | `Places`, `PlacesTall`, `PlacesWide` | ✓ |
+| `'polish'` | `Rub` | |
+| `'pray'` | `Pray` | |
+| `'present'` | `Show` | |
+| `'press'` | `Push`, `PushDir`, `Transfer` | |
+| `'prise'` | `Unlock` | |
+| `'prize'` | `Unlock` | |
+| `'pronouns'` | `Pronouns` | ✓ |
+| `'prune'` | `Cut` | |
+| `'pry'` | `Unlock` | |
+| `'pull'` | `Pull` | |
+| `'punch'` | `Attack` | |
+| `'purchase'` | `Buy` | |
+| `'purloin'` | `XPurloin` | ✓ debug |
+| `'push'` | `Push`, `PushDir`, `Transfer` | |
+| `'put'` | `Insert`, `PutOn`, `Wear`, `Drop` | |
+| `'q//'` | `Quit` | ✓ |
+| `'quit'` | `Quit` | ✓ |
+| `'random'` | `Predictable` | ✓ debug |
+| `'read'` | `Examine`, `Consult` | |
+| `'recording'` | `CommandsOn`, `CommandsOff` | ✓ |
+| `'remove'` | `Disrobe`, `Remove` | |
+| `'replay'` | `CommandsRead` | ✓ |
+| `'restart'` | `Restart` | ✓ |
+| `'restore'` | `Restore` | ✓ |
+| `'rotate'` | `Turn`, `SwitchOn`, `SwitchOff` | |
+| `'routines'` | `RoutinesOn`, `RoutinesOff`, `RoutinesVerbose` | ✓ debug |
+| `'rub'` | `Rub` | |
+| `'run'` | `Go`, `GoIn`, `VagueGo` | |
+| `'save'` | `Save` | ✓ |
+| `'say'` | `Answer` | |
+| `'scale'` | `Climb` | |
+| `'scope'` | `Scope` | ✓ debug |
+| `'score'` | `Score` | ✓ |
+| `'script'` | `ScriptOn`, `ScriptOff` | ✓ |
+| `'scrub'` | `Rub` | |
+| `'screw'` | `Turn`, `SwitchOn`, `SwitchOff` | |
+| `'search'` | `Search` | |
+| `'set'` | `Set`, `SetTo` | |
+| `'shed'` | `Disrobe` | |
+| `'shift'` | `Push`, `PushDir`, `Transfer` | |
+| `'shine'` | `Rub` | |
+| `'shit'` | `Strong` | |
+| `'short'` | `LMode3` | ✓ |
+| `'shout'` | `Answer` | |
+| `'show'` | `Show` | |
+| `'showdict'` | `ShowDict` | ✓ debug |
+| `'showobj'` | `ShowObj` | ✓ debug |
+| `'showverb'` | `ShowVerb` | ✓ debug |
+| `'shut'` | `Close`, `SwitchOff` | |
+| `'sing'` | `Sing` | |
+| `'sip'` | `Drink` | |
+| `'sit'` | `Enter` | |
+| `'skip'` | `Jump`, `JumpIn`, `JumpOn`, `JumpOver` | |
+| `'sleep'` | `Sleep` | |
+| `'slice'` | `Cut` | |
+| `'smash'` | `Attack` | |
+| `'smell'` | `Smell` | |
+| `'sniff'` | `Smell` | |
+| `'sod'` | `Strong` | |
+| `'sorry'` | `Sorry` | |
+| `'speak'` | `Answer` | |
+| `'squash'` | `Squeeze` | |
+| `'squeeze'` | `Squeeze` | |
+| `'stand'` | `Exit`, `Enter` | |
+| `'superbrief'` | `LMode3` | ✓ |
+| `'swallow'` | `Drink` | |
+| `'sweep'` | `Rub` | |
+| `'swim'` | `Swim` | |
+| `'swing'` | `Swing` | |
+| `'switch'` | `SwitchOn`, `SwitchOff` | |
+| `'take'` | `Take`, `Remove`, `Inv` | |
+| `'taste'` | `Taste` | |
+| `'tell'` | `Tell` | |
+| `'think'` | `Think` | |
+| `'throw'` | `ThrowAt` | |
+| `'thump'` | `Attack` | |
+| `'tie'` | `Tie` | |
+| `'timers'` | `TimersOn`, `TimersOff` | ✓ debug |
+| `'torture'` | `Attack` | |
+| `'touch'` | `Touch` | |
+| `'trace'` | `TraceOn`, `TraceOff`, `TraceLevel` | ✓ debug |
+| `'transcript'` | `ScriptOn`, `ScriptOff` | ✓ |
+| `'transfer'` | `Transfer` | |
+| `'tree'` | `XTree` | ✓ debug |
+| `'turn'` | `Turn`, `SwitchOn`, `SwitchOff` | |
+| `'twist'` | `Turn`, `SwitchOn`, `SwitchOff` | |
+| `'uncover'` | `Open`, `Unlock` | |
+| `'undo'` | `Open`, `Unlock` | |
+| `'unlock'` | `Unlock` | |
+| `'unscrew'` | `Turn`, `SwitchOn`, `SwitchOff` | |
+| `'unscript'` | `ScriptOff` | ✓ |
+| `'unwrap'` | `Open`, `Unlock` | |
+| `'verbose'` | `LMode2` | ✓ |
+| `'verify'` | `Verify` | ✓ |
+| `'version'` | `Version` | ✓ |
+| `'wait'` | `Wait` | |
+| `'wake'` | `Wake`, `WakeOther` | |
+| `'walk'` | `Go`, `GoIn`, `VagueGo` | |
+| `'watch'` | `Examine` | |
+| `'wave'` | `Wave`, `WaveHands` | |
+| `'wear'` | `Wear` | |
+| `'wipe'` | `Rub` | |
+| `'wreck'` | `Attack` | |
+| `'x//'` | `Examine` | |
+| `'y//'` | `Yes` | |
+| `'yes'` | `Yes` | |
+| `'z//'` | `Wait` | |
 
 **Total:** 185 verb words mapping to 78 distinct actions.
 
