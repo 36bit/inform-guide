@@ -63,17 +63,21 @@ function calls. They are part of the language, not the library:
 | Specifier | Opcode | Effect |
 |-----------|--------|--------|
 | `(string) addr` | `print_paddr` | Prints the string at packed address `addr` |
-| `(number) expr` | `print_num` | Prints the integer `expr` as decimal digits |
 | `(char) expr` | `print_char` | Prints the character with ZSCII/Unicode value `expr` |
 | `(address) expr` | `print_addr` | Prints the dictionary word at byte address `expr` |
 | `(object) expr` | `print_obj` | Prints an object's `short_name` via the raw VM opcode |
+
+A bare expression (without a format specifier) is printed as a signed
+decimal integer via the `print_num` opcode.
 
 The `(object)` specifier invokes the VM opcode directly; it prints the
 short name without any article logic. Game code rarely needs it — use
 `(name)`, `(the)`, or `(a)` instead (see §23.2).
 
-The `(property) prop` specifier prints the compiler's internal name for
-a property. It is a debugging aid and has no effect in release builds.
+The `(property) prop` specifier calls the `Print__PName` veneer routine
+to print the compiler's internal name for a property. It is primarily a
+debugging aid: in builds with the symbol table omitted, it prints a
+numeric placeholder (e.g. `<number 7>`) instead of the property name.
 
 ### String Escape Sequences
 
@@ -133,15 +137,12 @@ instead. If the object has the `proper` attribute, no article appears.
 compiler 6.30). Capitalised indefinite article: "A lamp" or
 "An elephant".
 
-**`(number) n`** — When used as a print rule (not the built-in opcode
-specifier), calls the `EnglishNumber` veneer, which dispatches to
-`LanguageNumber()` in `english.h`. Prints the number as English words:
+**`(number) n`** — Calls the `EnglishNumber` veneer routine. The
+veneer's default implementation simply prints the number as decimal
+digits (equivalent to `print_num`). When the standard library is
+included, it replaces `EnglishNumber` with `LanguageNumber()` from
+`english.h`, which prints the number as English words:
 `print (number) 42;` produces "forty-two".
-
-> **Note:** The built-in specifier `(number)` from §23.1 prints decimal
-> digits via `print_num`. The veneer print rule `(number)` prints
-> English words. Context determines which is used: inside a `print`
-> statement with an object argument, the veneer rule takes precedence.
 
 ### The Article System
 
