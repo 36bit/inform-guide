@@ -29,7 +29,7 @@ extension) when invoked with the `-G` switch.
 
 All details in this chapter have been verified against the Inform 6.44
 compiler source code and the Glulx specification (version 3.1.3). Where
-the compiler's behaviour differs from or extends the specification,
+the compiler's behavior differs from or extends the specification,
 those differences are noted.
 
 ## 30.1 Design Rationale and Differences from the Z-Machine
@@ -55,7 +55,7 @@ principles are:
 
 - **No built-in object structure.** Unlike the Z-machine, which defines
   a fixed object table format in the VM specification, Glulx provides
-  only a flat memory model. The Inform compiler synthesises its own
+  only a flat memory model. The Inform compiler synthesizes its own
   object table layout in memory (see §30.5).
 
 - **Big-endian byte order.** All multi-byte values in memory are stored
@@ -114,7 +114,7 @@ version and the version required by the features used.
 | Maximum properties | 31 (v3) or 63 (v4+) | No fixed limit |
 | I/O | Built into VM | External (Glk API) |
 | Byte order | Big-endian | Big-endian |
-| Object table | Defined by VM spec | Compiler-synthesised |
+| Object table | Defined by VM spec | Compiler-synthesized |
 | Story file extension | `.z3`–`.z8` | `.ulx` |
 | Floating point | Not supported | IEEE-754 single and double |
 
@@ -162,7 +162,7 @@ game state. Global variables are stored at the very beginning of RAM,
 each occupying 4 bytes.
 
 **Extended Memory (EXTSTART to ENDMEM):** This region is not stored in
-the game file. It is initialised to all zeros when the game is loaded
+the game file. It is initialized to all zeros when the game is loaded
 and is used for heap allocation (`malloc`/`mfree`). The size of this
 region is determined by the `MEMORY_MAP_EXTENSION` setting.
 
@@ -263,7 +263,7 @@ Unicode extensions were introduced.
 
 Unlike the Z-machine, which defines a fixed object table format as
 part of the VM specification, Glulx provides no built-in object
-structure. The Inform compiler synthesises its own object table in the
+structure. The Inform compiler synthesizes its own object table in the
 RAM segment. Understanding this layout is important for advanced
 debugging and for writing assembly code that manipulates objects
 directly.
@@ -526,7 +526,7 @@ via the `setiosys` opcode. The available modes are:
 When the VM starts, the null I/O system is active. The program must
 explicitly select the Glk system (typically with `@setiosys 2 0;`)
 before any output will be visible. The standard library performs this
-switch during initialisation.
+switch during initialization.
 
 ### 30.8.2 The `@glk` Opcode
 
@@ -801,7 +801,7 @@ Functions 2–7 are deprecated and should not be used when
 `NUM_ATTR_BYTES` differs from the default value, as they assume a
 fixed attribute size.
 
-### 30.10.4 Restrictions and Behaviour
+### 30.10.4 Restrictions and Behavior
 
 Accelerated functions have several restrictions:
 

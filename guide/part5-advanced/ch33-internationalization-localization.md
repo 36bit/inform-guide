@@ -20,7 +20,7 @@
 # Chapter 33: Internationalization and Localization
 
 The library separates language-dependent text and grammar from the core
-parser and world model. All English-specific behaviour is isolated in a
+parser and world model. All English-specific behavior is isolated in a
 single file, `english.h`, which defines arrays, constants, and functions
 that the parser and verb library call through a well-defined interface. To
 translate a game into another language, one replaces `english.h` with a new
@@ -33,7 +33,7 @@ tense system introduced in library 6.12.
 
 The file `english.h` (1583 lines in library 6.12.8) is automatically
 included by `parserm.h` and provides every piece of English-specific
-behaviour that the library requires. It is organised into several parts:
+behavior that the library requires. It is organised into several parts:
 pronoun and descriptor tables, printing routines, text constants, pronoun
 helper functions, narrative voice conjugation helpers, and the main library
 message handler. This section provides a complete inventory.
@@ -162,7 +162,7 @@ vowel column.
 
 The `LanguageArticles` array (line 193) is a two-dimensional word array
 indexed by article row and contraction form. Each row contains six
-entries — capitalised definite, lowercase definite, and indefinite, for
+entries — capitalized definite, lowercase definite, and indefinite, for
 each contraction form:
 
 ```inform6
@@ -458,7 +458,7 @@ player's input to numeric values.
 
 **`LanguageArticles`** — A `-->` (word) array containing article strings.
 The array has dimensions `(number of article rows) × (LanguageContractionForms × 3)`.
-Each group of three strings per contraction form contains the capitalised
+Each group of three strings per contraction form contains the capitalized
 definite article, lowercase definite article, and indefinite article.
 
 **`LanguageGNAsToArticles`** — A `-->` (word) array of 12 entries, one per
@@ -502,7 +502,7 @@ the target language. Called by the library when printing numbers in prose
 when the game uses `Statusline time;`.
 
 **`LanguageVerb(i)`** — Receives a dictionary word and prints its
-full-form verb name. Returns true if the word was recognised, false
+full-form verb name. Returns true if the word was recognized, false
 otherwise. Used in parser messages like "I only understood you as far as
 wanting to [verb]".
 
@@ -517,15 +517,15 @@ and most complex function in the language definition file.
 ### 33.2.4 Optional Functions
 
 The following functions are checked with `#Ifdef` before being called. If
-they are absent, the library uses default behaviour:
+they are absent, the library uses default behavior:
 
 **`LanguageInitialise`** — Called once at game startup during
 `Initialise()`. Can be used to set up
 language-specific global state.
 
-**`LanguageToInformese`** — Called during input tokenisation
+**`LanguageToInformese`** — Called during input tokenization
 to preprocess the raw input buffer before the parser analyses
-it. Useful for normalising accented characters, expanding contractions, or
+it. Useful for normalizing accented characters, expanding contractions, or
 handling language-specific input transformations. The `english.h` file
 defines this as an empty function.
 
@@ -540,7 +540,7 @@ given object.
 
 **`LanguageCommand(v)`** — Called when printing a command back to the
 player. If defined, gives the language file a chance
-to customise how commands are displayed.
+to customize how commands are displayed.
 
 **`LanguagePrintShortName(obj)`** — Called when printing an object's short
 name. If defined, allows the language file to
@@ -600,7 +600,7 @@ The article selection mechanism works as follows:
    contraction form (0 to `LanguageContractionForms - 1`).
 4. It computes the index into `LanguageArticles`:
    `row * LanguageContractionForms * 3 + contraction_form * 3 + column`,
-   where column is 0 for capitalised definite, 1 for lowercase definite,
+   where column is 0 for capitalized definite, 1 for lowercase definite,
    or 2 for indefinite.
 5. It prints the string at that index.
 
@@ -924,7 +924,7 @@ object. Setting up a flashback in past tense is straightforward:
 
 The core conjugation function is `CSubjectVerb` (in `english.h`).
 All library messages that print a subject-verb combination call this
-function or one of its specialised wrappers:
+function or one of its specialized wrappers:
 
 ```inform6
 [ CSubjectVerb obj reportage nocaps v1 v2 v3 past;
@@ -979,7 +979,7 @@ print " ", (the) x1, ".^";
 ! Voice 3, past:    "George closed the door."
 ```
 
-### 33.5.4 Specialised Conjugation Helpers
+### 33.5.4 Specialized Conjugation Helpers
 
 `english.h` provides wrapper functions for common English verbs. Each
 follows the same pattern as `CSubjectVerb` but with the verb forms
@@ -1114,7 +1114,7 @@ for the subject. For the player object:
 For non-player objects: "he", "she", "they", or "that".
 
 **`Possessive(obj, caps)`** (line 671) — Prints the possessive pronoun
-for `obj`, with optional capitalisation:
+for `obj`, with optional capitalization:
 
 | Voice | Output (caps=false) | Output (caps=true) |
 |-------|---------------------|--------------------|
@@ -1177,7 +1177,7 @@ Eat:
     print " ", (the) x1, ". Delicious!";
 ```
 
-For messages that include auxiliary verbs, use the specialised helpers:
+For messages that include auxiliary verbs, use the specialized helpers:
 
 ```inform6
 ! "You can't eat that." / "I couldn't eat that." / etc.

@@ -20,7 +20,7 @@
 # Chapter 32: Replacing and Extending the Library
 
 The library provides a comprehensive framework for interactive fiction,
-but nearly every game needs to customise it in some way. This chapter
+but nearly every game needs to customize it in some way. This chapter
 covers the compiler directives and design patterns that allow a game to
 replace individual library routines, define new actions and verbs, extend
 the class hierarchy, intercept library messages, and write reusable
@@ -88,7 +88,7 @@ typedef struct value_pair_struct {
 When the compiler encounters the routine definition in the system file, it
 finds the rename mapping via `find_symbol_replacement()` and compiles the
 routine body under the renamed symbol instead of skipping it entirely. The
-game can then call `preserved_name()` to invoke the original behaviour.
+game can then call `preserved_name()` to invoke the original behavior.
 
 ### 32.1.3 Constraints
 
@@ -180,7 +180,7 @@ Include "Grammar";
 ### 32.2.2 Using the Two-Argument Form
 
 The two-argument form of `Replace` is especially useful when you want to
-augment the original behaviour rather than completely replacing it:
+augment the original behavior rather than completely replacing it:
 
 ```inform6
 Replace Banner OriginalBanner;
@@ -316,7 +316,7 @@ Stub InitGlkWindow     1;
 ```
 
 These Glulx-only entry points handle Glk event processing, object
-identification during save/restore, and window initialisation
+identification during save/restore, and window initialization
 respectively.
 
 ### 32.3.3 Entry Point Summary
@@ -342,11 +342,11 @@ each receives:
 | `NewRoom` | 0 | When the player enters a new room |
 | `ObjectDoesNotFit` | 2 | When an object is too large for a container |
 | `ParseNumber` | 2 | To handle numeric input during parsing |
-| `ParserError` | 1 | To intercept or customise parser error messages |
+| `ParserError` | 1 | To intercept or customize parser error messages |
 | `PrintTaskName` | 1 | To print the name of a scored task |
-| `PrintVerb` | 1 | To print a verb the library does not recognise |
+| `PrintVerb` | 1 | To print a verb the library does not recognize |
 | `TimePasses` | 0 | At the end of each turn |
-| `UnknownVerb` | 1 | To handle a verb the parser does not recognise |
+| `UnknownVerb` | 1 | To handle a verb the parser does not recognize |
 | `AfterSave` | 1 | After a save operation (argument: success flag) |
 | `AfterRestore` | 1 | After a restore operation (argument: success flag) |
 
@@ -487,7 +487,7 @@ Extend 'get' replace
 
 The `replace` keyword discards **all** existing grammar for the verb and
 substitutes the new lines. Use this with care, as it removes all standard
-behaviour for that verb word.
+behavior for that verb word.
 
 **The `only` keyword:**
 
@@ -517,7 +517,7 @@ Fake_Action Sneeze;
 
 This allocates an action number for `Sneeze` (accessible as `##Sneeze`)
 but does not create a verb or grammar for it. Fake actions are used for
-internal signalling between objects — for example, a `before` handler
+internal signaling between objects — for example, a `before` handler
 might respond to `##Sneeze` even though the player can never type
 a command that generates it directly. Game code can trigger it with:
 
@@ -552,7 +552,7 @@ the Glulx format.
 
 Inform 6 supports single and multiple inheritance through its class
 system. Games can define new classes, inherit from library classes, and
-combine behaviours from multiple parent classes.
+combine behaviors from multiple parent classes.
 
 ### 32.5.1 Defining Classes
 
@@ -781,7 +781,7 @@ library context. The `#Iftrue` directive performs a numeric comparison.
   extensions or the game itself.
 - **Use `System_file`**: so game authors can replace individual routines.
 - **Use include guards**: to prevent double-inclusion (see §32.6.2).
-- **Avoid modifying globals at load time**: defer initialisation to
+- **Avoid modifying globals at load time**: defer initialization to
   a routine that the game can call from `Initialise`.
 - **Provide `Replace`-friendly routines**: keep routines small and
   focused so they can be individually replaced without copying large
@@ -855,11 +855,11 @@ Include "myextension";
 Include "Grammar";
 ```
 
-## 32.7 Customising LibraryMessages
+## 32.7 Customizing LibraryMessages
 
 The standard library generates many messages during gameplay — responses
 to actions, parser errors, status reports, and so on. The
-`LibraryMessages` mechanism provides a clean way to customise these
+`LibraryMessages` mechanism provides a clean way to customize these
 messages without replacing entire library routines.
 
 ### 32.7.1 The LibraryMessages Object
@@ -941,7 +941,7 @@ the source of `LanguageLM` in `english.h` for the specific action.
 For example, in some messages `x1` may be the object that caused the
 action to fail, while in others it may be a count of items.
 
-### 32.7.5 LanguageLM and Internationalisation
+### 32.7.5 LanguageLM and Internationalization
 
 The default message handler, `LanguageLM`, is defined in `english.h`
 and contains a large switch statement
@@ -961,7 +961,7 @@ various `lm_n` sub-messages for that action:
 The relationship between `LibraryMessages` and `LanguageLM` is
 straightforward:
 
-- **`LibraryMessages`** provides **game-level** customisation. A game
+- **`LibraryMessages`** provides **game-level** customization. A game
   author uses it to adjust specific messages for their particular game.
 - **`LanguageLM`** provides **language-level** defaults. A translator
   replacing `english.h` with (for example) `french.h` would rewrite
@@ -969,7 +969,7 @@ straightforward:
 
 ### 32.7.6 Comprehensive Example
 
-The following example customises messages for several common actions:
+The following example customizes messages for several common actions:
 
 ```inform6
 Object LibraryMessages
@@ -1014,7 +1014,7 @@ needs to handle the `lm_n` values they want to change.
 
 ### 32.7.7 Replacing vs. LibraryMessages
 
-There are two approaches to customising library output:
+There are two approaches to customizing library output:
 
 | Approach | When to Use |
 |----------|------------|

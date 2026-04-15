@@ -21,7 +21,7 @@
 
 This chapter describes the limits that constrain a program: both the hard
 constraints imposed by the target virtual machine and the configurable
-settings that control the compiler's own behaviour. It collects the
+settings that control the compiler's own behavior. It collects the
 practical information a programmer needs when a project grows beyond
 default limits, when choosing between Z-machine and Glulx, or when
 fine-tuning the compiler for a production release.
@@ -168,7 +168,7 @@ applications needing full Unicode support.
 
 ## 15.4 Configurable Compiler Settings
 
-The following table lists all `$SETTING=value` options recognised by
+The following table lists all `$SETTING=value` options recognized by
 the current compiler (version 6.44). Settings marked "fixed" in the
 Z-code column are determined by the Z-machine specification and cannot
 be changed when compiling for Z-code. Settings marked "N/A" do not
@@ -218,7 +218,7 @@ Z-machine:
 | `$ZCODE_COMPACT_GLOBALS` | 0 | If 1, reuse global variable slots that are declared but never written. |
 | `$ZCODE_LESS_DICT_DATA` | 0 | If 1, use 2 data bytes per dictionary entry instead of 3, saving space in large dictionaries. |
 
-### 15.4.5 Compiler Behaviour Settings
+### 15.4.5 Compiler Behavior Settings
 
 These settings control compiler internals and output features:
 
@@ -228,9 +228,9 @@ These settings control compiler internals and output features:
 | `$TRANSCRIPT_FORMAT` | 0 | Format of the `gametext.txt` file: 0 for human-readable, 1 for machine-parseable. |
 | `$SERIAL` | auto | Six-digit serial number for the story file header. Default uses the compilation date (YYMMDD). |
 
-### 15.4.6 Optimisation and Output Flags
+### 15.4.6 Optimization and Output Flags
 
-These boolean settings (0 or 1) control compiler optimisation passes
+These boolean settings (0 or 1) control compiler optimization passes
 and output format. See §12.5 for detailed descriptions of each.
 
 | Setting | Default | Description |
@@ -249,7 +249,7 @@ grammar table features. See §12.5 for detailed descriptions.
 | ------- | ------- | ----------- |
 | `$DICT_IMPLICIT_SINGULAR` | 0 | If 1, dictionary words in noun context automatically get the singular flag. |
 | `$DICT_TRUNCATE_FLAG` | 0 | If 1, flag bit 6 marks words truncated beyond `$DICT_WORD_SIZE`. |
-| `$LONG_DICT_FLAG_BUG` | 1 | If 1, retain legacy buggy handling of `//p` on long dictionary words. Set to 0 for correct behaviour. |
+| `$LONG_DICT_FLAG_BUG` | 1 | If 1, retain legacy buggy handling of `//p` on long dictionary words. Set to 0 for correct behavior. |
 | `$GRAMMAR_META_FLAG` | 0 | If 1, enable per-action meta flags in the grammar table. |
 
 ---
@@ -274,7 +274,7 @@ new_count = 2 × requested_count + 8
 
 This exponential-with-headroom strategy means that a table that grows
 incrementally (one item at a time) will double in capacity each time it
-overflows, amortising the cost of reallocation. The `+ 8` term ensures
+overflows, amortizing the cost of reallocation. The `+ 8` term ensures
 that very small tables get a reasonable minimum allocation without
 requiring a separate code path.
 
@@ -463,7 +463,7 @@ object record (must be a multiple of 4):
 inform -G $GLULX_OBJECT_EXT_BYTES=8 adventure.inf
 ```
 
-These extra bytes are initialised to zero and can be read and written
+These extra bytes are initialized to zero and can be read and written
 using assembly-level memory access.
 
 ### 15.7.6 Reducing Z-Code File Size
@@ -550,7 +550,7 @@ scripts with Unicode support.
    inform $LIST
    ```
 
-   This is especially useful when diagnosing unexpected behaviour
+   This is especially useful when diagnosing unexpected behavior
    caused by a setting inherited from an ICL file or header comment.
 
 ---

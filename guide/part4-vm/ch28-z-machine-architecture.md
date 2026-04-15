@@ -25,10 +25,10 @@ compilation target and was originally designed by Infocom in the early
 1980s to run interactive fiction portably across many different hardware
 platforms. The compiler produces story files that conform to the Z-machine
 specification, and understanding the underlying architecture is valuable
-for advanced optimisation, debugging, and writing assembly-level code.
+for advanced optimization, debugging, and writing assembly-level code.
 
 All details in this chapter have been verified against the Inform 6.44
-compiler source code. Where the compiler's behaviour differs from or
+compiler source code. Where the compiler's behavior differs from or
 extends the Z-Machine Standard document, those differences are noted.
 
 ## 28.1 History and Versions
@@ -327,7 +327,7 @@ typedef struct objecttz {
 ## 28.5 Dictionary Layout
 
 The dictionary table stores the game's vocabulary — every word that the
-parser can recognise. The table has three parts:
+parser can recognize. The table has three parts:
 
 ### 28.5.1 Separator List
 
@@ -604,7 +604,7 @@ In alphabet A2, position 0 (Z-char 6) is special: it introduces a
 two-Z-char literal ZSCII code (used for characters not in any alphabet).
 Position 1 (Z-char 7) represents a newline character.
 
-The alphabet can be customised using the `Zcharacter` directive, which
+The alphabet can be customized using the `Zcharacter` directive, which
 modifies the `alphabet[][]` array in the compiler. If the alphabet is
 modified, the custom alphabet table is written into the story file and
 its address is recorded in header bytes 52–53.

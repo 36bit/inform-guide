@@ -21,7 +21,7 @@
 
 This chapter describes routines (functions): how they are declared, how
 arguments and local variables work, how values are returned, and the
-calling conventions that govern their behaviour on the Z-machine and Glulx
+calling conventions that govern their behavior on the Z-machine and Glulx
 virtual machines.
 
 ## 6.1 Routine Declaration Syntax
@@ -65,7 +65,7 @@ definition. It is callable by name from anywhere in the program:
 ];
 ```
 
-Stand-alone routines are the primary mechanism for organising code in
+Stand-alone routines are the primary mechanism for organizing code in
 programs. The name becomes a global constant whose value is the
 packed address of the routine.
 
@@ -107,7 +107,7 @@ routine value:
 
 The local variables listed in a routine's header serve a dual purpose: the
 first *N* locals receive the *N* arguments passed by the caller, and any
-remaining locals are initialised to zero.
+remaining locals are initialized to zero.
 
 ```inform6
 [ Add a b;
@@ -122,7 +122,7 @@ remaining locals are initialised to zero.
 ### 6.4.1 Missing and Excess Arguments
 
 If the caller supplies **fewer** arguments than the routine declares
-locals, the unmatched locals are initialised to zero:
+locals, the unmatched locals are initialized to zero:
 
 ```inform6
 [ Flexible a b c;
@@ -292,10 +292,10 @@ subsequent arguments are passed to the called routine:
 
 Indirect calls are useful for:
 
-- **Callback patterns** — passing behaviour as an argument.
+- **Callback patterns** — passing behavior as an argument.
 - **Dispatch tables** — storing routine addresses in arrays and calling
   them by index.
-- **Plugin architectures** — swapping behaviour at runtime.
+- **Plugin architectures** — swapping behavior at runtime.
 
 ```inform6
 Array handlers --> ProcessA ProcessB ProcessC;
@@ -378,7 +378,7 @@ can still overflow it.
 
 ### 6.10.2 Tail Recursion
 
-The compiler does not perform tail-call optimisation. A recursive
+The compiler does not perform tail-call optimization. A recursive
 call in tail position still allocates a new stack frame. If deep recursion
 is needed, consider rewriting the algorithm iteratively:
 

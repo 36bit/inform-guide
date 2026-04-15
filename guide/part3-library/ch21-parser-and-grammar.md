@@ -23,14 +23,14 @@ The parser is the largest and most complex component of the standard
 library. It reads the player's typed input, matches it against grammar
 definitions, resolves noun phrases to objects, and produces an action with
 its arguments. This chapter explains how the parser works, how grammar is
-defined, and how game authors can customise parsing behaviour.
+defined, and how game authors can customize parsing behavior.
 
 ## 21.1 How the Parser Works
 
 When the player types a command and presses Enter, the parser performs
 four major phases:
 
-### Phase 1: Tokenisation
+### Phase 1: Tokenization
 
 The library calls `Keyboard()` to read a line of input into the
 **buffer** array. It then calls `Tokenise__()` to split the input into
@@ -291,7 +291,7 @@ to indicate which words were matched:
 
 The `Extend` directive adds grammar lines to an existing verb without
 replacing its original grammar. This is the primary mechanism for
-customising the parser from game source.
+customizing the parser from game source.
 
 ### Basic Syntax
 
@@ -397,7 +397,7 @@ Object  -> "red ball" room
         ];
 ```
 
-### Signalling Plurals
+### Signaling Plurals
 
 If `parse_name` matches a plural word, it should set `parser_action` to
 `##PluralFound` so the parser knows to consider multiple objects:
@@ -450,7 +450,7 @@ which object the player intended. This process is called
 
 1. The parser builds `match_list`, an array of candidate objects.
 2. Objects are grouped into **equivalence classes** — groups of
-   identical objects (same name words, same `parse_name` behaviour).
+   identical objects (same name words, same `parse_name` behavior).
 3. If only one class exists, the parser picks any member.
 4. If multiple classes exist, the parser asks the player:
    `"Which do you mean, the red ball or the blue ball?"`
@@ -516,7 +516,7 @@ parser error. The library defines 18 standard error types as constants:
 | `VAGUE_PE` | 9 | Not sure what "it" refers to |
 | `EXCEPT_PE` | 10 | Exception error |
 | `ANIMA_PE` | 11 | Can only do that to animate things |
-| `VERB_PE` | 12 | Not a verb I recognise |
+| `VERB_PE` | 12 | Not a verb I recognize |
 | `SCENERY_PE` | 13 | Not something to interact with |
 | `ITGONE_PE` | 14 | "It" is no longer available |
 | `JUNKAFTER_PE` | 15 | Junk after the command |
@@ -526,7 +526,7 @@ parser error. The library defines 18 standard error types as constants:
 
 ### The `ParserError` Entry Point
 
-The game can define a `ParserError` routine to customise error messages.
+The game can define a `ParserError` routine to customize error messages.
 It receives the error type as its argument. Return `true` to suppress
 the default message, or `false` to let the library print its standard
 error.
@@ -576,7 +576,7 @@ the routine handled the printing, or `false` for the default.
 ## 21.9 The Input Buffer and Parse Table
 
 The parser uses two main data structures to hold input: the **buffer**
-(raw character input) and the **parse** table (tokenised word list).
+(raw character input) and the **parse** table (tokenized word list).
 
 ### Z-Machine Layout
 
@@ -609,7 +609,7 @@ accommodate 32-bit dictionary addresses.
 |----------|---------|
 | `wn` | Current word index into the parse table (1-based). The parser advances this as it consumes words. |
 | `num_words` | Total number of words in the current input. |
-| `verb_word` | Dictionary address of the recognised verb word. |
+| `verb_word` | Dictionary address of the recognized verb word. |
 | `verb_wordnum` | Position of the verb word in the input (1-based). |
 
 ### Word Access Routines
@@ -632,7 +632,7 @@ NumberWord(n)       ! Parses word n as a number; returns the value
 
 ### Manipulating Input
 
-Games can modify the buffer and re-tokenise to alter what the parser
+Games can modify the buffer and re-tokenize to alter what the parser
 sees. This is typically done in `BeforeParsing()`:
 
 ```inform6
@@ -647,7 +647,7 @@ sees. This is typically done in `BeforeParsing()`:
 ];
 ```
 
-The `Tokenise__()` function can be called to re-tokenise the buffer
+The `Tokenise__()` function can be called to re-tokenize the buffer
 after modifications:
 
 ```inform6

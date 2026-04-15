@@ -129,7 +129,7 @@ The optimization algorithm works as follows:
    newly selected abbreviation would conflict with one already chosen —
    for example, if `"the "` and `"there"` both appear as candidates, the
    compiler ensures that selecting one does not invalidate occurrences of
-   the other. Overlapping candidates are skipped in favour of
+   the other. Overlapping candidates are skipped in favor of
    higher-scoring alternatives.
 
 The algorithm produces good results but can be very slow on large games,
@@ -363,11 +363,11 @@ setting `$STRIP_UNREACHABLE_LABELS=0` preserves all labels.
 ### 35.3.4 Unused Routine Detection
 
 The compiler can detect and optionally remove routines that are never
-called. Two settings control this behaviour:
+called. Two settings control this behavior:
 
 **`$WARN_UNUSED_ROUTINES`** controls warning generation:
 
-| Value | Behaviour |
+| Value | Behavior |
 |-------|-----------|
 | 0 | No warnings about unused routines (default) |
 | 1 | Warn about unused routines in game code only |
@@ -381,7 +381,7 @@ are only used in specific configurations.
 
 **`$OMIT_UNUSED_ROUTINES`** controls code generation:
 
-| Value | Behaviour |
+| Value | Behavior |
 |-------|-----------|
 | 0 | Compile all routines regardless of usage (default) |
 | 1 | Omit routines that are never called from the compiled output |
@@ -512,7 +512,7 @@ for optimal hash distribution.
 ## 35.5 Story File Size Reduction Techniques
 
 This section provides a practical overview of all available optimization
-techniques, summarising the mechanisms described in this chapter and
+techniques, summarizing the mechanisms described in this chapter and
 elsewhere in the guide. The goal is to help authors produce the smallest
 possible story file for release builds.
 
@@ -604,7 +604,7 @@ dictionary flexibility.
 The `$OMIT_SYMBOL_TABLE` setting controls whether
 the compiler includes symbolic debugging information in the story file.
 
-| Value | Behaviour |
+| Value | Behavior |
 |-------|-----------|
 | 0 | Include all debug symbol names in the story file (default) |
 | 1 | Omit all debug symbol names from the story file |
@@ -627,7 +627,7 @@ for runtime debugging tools.
 - Object short names (the printed names of in-game objects) — these are
   game content, not debug symbols
 - Dictionary words — these are part of the parser vocabulary
-- All game logic and behaviour — stripping symbols has no effect on
+- All game logic and behavior — stripping symbols has no effect on
   gameplay
 
 **Typical size savings:** 5–15% of total story file size, depending on
@@ -658,7 +658,7 @@ Or in source:
 The `$ZCODE_LESS_DICT_DATA` setting reduces the
 size of each dictionary entry by one byte.
 
-| Value | Behaviour |
+| Value | Behavior |
 |-------|-----------|
 | 0 | Standard dictionary entry format (default) |
 | 1 | Reduced dictionary entry format (one fewer data byte) |
@@ -732,7 +732,7 @@ dynamic data. In the standard layout, arrays start at offset 0x1E0
 When `$ZCODE_COMPACT_GLOBALS` is set to 1, the compiler changes this
 layout:
 
-| Value | Behaviour |
+| Value | Behavior |
 |-------|-----------|
 | 0 | Standard layout: 480-byte global block, arrays follow (default) |
 | 1 | Compact layout: arrays begin immediately after the last used global |

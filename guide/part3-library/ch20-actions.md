@@ -38,9 +38,9 @@ Every action has three components:
 1. **An action number** — a compile-time constant written `##ActionName`.
    The compiler assigns these automatically.
 2. **An action routine** — a function named `ActionNameSub` that
-   implements the default behaviour.
+   implements the default behavior.
 3. **A grammar pattern** (optional) — one or more grammar lines in a
-   `Verb` directive that tell the parser how to recognise the action from
+   `Verb` directive that tell the parser how to recognize the action from
    player input.
 
 When an action fires, the library sets several global variables that
@@ -87,7 +87,7 @@ resolves noun phrases to objects. On success it sets `action`, `noun`,
 ### Step 2: Action Transformations
 
 Before dispatching, the library applies several transformations to
-normalise reversed and redirected actions:
+normalize reversed and redirected actions:
 
 - **`GiveR` → `Give`** and **`ShowR` → `Show`**: Grammar lines using
   `reverse` (e.g. `* creature held -> Give reverse`) produce `GiveR`
@@ -176,7 +176,7 @@ the action routine (`ActionNameSub`) via a lookup in the actions table:
 ];
 ```
 
-The action routine carries out the default behaviour — printing messages,
+The action routine carries out the default behavior — printing messages,
 moving objects, changing attributes, and so on.
 
 #### 4c. `AfterRoutines()`
@@ -229,7 +229,7 @@ non-zero (the player has died or won), the sequence halts.
 ## 20.3 Before and After Processing
 
 The `before` and `after` properties are the primary way game authors
-customise action behaviour. Both are **additive** properties, meaning
+customize action behavior. Both are **additive** properties, meaning
 inherited values from class definitions are combined rather than
 replaced.
 
@@ -460,7 +460,7 @@ The standard library declares these fake actions in `parser.h`:
 
 Game code can trigger actions directly using angle-bracket notation.
 This is essential for redirecting actions, implementing complex
-behaviours, and creating cause-and-effect chains.
+behaviors, and creating cause-and-effect chains.
 
 ### Basic Forms
 
@@ -708,11 +708,11 @@ The following table lists every action defined by the standard library
 | `LetGo` | Sent to container `before` when an object is removed. |
 | `ListMiscellany` | Internal: object-list message selection. |
 | `Miscellany` | Internal: general library messages. |
-| `NotUnderstood` | Sent to NPC `orders` when the command is unrecognised. |
+| `NotUnderstood` | Sent to NPC `orders` when the command is unrecognized. |
 | `Objects` | Internal: used by `objects` meta-verb. |
 | `Order` | Sent to NPC `life` when given a command. |
 | `Places` | Internal: used by `places` meta-verb. |
-| `PluralFound` | Internal: `parse_name` signalling. |
+| `PluralFound` | Internal: `parse_name` signaling. |
 | `Prompt` | Sent before the command prompt is printed. |
 | `Receive` | Sent to container/supporter `before` when receiving an object. |
 | `RunTimeError` | Internal: run-time error messages. |

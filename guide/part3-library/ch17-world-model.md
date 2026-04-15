@@ -636,7 +636,7 @@ routine iterates over every object in the game. For each object with a
 ### 17.11.3 The `absent` Attribute
 
 Giving a floating object the `absent` attribute (aliased as
-`non_floating`) suppresses its floating behaviour — `MoveFloatingObjects`
+`non_floating`) suppresses its floating behavior — `MoveFloatingObjects`
 removes any object with `absent`, regardless of `found_in`:
 
 ```inform6

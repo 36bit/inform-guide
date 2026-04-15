@@ -256,7 +256,7 @@ is on top), and L2 specifies how many to consume. The `callf` family
 provides more efficient encoding for calls with 0–3 inline arguments,
 avoiding the need to push arguments onto the stack.
 
-The `tailcall` opcode optimises recursive and tail-position calls by
+The `tailcall` opcode optimizes recursive and tail-position calls by
 reusing the current stack frame. It has the `Rf` flag set because
 execution never continues past it — the called function's return value
 is delivered directly to the caller of the current function.
@@ -342,7 +342,7 @@ that both operands are store destinations.
 |---|---|---|---|
 | 0x00 | `nop` | (none) | No operation. |
 | 0x100 | `gestalt` | L1 L2 S1 | Query VM capability. L1 is the selector, L2 is an argument. Result stored in S1. |
-| 0x101 | `debugtrap` | L1 | Trigger interpreter-specific debugging. Behaviour is implementation-defined. |
+| 0x101 | `debugtrap` | L1 | Trigger interpreter-specific debugging. Behavior is implementation-defined. |
 | 0x102 | `getmemsize` | S1 | Store the current total memory size (ENDMEM) into S1. |
 | 0x103 | `setmemsize` | L1 S1 | Request memory resize to L1 bytes. S1 receives 0 on success, 1 on failure. L1 must be a multiple of 256 and ≥ ENDMEM. |
 | 0x110 | `random` | L1 S1 | Generate a random number. If L1 > 0, result is in 0..(L1−1). If L1 < 0, result is in (L1+1)..0. If L1 = 0, result is any 32-bit value. |
@@ -597,7 +597,7 @@ function type used by the Inform compiler for most routines. Arguments
 passed by the caller are copied into the function's local variables.
 If more arguments are passed than the function declares, the extras are
 discarded. If fewer arguments are passed, the remaining locals are
-initialised to zero.
+initialized to zero.
 
 **Type C0 (0xC0) — Stack-argument functions.** Arguments remain on the
 stack rather than being copied into locals. The function accesses its
@@ -646,7 +646,7 @@ Functions can be called using several opcodes:
   is the store destination for the return value.
 
 - **`callf` (0x160), `callfi` (0x161), `callfii` (0x162),
-  `callfiii` (0x163):** Optimised calling opcodes for 0, 1, 2, or 3
+  `callfiii` (0x163):** Optimized calling opcodes for 0, 1, 2, or 3
   arguments respectively. Arguments are passed as inline operands,
   avoiding the need to push them onto the stack. The compiler prefers
   these for efficiency when the argument count is small and known at
@@ -694,7 +694,7 @@ and the `->` operator compiles to `aloadb`/`astoreb`.
 
 The `mzero` and `mcopy` opcodes operate on contiguous blocks of memory:
 
-- `mzero` sets a region to all zeros. Useful for initialising arrays
+- `mzero` sets a region to all zeros. Useful for initializing arrays
   or clearing buffers.
 - `mcopy` copies a block of bytes from one address to another. The
   operation handles overlapping regions correctly (similar to C's
@@ -933,7 +933,7 @@ The `Glk__Wrap` veneer routine bridges these calling conventions:
 ### 31.7.4 Setting the I/O System
 
 Before any output can occur, the program must select an I/O system.
-The standard library does this during initialisation, but programs
+The standard library does this during initialization, but programs
 that bypass the library must do it manually:
 
 ```inform6
@@ -1104,7 +1104,7 @@ if (result) {
 
 ### 31.8.4 Custom Opcode Syntax
 
-If the compiler does not recognise an opcode name, it can still
+If the compiler does not recognize an opcode name, it can still
 assemble the instruction using a numeric opcode specification. This
 allows programs to use opcodes that the compiler does not have built-in
 support for:

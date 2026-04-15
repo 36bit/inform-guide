@@ -22,7 +22,7 @@
 The compiler translates source files written in the Inform language into
 story files for either the Z-machine or Glulx virtual machine. This
 chapter describes how to invoke the compiler from the command line, how it
-locates source and output files, and how to control its behaviour through
+locates source and output files, and how to control its behavior through
 switches, path settings, and configuration files.
 
 ---
@@ -197,7 +197,7 @@ used.
 
 ## 11.4 Output File Naming
 
-### 11.4.1 Default Behaviour
+### 11.4.1 Default Behavior
 
 When only one filename is given on the command line, the compiler derives
 the output filename from the source filename by stripping any directory
@@ -361,7 +361,7 @@ Options are processed in the following order:
 3. **Command-line arguments** — processed left to right, including any
    ICL files loaded via `(file.icl)` or `--config`.
 
-### 11.7.2 Overriding Behaviour
+### 11.7.2 Overriding Behavior
 
 Later options override earlier ones. Within the command line, arguments
 are processed strictly left to right, so a switch appearing later will

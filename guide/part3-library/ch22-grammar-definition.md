@@ -23,7 +23,7 @@ This chapter provides a detailed reference for defining and extending
 grammar. Where Chapter 21 introduced the parser, verb directives, and
 token types at a practical level, this chapter examines the underlying
 mechanisms: formal syntax, grammar table encoding, token type internals,
-custom parsing routines, action linkage, and a complete catalogue of the
+custom parsing routines, action linkage, and a complete catalog of the
 standard library's grammar entries.
 
 ## 22.1 The Verb Directive in Detail
@@ -132,7 +132,7 @@ ones.
 
 **`first`**: Inserts the new grammar lines before all existing lines.
 The parser tries the new lines first, which is useful when overriding
-default behaviour without removing it:
+default behavior without removing it:
 
 ```inform6
 Extend 'look' first
@@ -431,7 +431,7 @@ if (action == ##Examine) print "You look closely.^";
 
 The `Fake_action` directive creates an action number constant without
 requiring either a `Sub` routine or grammar. This is used for internal
-signalling between `before`/`after` handlers — the action number exists
+signaling between `before`/`after` handlers — the action number exists
 solely for use with `<< >>` or `action == ##Name` tests:
 
 ```inform6
@@ -516,7 +516,7 @@ byte at offset +2 of the grammar line.
 ## 22.7 Standard Grammar Entries
 
 The standard library defines its verbs in `grammar.h` (version 6.12.8).
-The following tables provide a complete categorised reference.
+The following tables provide a complete categorized reference.
 
 ### Meta Verbs (System Commands)
 

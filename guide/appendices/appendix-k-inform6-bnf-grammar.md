@@ -85,7 +85,7 @@ The `*` debug marker must appear before any local variable names
 
 Source files use the ASCII character set (bytes 0x20–0x7E plus whitespace
 characters 0x09 tab, 0x0A newline, 0x0D carriage return). The compiler
-recognises the Latin-1 range (0xA1–0xFF) in string literals and character
+recognizes the Latin-1 range (0xA1–0xFF) in string literals and character
 constants.
 
 ### §K.2.2 Comments
@@ -260,7 +260,7 @@ system-constant-name
 ### §K.2.10 Separators and Operators
 
 
-The following separator tokens are recognised by the lexer. Their role as
+The following separator tokens are recognized by the lexer. Their role as
 operators is defined in §K.7.
 
 | Token | Symbol | Token | Symbol |
@@ -375,7 +375,7 @@ Maximum 96 abbreviations in Z-code (64 in version 3).
 
 ```
 array-directive
-    ::= 'Array' IDENTIFIER [ 'static' ] array-type array-initialiser ";"
+    ::= 'Array' IDENTIFIER [ 'static' ] array-type array-initializer ";"
 
 array-type
     ::= "->"                   (* byte array *)
@@ -384,7 +384,7 @@ array-type
     |   'table'                (* word array with length prefix *)
     |   'buffer'               (* byte array with word-sized length prefix *)
 
-array-initialiser
+array-initializer
     ::= numeric-expression                (* count of zero-filled entries *)
     |   expression { expression }         (* list of initial values *)
     |   STRING                            (* ASCII character values *)
@@ -392,8 +392,8 @@ array-initialiser
                                           (* bracketed list of values *)
 ```
 
-When the initialiser is a single expression followed by `;`, it is the
-number of entries (initialised to zero). When multiple expressions appear
+When the initializer is a single expression followed by `;`, it is the
+number of entries (initialized to zero). When multiple expressions appear
 before `;`, they are the data values. A `string` or `table` array has a
 length word at index 0; a `buffer` array has a word-sized length at
 byte offset 0.
@@ -415,7 +415,7 @@ class-directive
         body-of-definition ";"
 ```
 
-The optional parenthesised expression specifies the number of duplicate
+The optional parenthesized expression specifies the number of duplicate
 instances to create.
 
 ### §K.3.6 Constant
@@ -695,7 +695,7 @@ system-file-directive
 ```
 
 Declares the current source file as a system file (affecting `Replace`
-behaviour).
+behavior).
 
 ### §K.3.30 Trace
 
@@ -736,7 +736,7 @@ version-directive
     ::= 'Version' constant-expression ";"
 ```
 
-Sets the Z-machine version (3–8). Deprecated in favour of command-line
+Sets the Z-machine version (3–8). Deprecated in favor of command-line
 switches.
 
 ### §K.3.34 Zcharacter
@@ -833,7 +833,7 @@ embedded-routine
     ::= "[" { local-variable-name } [ "*" ] ";" routine-body "]"
 ```
 
-A property with no values is initialised to 0. The `name` property
+A property with no values is initialized to 0. The `name` property
 (property number 1) treats double-quoted strings as dictionary words
 rather than static strings. Embedded routines are named
 `ObjectName.PropertyName` (for objects) or `ClassName::PropertyName` (for
@@ -981,7 +981,7 @@ case-value
 
 The Inform 6 expression parser is a shift-reduce parser with a
 precedence table. The following grammar is equivalent to the parser's
-behaviour.
+behavior.
 
 ```
 expression
@@ -1341,8 +1341,8 @@ print-format
     |   'a'                                (* print with indefinite article *)
     |   'an'                               (* synonym for 'a' *)
     |   'the'                              (* print with definite article *)
-    |   'The'                              (* capitalised definite article *)
-    |   'A'                                (* capitalised indefinite article — Glulx *)
+    |   'The'                              (* capitalized definite article *)
+    |   'A'                                (* capitalized indefinite article — Glulx *)
     |   'name'                             (* print object short name *)
     |   'number'                           (* print number in words *)
     |   'property'                         (* print property name *)
@@ -1527,7 +1527,7 @@ which operators and forms are permitted.
 | QUANTITY | Value expression | Standard expression |
 | ACTION_Q | Action name | Restricted to action values |
 | ASSEMBLY | Assembly operand | No `->` operator |
-| ARRAY | Array initialiser | No `::` operator |
+| ARRAY | Array initializer | No `::` operator |
 | FORINIT | For-loop init | No `::` operator |
 | RETURN_Q | Return value | Bare property names allowed |
 
@@ -1536,7 +1536,7 @@ which operators and forms are permitted.
 ## §K.10 Lexer Disambiguation Rules
 
 The lexer applies several context-dependent disambiguation rules when
-tokenising.
+tokenizing.
 
 
 ### §K.10.1 Unary Minus vs. Binary Minus

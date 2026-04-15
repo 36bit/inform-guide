@@ -191,7 +191,7 @@ list of initial values. The compiler supports four forms of initializer.
 ### 8.3.1 Numeric Size (Zero-Filled)
 
 A single numeric expression after the type keyword creates an array of that
-many entries, all initialised to zero:
+many entries, all initialized to zero:
 
 ```inform6
 Array buffer -> 100;           ! 100 zero-initialised bytes
@@ -207,7 +207,7 @@ an error if the value is zero or negative.
 ### 8.3.2 Value List
 
 A sequence of two or more expressions after the type keyword creates an
-array with one entry per expression, initialised to the given values:
+array with one entry per expression, initialized to the given values:
 
 ```inform6
 Array directions --> 1 2 3 4 5 6 7 8;
@@ -398,7 +398,7 @@ Array counters --> 4;
 Inform 6 does **not** perform bounds checking on array accesses by default.
 Reading or writing beyond the declared extent of an array accesses whatever
 bytes happen to lie at that memory address — potentially other arrays,
-global variables, or object data. The behaviour is undefined and can cause
+global variables, or object data. The behavior is undefined and can cause
 subtle, hard-to-diagnose bugs:
 
 ```inform6

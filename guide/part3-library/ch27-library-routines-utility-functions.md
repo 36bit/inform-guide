@@ -441,7 +441,7 @@ out of range or the word is not in the dictionary.
 ```
 
 **Notes:**
-- Commas and periods are normalised to `comma_word` and `THEN1__WD`
+- Commas and periods are normalized to `comma_word` and `THEN1__WD`
   respectively.
 - The global variable `wn` (word number) tracks the current position,
   starting at 1.
@@ -574,7 +574,7 @@ suppress status line redraw during input.
 - The routine loops until a valid response is received. Invalid
   responses produce the message "Please answer yes or no." (or its
   language-specific equivalent).
-- The recognised words are defined by language constants: `YES1__WD`,
+- The recognized words are defined by language constants: `YES1__WD`,
   `YES2__WD`, `YES3__WD` (typically "yes", "y", "oui"), and
   `NO1__WD`, `NO2__WD`, `NO3__WD` (typically "no", "n").
 

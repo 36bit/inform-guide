@@ -19,7 +19,7 @@
 
 # Chapter 5: Statements and Control Flow
 
-This chapter describes every statement form recognised by the compiler and
+This chapter describes every statement form recognized by the compiler and
 the control-flow constructs that determine the order in which statements
 execute.
 
@@ -160,7 +160,7 @@ Ranges and individual values may be mixed freely on the same case arm.
 
 ### 5.4.3 Case Expressions (Compiler 6.42+)
 
-Starting with compiler version 6.42, case values may be **parenthesised
+Starting with compiler version 6.42, case values may be **parenthesized
 compile-time constant expressions**, not merely bare literals or named
 constants.
 
@@ -183,7 +183,7 @@ Constant BASE = 10;
 
 The parentheses are required so the compiler can distinguish a case
 expression from a bare literal. Note that range endpoints specified with
-`to` cannot themselves be parenthesised expressions; only individual case
+`to` cannot themselves be parenthesized expressions; only individual case
 values support this syntax.
 
 ### 5.4.4 No Fall-Through
@@ -210,7 +210,7 @@ The `for` loop in Inform 6 follows the same three-part structure as in C,
 but uses **colons** (`:`) to separate the parts, not semicolons.
 
 ```
-for ( initialiser : condition : update ) statement
+for ( initializer : condition : update ) statement
 ```
 
 > **Warning:** Using semicolons instead of colons is a common mistake for
@@ -240,17 +240,17 @@ for (::)               ! infinite loop — all three parts empty
 for (i = 0 : i < n :)  ! no update — must be handled in the body
     i = NextPrime(i);
 
-for (: i > 0 : i--)    ! no initialiser
+for (: i > 0 : i--)    ! no initializer
     ProcessItem(i);
 ```
 
 An entirely empty specification `for ()` is equivalent to `for (::)` and
 produces an infinite loop.
 
-### 5.5.3 Complex Initialisers
+### 5.5.3 Complex Initializers
 
-The initialiser part may contain only a single expression statement. To
-initialise multiple variables, use a helper routine or initialise them
+The initializer part may contain only a single expression statement. To
+initialize multiple variables, use a helper routine or initialize them
 before the loop:
 
 ```inform6
@@ -448,7 +448,7 @@ These are shorthand for `return true` and `return false`:
 ];
 ```
 
-The compiler optimises these into single Z-machine instructions.
+The compiler optimizes these into single Z-machine instructions.
 
 ## 5.11 `print` Statement
 
@@ -476,7 +476,7 @@ print "The answer is ", 6 * 7, ".^";   ! prints: The answer is 42.
 
 ### 5.11.3 Format Specifiers
 
-Parenthesised keywords control how a value is printed:
+Parenthesized keywords control how a value is printed:
 
 | Specifier | Meaning |
 | --------- | ------- |
@@ -488,9 +488,9 @@ Parenthesised keywords control how a value is printed:
 | `(object) expr` | Print the short name of an object (low-level, no article) |
 | `(a) expr` | Print the object name with an indefinite article ("a sword") |
 | `(an) expr` | Synonym for `(a)` |
-| `(A) expr` | Print the object name with a capitalised indefinite article ("A sword") |
+| `(A) expr` | Print the object name with a capitalized indefinite article ("A sword") |
 | `(the) expr` | Print the object name with a definite article ("the sword") |
-| `(The) expr` | Print with a capitalised definite article ("The sword") |
+| `(The) expr` | Print with a capitalized definite article ("The sword") |
 | `(property) expr` | Print the name of a property (debugging aid) |
 
 ```inform6
@@ -669,9 +669,9 @@ arrays:
 
 The first argument is the **text buffer** array (to receive the raw typed
 characters), and the second is the **parse buffer** array (to receive the
-tokenised words).
+tokenized words).
 
-### 5.18.1 Version-Dependent Behaviour
+### 5.18.1 Version-Dependent Behavior
 
 On Z-machine Version 3, `read` also updates the status line before
 accepting input. On Version 4 and above, `read` returns the terminating
@@ -769,7 +769,7 @@ references are permitted — you can jump to a label that appears later in
 the source.
 
 > **Style note:** The use of `jump` and labels is generally discouraged in
-> favour of structured control flow (`if`, `while`, loops). They exist
+> favor of structured control flow (`if`, `while`, loops). They exist
 > primarily for low-level code and as a compilation target for macros.
 
 ## 5.22 `quit`, `save`, `restore`

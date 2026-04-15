@@ -140,10 +140,10 @@ specification and by the Glulx `div` and `mod` opcodes:
 - `-17 % 5` evaluates to `-2`.
 
 Division by zero causes a runtime error on both platforms. The Z-machine
-halts execution; Glulx behaviour depends on the interpreter but typically
+halts execution; Glulx behavior depends on the interpreter but typically
 produces an error.
 
-### 2.3.4 Overflow Behaviour
+### 2.3.4 Overflow Behavior
 
 Arithmetic overflow wraps silently according to two's complement rules. No
 exception or error is raised:
@@ -427,7 +427,7 @@ It generates the appropriate call instruction for the target VM.
 
 ### 2.7.3 Routines in Properties
 
-Object properties commonly hold routine values to implement behaviour that
+Object properties commonly hold routine values to implement behavior that
 varies per object. When the library evaluates a property and discovers that
 it contains a routine address (determined via `metaclass()`), it calls the
 routine rather than using the value directly:
@@ -566,7 +566,7 @@ For words of two or more characters, `'word'` is the standard form and
 
 Two dictionary word expressions are equal if and only if they refer to the
 same dictionary entry. Because the dictionary stores words in a truncated
-and normalised form (see §1.4), words that differ only beyond the truncation
+and normalized form (see §1.4), words that differ only beyond the truncation
 limit compare as equal:
 
 ```inform6
@@ -772,7 +772,7 @@ inspection in Inform 6. It examines a value and returns one of five results:
 | `Class`    | The value is a class object |
 | `Routine`  | The value is a routine address |
 | `String`   | The value is a string address |
-| `nothing`  | The value is `0`, out of range, or not a recognised type |
+| `nothing`  | The value is `0`, out of range, or not a recognized type |
 
 ### 2.12.1 How `metaclass()` Works
 

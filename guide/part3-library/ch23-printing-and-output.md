@@ -22,7 +22,7 @@
 This chapter is the definitive reference for producing textual output. It
 covers the `print` statement and its format specifiers, the library's
 print-rule system for articles and pronouns, object-listing routines, text
-styling, narrative voice and tense, and the library message customisation
+styling, narrative voice and tense, and the library message customization
 mechanism. Where §5 introduces `print` and `print_ret` as language
 statements, this chapter examines the full breadth of the output system —
 from low-level VM opcodes to high-level library routines that automatically
@@ -43,7 +43,7 @@ Each item is one of three kinds:
 2. An **expression** — evaluated, then printed as a signed decimal
    integer.
 3. A **format specifier** of the form `(rule) value` — calls a routine
-   or compiles a specialised VM opcode to format the value.
+   or compiles a specialized VM opcode to format the value.
 
 The `print_ret` statement prints its items, outputs a newline, and
 returns `true`. It is exactly equivalent to:
@@ -82,7 +82,7 @@ numeric placeholder (e.g. `<number 7>`) instead of the property name.
 ### String Escape Sequences
 
 Inside double-quoted strings, the following escape sequences are
-recognised:
+recognized:
 
 | Sequence | Meaning |
 |----------|---------|
@@ -125,7 +125,7 @@ definite article "the" followed by the short name. If the object has the
 alone appears.
 
 **`(The) obj`** — Calls the `CDefArt` veneer routine. Identical to
-`(the)` but capitalises the article: "The lamp" vs "the lamp". For
+`(the)` but capitalizes the article: "The lamp" vs "the lamp". For
 proper nouns, the short name prints unchanged.
 
 **`(a) obj`** / **`(an) obj`** — Calls the `InDefArt` veneer routine.
@@ -134,7 +134,7 @@ If the object has an `article` property (see §7.3), that string is used
 instead. If the object has the `proper` attribute, no article appears.
 
 **`(A) obj`** — Calls the `CInDefArt` veneer routine (available since
-compiler 6.30). Capitalised indefinite article: "A lamp" or
+compiler 6.30). Capitalized indefinite article: "A lamp" or
 "An elephant".
 
 **`(number) n`** — Calls the `EnglishNumber` veneer routine. The
@@ -194,12 +194,12 @@ voice (first/second/third person), tense (present/past), and the
 |------|---------|----------------------|
 | `(ItOrThem) obj` | Objective pronoun | "it", "him", "her", "them" |
 | `(ThatOrThose) obj` | Demonstrative pronoun | "that", "him", "her", "those" |
-| `(CThatOrThose) obj` | Capitalised demonstrative | "That", "He", "She", "Those" |
+| `(CThatOrThose) obj` | Capitalized demonstrative | "That", "He", "She", "Those" |
 | `(CTheyreOrThats) obj` | Subject + copula contraction | "That's", "He's", "They're" |
 | `(IsOrAre) obj` | Copula verb | "is", "are" (or "was", "were") |
 | `(OnesSelf) obj` | Reflexive pronoun | "itself", "himself", "herself" |
 | `(Possessive) obj` | Possessive adjective | "its", "his", "her", "their" |
-| `(PossessiveCaps) obj` | Capitalised possessive | "Its", "His", "Her", "Their" |
+| `(PossessiveCaps) obj` | Capitalized possessive | "Its", "His", "Her", "Their" |
 | `(theActor) obj` | Actor pronoun (lowercase) | "I", "you", "he", "she" |
 | `(nop) x` | No-op; absorbs return value | *(nothing printed)* |
 
@@ -473,7 +473,7 @@ player.narrative_tense = PAST_TENSE;
 
 When `player.nameless` is set to `true`, the library uses alternative
 phrasing for self-references, avoiding the player character's name in
-favour of more impersonal constructions. The default is `false`.
+favor of more impersonal constructions. The default is `false`.
 
 ### How Library Messages Adapt
 
@@ -569,10 +569,10 @@ or `s2` otherwise. Typically used to choose between "on" and "in".
 **`DecideAgainst()`** — prints the standard refusal message: "You
 decide that's not such a good idea." Adapts to voice and tense.
 
-## 23.10 Library Messages and Customisation
+## 23.10 Library Messages and Customization
 
-The library produces all textual output through a centralised message
-system that can be intercepted and customised on a per-message basis.
+The library produces all textual output through a centralized message
+system that can be intercepted and customized on a per-message basis.
 
 ### How Messages Are Dispatched
 
@@ -654,7 +654,7 @@ messages not tied to a specific action (e.g. "I beg your pardon?",
 
 ### Finding Message Numbers
 
-The definitive catalogue of messages is the `LanguageLM()` routine in
+The definitive catalog of messages is the `LanguageLM()` routine in
 `english.h`. Each action has a switch block on `lm_n`; reading the
 source is the most reliable way to identify the number for a specific
 message.
@@ -747,5 +747,5 @@ needs to change without restructuring the surrounding code.
 > constant containing `@(N)` is stored and printed later, it will
 > reflect whatever value slot `N` holds at the moment of printing, not
 > at the moment the string was assigned. This is usually the desired
-> behaviour, but can produce surprises if the slot is shared across
+> behavior, but can produce surprises if the slot is shared across
 > unrelated subsystems.
