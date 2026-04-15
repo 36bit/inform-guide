@@ -502,8 +502,8 @@ compilation environment:
 
 Additional system constants are accessible through the `#` prefix
 notation, such as `#largest_object`, `#dictionary_table`, and
-`#grammar_table`. These are described in detail in the virtual-machine
-chapters (Part IV).
+`#grammar_table`. These are described in detail in Appendix G (System
+Constants Reference).
 
 ### 3.8.4 Constants vs. Global Variables
 
