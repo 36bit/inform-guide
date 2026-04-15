@@ -103,6 +103,12 @@ processing toolchain.
 | Inform 6 compiler        | 6.44    |
 | Inform standard library  | 6.12.8  |
 
+## Contributing and Feedback
+
+Contributions, feedback, and problem reports are welcome. To contribute
+changes, send feedback, or report problems, please email
+[j@jxself.org](mailto:j@jxself.org).
+
 ## Copyright and License
 
 Copyright (C) 2026 Software Freedom Conservancy, Inc.
