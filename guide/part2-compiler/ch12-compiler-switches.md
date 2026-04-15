@@ -886,29 +886,58 @@ specialized applications.
 
 ### 12.8.2 All Dollar Settings
 
-```
-DICT_CHAR_SIZE           DICT_IMPLICIT_SINGULAR
-DICT_TRUNCATE_FLAG       DICT_WORD_SIZE
-GLULX_OBJECT_EXT_BYTES   GRAMMAR_META_FLAG
-GRAMMAR_VERSION          HASH_TAB_SIZE
-INDIV_PROP_START         LONG_DICT_FLAG_BUG
-MAX_ABBREVS              MAX_DYNAMIC_STRINGS
-MAX_STACK_SIZE           MEMORY_MAP_EXTENSION
-NUM_ATTR_BYTES           OMIT_SYMBOL_TABLE
-OMIT_UNUSED_ROUTINES     SERIAL
-STRIP_UNREACHABLE_LABELS TRANSCRIPT_FORMAT
-WARN_UNUSED_ROUTINES     ZCODE_COMPACT_GLOBALS
-ZCODE_FILE_END_PADDING   ZCODE_HEADER_EXT_WORDS
-ZCODE_HEADER_FLAGS_3     ZCODE_LESS_DICT_DATA
-ZCODE_MAX_INLINE_STRING
-```
+| Setting | Description | Details |
+| ------- | ----------- | ------- |
+| `$DICT_CHAR_SIZE` | Bytes per character in dictionary words (1 or 4) | §12.4.3 |
+| `$DICT_IMPLICIT_SINGULAR` | Auto-set singular flag on noun words | §12.5.5 |
+| `$DICT_TRUNCATE_FLAG` | Flag words truncated beyond `DICT_WORD_SIZE` | §12.5.6 |
+| `$DICT_WORD_SIZE` | Characters stored per dictionary word | §12.4.3 |
+| `$GLULX_OBJECT_EXT_BYTES` | Extra bytes per Glulx object data block | §12.4.6 |
+| `$GRAMMAR_META_FLAG` | Per-action meta flags in grammar table | §12.5.7 |
+| `$GRAMMAR_VERSION` | Grammar table format version (1, 2, or 3) | §12.4.4 |
+| `$HASH_TAB_SIZE` | Compiler symbol hash table size | §12.4.7 |
+| `$INDIV_PROP_START` | First individual property number | §12.4.4 |
+| `$LONG_DICT_FLAG_BUG` | Retain long-word dictionary flag bug | §12.5.8 |
+| `$MAX_ABBREVS` | Maximum number of `Abbreviate` directives | §12.4.3 |
+| `$MAX_DYNAMIC_STRINGS` | Maximum string substitution variables | §12.4.3 |
+| `$MAX_STACK_SIZE` | Glulx interpreter stack size in bytes | §12.4.6 |
+| `$MEMORY_MAP_EXTENSION` | Extra zero bytes at end of Glulx file | §12.4.6 |
+| `$NUM_ATTR_BYTES` | Bytes for attribute flags | §12.4.5, §12.4.6 |
+| `$OMIT_SYMBOL_TABLE` | Skip symbol names in output file | §12.5.3 |
+| `$OMIT_UNUSED_ROUTINES` | Dead-code elimination of uncalled routines | §12.5.1 |
+| `$SERIAL` | Story file serial number (0 = use date) | §12.4.7 |
+| `$STRIP_UNREACHABLE_LABELS` | Remove unreachable labels from code | §12.5.9 |
+| `$TRANSCRIPT_FORMAT` | Game text transcript format (0 or 1) | §12.4.7 |
+| `$WARN_UNUSED_ROUTINES` | Warn about uncalled routines (0, 1, or 2) | §12.5.2 |
+| `$ZCODE_COMPACT_GLOBALS` | Reuse unused global variable slots | §12.4.5 |
+| `$ZCODE_FILE_END_PADDING` | Pad Z-code file to 512-byte boundary | §12.4.5 |
+| `$ZCODE_HEADER_EXT_WORDS` | Words in Z-code header extension table | §12.4.5 |
+| `$ZCODE_HEADER_FLAGS_3` | Flags 3 value in header extension table | §12.4.5 |
+| `$ZCODE_LESS_DICT_DATA` | Reduce Z-code dictionary entry size | §12.5.4 |
+| `$ZCODE_MAX_INLINE_STRING` | Max length for inline Z-character strings | §12.4.5 |
 
 ### 12.8.3 All Trace Options
 
-```
-$!ACTIONS    $!ASM         $!BPATCH      $!DICT
-$!EXPR       $!FILES       $!FINDABBREVS $!FREQ
-$!MAP        $!MEM         $!OBJECTS     $!PROPS
-$!RUNTIME    $!STATS       $!SYMBOLS     $!SYMDEF
-$!TOKENS     $!UNICODE     $!VERBS
-```
+See §12.6.2 for full details including trace levels.
+
+| Trace option | Description |
+| ------------ | ----------- |
+| `$!ACTIONS` | Show all actions defined |
+| `$!ASM` | Trace assembly output (same as `-a`) |
+| `$!BPATCH` | Show backpatch markers and results |
+| `$!DICT` | Display the dictionary table |
+| `$!EXPR` | Show expression parse trees |
+| `$!FILES` | List all files opened during compilation |
+| `$!FINDABBREVS` | Show abbreviation optimization decisions |
+| `$!FREQ` | Show abbreviation frequency data (same as `-f`) |
+| `$!MAP` | Print memory map (same as `-z`) |
+| `$!MEM` | Show compiler internal memory allocations |
+| `$!OBJECTS` | Display the object tree table |
+| `$!PROPS` | Show all attributes and properties defined |
+| `$!RUNTIME` | Insert runtime function call tracing (same as `-g`) |
+| `$!STATS` | Print compilation statistics (same as `-s`) |
+| `$!SYMBOLS` | Display the symbol table |
+| `$!SYMDEF` | Show each symbol as it is noticed and defined |
+| `$!TOKENS` | Show token lexing |
+| `$!UNICODE` | Show the Z-machine Unicode translation table |
+| `$!VERBS` | Display the verb grammar table |
