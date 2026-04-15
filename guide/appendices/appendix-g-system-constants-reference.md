@@ -75,10 +75,10 @@ classes.
 
 | Constant | VM | Description |
 |----------|-----|-------------|
-| `largest_object` | Z | The object number of the last object, using 1-based numbering with a base offset of 256. Equal to 256 + (total number of objects) − 1. |
-| `actual_largest_object` | Z | The actual count of objects defined in the game. Unlike `largest_object`, this is the raw count without the Z-machine offset. |
-| `lowest_object_number` | Z/G | Always 1. Objects are numbered starting from 1. |
-| `highest_object_number` | Z/G | The number of the last object, equal to (total objects) − 1. Zero-based count. |
+| `largest_object` | Z | The highest object number with a base offset of 256, equal to 256 + (total number of objects) − 1. This is a legacy value used in some older Inform code. |
+| `actual_largest_object` | Z | The total count of objects defined in the game file, without any offset. |
+| `lowest_object_number` | Z/G | Always 1. The lowest valid object number. |
+| `highest_object_number` | Z/G | The highest valid object number. The valid range of object numbers is `#lowest_object_number` through `#highest_object_number` inclusive. |
 | `lowest_class_number` | Z/G | Always 0. Classes are numbered starting from 0. |
 | `highest_class_number` | Z/G | The index of the last class, equal to (total classes) − 1. |
 | `class_objects_array` | Z/G | Address of the class-numbers table. This table maps class indices to their corresponding object numbers. On Glulx, the address is in RAM. |
