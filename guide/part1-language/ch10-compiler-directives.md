@@ -654,7 +654,7 @@ warning. The `Extend` form is preferred.
 The `Fake_action` directive declares a fake action. Fake actions have
 action numbers but no associated grammar — they cannot be triggered by
 player input. They are used for `before`/`after` hooks and internal
-signalling.
+signaling.
 
 ```inform6
 Fake_action Salute;

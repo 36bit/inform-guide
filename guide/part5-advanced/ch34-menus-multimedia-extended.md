@@ -19,19 +19,19 @@
 
 # Chapter 34: Menus, Multimedia, and Extended Features
 
-This chapter covers the library's support for status line customisation,
+This chapter covers the library's support for status line customization,
 interactive menus, sound and graphics, file I/O, and undo. These features
 span a range of complexity and virtual machine support: some, like status
-line customisation and undo, work on both the Z-machine and Glulx with
+line customization and undo, work on both the Z-machine and Glulx with
 minor differences; others, like file I/O, are available only on Glulx.
 Where a feature differs between virtual machines, the relevant sections are
 marked with **[Z-machine]** or **[Glulx]** tags.
 
-## 34.1 Status Line Customisation
+## 34.1 Status Line Customization
 
 The status line is the top line of the display, conventionally showing the
 current location name, score, and move count. The library draws it
-automatically every turn, but a game can fully customise its content and
+automatically every turn, but a game can fully customize its content and
 layout by replacing the `DrawStatusLine` routine.
 
 ### 34.1.1 The sline1 and sline2 Globals
@@ -64,7 +64,7 @@ an `each_turn` entry point to show custom information.
 
 ### 34.1.2 The Default DrawStatusLine Routine
 
-The default `DrawStatusLine` routine is defined in the library. Its behaviour depends on the virtual machine and, for
+The default `DrawStatusLine` routine is defined in the library. Its behavior depends on the virtual machine and, for
 the Z-machine, on the Z-machine version number.
 
 **[Z-machine]** On Z-machine **version 3**, the status line is drawn by the
@@ -99,7 +99,7 @@ The opcodes used — `@split_window`, `@set_window`, `@set_cursor`,
 
 **[Glulx]** On Glulx, `DrawStatusLine` uses the Glk windowing API. The
 library maintains a global `gg_statuswin` that holds the Glk window
-reference for the status window (created during initialisation by
+reference for the status window (created during initialization by
 `GGInitialise`). The default implementation:
 
 1. Calls `glk_set_window(gg_statuswin)` to direct output to the status
@@ -512,7 +512,7 @@ V6 provides opcodes for drawing and managing pictures:
   (`y`, `x`) in the current window. Coordinates are in screen units
   (pixels in most V6 interpreters).
 - `@erase_picture pic_num y x` — erases the area occupied by picture
-  `pic_num` at the given position, filling it with the background colour.
+  `pic_num` at the given position, filling it with the background color.
 - `@picture_data pic_num array -> result` — stores the height and width
   of picture `pic_num` into `array-->0` and `array-->1` respectively.
   If `pic_num` is 0, stores the number of available pictures and the
@@ -959,8 +959,8 @@ This code performs the following steps:
    equivalent of result 2 on the Z-machine). The library calls
    `GGRecoverObjects()` to re-establish Glk object references (window
    IDs, stream handles, etc.) that may have been invalidated by the
-   state restore, then normalises the result to 2.
-3. **Normalise Glulx results**: the `~~i` (bitwise NOT) converts the
+   state restore, then normalizes the result to 2.
+3. **Normalize Glulx results**: the `~~i` (bitwise NOT) converts the
    Glulx convention (0 = success) to the library's convention
    (non-zero = success).
 4. **Reset `just_undone`** to 0, allowing undo on this turn.
@@ -971,7 +971,7 @@ This code performs the following steps:
 
 ### 34.5.4 The PerformUndo Routine
 
-When the player types UNDO, the parser recognises it as a special
+When the player types UNDO, the parser recognizes it as a special
 meta-command and calls `PerformUndo`.
 This routine handles all the validation and error reporting:
 
@@ -1014,7 +1014,7 @@ This routine handles all the validation and error reporting:
 ### 34.5.5 Undo-Related Library Messages
 
 The undo system communicates with the player through the `Miscellany`
-library message set. These can be customised
+library message set. These can be customized
 through the standard library message interception mechanism
 (see §32.4):
 
@@ -1031,7 +1031,7 @@ sequence for double-quote characters in strings (see §1.4).
 
 ### 34.5.6 Dictionary Words for UNDO
 
-The words that the parser recognises as the UNDO command are defined
+The words that the parser recognizes as the UNDO command are defined
 in `english.h` as dictionary word constants:
 
 ```inform6
@@ -1070,5 +1070,5 @@ automatic save.
 
 For games that require multi-level undo (more than one turn back),
 this must be implemented at the application level — for example, by
-maintaining a stack of serialised game states using the file I/O
+maintaining a stack of serialized game states using the file I/O
 facilities described in §34.4 (Glulx only).

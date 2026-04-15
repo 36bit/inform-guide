@@ -104,7 +104,7 @@ Dictionary words appear most commonly in three contexts:
 
 Dictionary lookups are case-insensitive. The words `'Take'`, `'take'`, and
 `'TAKE'` all refer to the same dictionary entry. This matches the
-behaviour of the runtime parser, which converts player input to lowercase
+behavior of the runtime parser, which converts player input to lowercase
 before performing dictionary lookups.
 
 ### 9.2.2 Double-Quoted Dictionary Words
@@ -166,7 +166,7 @@ The total byte size of the encoded word portion of each dictionary entry is
 
 When a dictionary word is longer than the significant character limit, the
 compiler can optionally set the `TRUNC_DFLAG` (bit 6) on the entry to
-indicate that truncation occurred. This behaviour is controlled by the
+indicate that truncation occurred. This behavior is controlled by the
 `$DICT_TRUNCATE_FLAG` setting:
 
 ```inform6
@@ -175,7 +175,7 @@ indicate that truncation occurred. This behaviour is controlled by the
 ```
 
 When `$DICT_TRUNCATE_FLAG` is 0 (the default), bit 6 is instead used to
-mark verb words (legacy behaviour). Enabling the truncation flag can be
+mark verb words (legacy behavior). Enabling the truncation flag can be
 useful for games that want to warn players when their input was truncated.
 
 ## 9.4 Dictionary Flags

@@ -21,7 +21,7 @@
 
 The compiler provides a rich set of diagnostic messages to help
 programmers identify and fix problems in their source code. This chapter
-catalogues the three categories of diagnostic messages — fatal errors,
+catalogs the three categories of diagnostic messages — fatal errors,
 errors, and warnings — and describes the compiler's debugging and
 tracing facilities.
 
@@ -318,7 +318,7 @@ format on Unix/Linux and most other platforms.
 game.inf(42): Error: Expected ';'
 ```
 
-Uses the `file(line)` format recognised by Microsoft Visual Studio and
+Uses the `file(line)` format recognized by Microsoft Visual Studio and
 many Windows-based editors. This is the default format on Windows.
 
 ### 14.5.3 `-E2` — Macintosh MPW Format
@@ -645,7 +645,7 @@ of the checks. This is safe only after thorough testing.
 
 3. **Use strict mode during development.** The `-S` switch (on by
    default) catches many bugs that would otherwise manifest as bizarre
-   in-game behaviour. Only disable it for final release builds after
+   in-game behavior. Only disable it for final release builds after
    thorough testing.
 
 4. **Use the debug file for complex projects.** The `-k` switch

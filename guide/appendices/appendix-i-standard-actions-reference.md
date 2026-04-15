@@ -4763,7 +4763,7 @@ These actions are only available when the game is compiled in debug mode.
 | `TimersOff` | Turn off timer/daemon tracing. |
 | `ChangesOn` | Trace object property changes. |
 | `ChangesOff` | Turn off property-change tracing. |
-| `Predictable` | Seed the random-number generator for repeatable behaviour. |
+| `Predictable` | Seed the random-number generator for repeatable behavior. |
 | `Goto` | Teleport the player to a room by internal object number. |
 | `GoNear` | Teleport the player to the room containing a named object. |
 | `Scope` | Display all objects currently in scope. |

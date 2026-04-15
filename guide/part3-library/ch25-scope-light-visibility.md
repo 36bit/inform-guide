@@ -465,7 +465,7 @@ object into scope.
 
 ## 25.5 Custom Scope Routines
 
-The library provides three ways to customise what is in scope: the
+The library provides three ways to customize what is in scope: the
 `InScope()` entry point, custom scope tokens, and the `add_to_scope`
 property.
 
@@ -610,7 +610,7 @@ This means that in darkness, the player can still interact with
 carried objects ("drop lamp", "turn on torch") but cannot see or
 interact with room contents.
 
-A game can override this behaviour through the `InScope()` entry
+A game can override this behavior through the `InScope()` entry
 point — for example, to allow the player to feel around in the dark:
 
 ```inform6
@@ -638,7 +638,7 @@ point — for example, to allow the player to feel around in the dark:
 | `HidesLightSource(obj)`        | Does `obj` block light from contents?      |
 | `AdjustLight()`                | Recalculate and apply lighting changes     |
 | `FindVisibilityLevels()`       | Get nesting depth to visibility ceiling    |
-| `InScope(actor)`               | Entry point: customise scope               |
+| `InScope(actor)`               | Entry point: customize scope               |
 | `add_to_scope` property        | Bring extra objects into scope             |
 | `light` attribute              | Object provides illumination               |
 | `transparent` attribute        | Object contents visible / light passes     |

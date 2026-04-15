@@ -325,7 +325,7 @@ is compiled, but routines that are never needed are omitted entirely.
 A typical game using the standard library might include 20–30 of the 48
 veneer routines; a minimal program may need only a handful.
 
-### 13.5.3 Catalogue of Veneer Routines
+### 13.5.3 Catalog of Veneer Routines
 
 The following table lists the major categories of veneer routines. The
 full set of 48 is defined in the `VRs_z[]` and `VRs_g[]` arrays in the
@@ -344,13 +344,13 @@ compiler's veneer module.
 | `R_Process` | Default action handler (prints action tuple) |
 | `DefArt` | Print definite article ("the") |
 | `InDefArt` | Print indefinite article ("a") |
-| `CDefArt` | Print capitalised definite article ("The") |
-| `CInDefArt` | Print capitalised indefinite article ("A") |
+| `CDefArt` | Print capitalized definite article ("The") |
+| `CInDefArt` | Print capitalized indefinite article ("A") |
 | `PrintShortName` | Print an object's short name |
 | `EnglishNumber` | Print a number in English words |
 | `Print__PName` | Print a property name (for debugging) |
 
-These stubs provide minimal default behaviour when the standard library
+These stubs provide minimal default behavior when the standard library
 is not included. The library replaces them with fuller implementations.
 
 **Property access and message passing:**
@@ -420,14 +420,14 @@ Replace RT__Err;
 When a veneer routine is replaced, the compiler uses the user's
 definition and does not compile the built-in version. This is rarely
 needed but can be useful for custom runtime error handling or
-internationalisation of article printing.
+internationalization of article printing.
 
 ---
 
 ## 13.6 Vocabulary (Dictionary) Construction
 
 The story file dictionary is one of the most important data structures
-for interactive fiction, as it is used by the parser to recognise words
+for interactive fiction, as it is used by the parser to recognize words
 in player input. The compiler builds it incrementally during the main
 pass and sorts it during finalization.
 
@@ -439,7 +439,7 @@ directive — it inserts the word into a **red-black tree** (a self-
 balancing binary search tree). This data structure ensures that insertion and lookup are O(log n) operations
 even as the dictionary grows to thousands of entries.
 
-Each tree node stores left/right child indices and a colour bit. The
+Each tree node stores left/right child indices and a color bit. The
 actual word data (encoded sort keys and dictionary flags) is stored in
 parallel arrays indexed by accession number.
 
@@ -571,7 +571,7 @@ flexible, supporting larger property numbers and values.
 
 The grammar table encodes the verb definitions that drive the parser.
 It is built during the main pass as `Verb` and `Extend` directives are
-processed, and finalised during story file construction.
+processed, and finalized during story file construction.
 
 ### 13.8.1 Structure
 
@@ -676,7 +676,7 @@ than 64 KB of code and strings.
 
 ### 13.9.2 Glulx Story File Layout
 
-[Glulx] The story file has a different organisation:
+[Glulx] The story file has a different organization:
 
 ```
 ┌──────────────────────────────────────┐  Byte 0

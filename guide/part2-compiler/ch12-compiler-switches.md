@@ -20,7 +20,7 @@
 # Chapter 12: Compiler Switches and Settings
 
 This chapter provides a comprehensive reference for every switch, path
-option, memory setting, and trace option recognised by the compiler.
+option, memory setting, and trace option recognized by the compiler.
 Chapter 11 explains how to invoke the compiler and where options may be
 supplied (command line, ICL files, `!%` header comments); this chapter
 documents what each option does in detail.
@@ -31,7 +31,7 @@ documents what each option does in detail.
 
 Dash switches are single-character flags prefixed with `-`. They control
 the compiler's target platform, output format, debugging features, and
-diagnostic behaviour. Many accept an optional numeric suffix to select a
+diagnostic behavior. Many accept an optional numeric suffix to select a
 specific level or mode; when no suffix is given, the switch simply
 toggles on.
 
@@ -91,7 +91,7 @@ accepts a numeric suffix to control verbosity:
 | ----- | ------ |
 | `-a` or `-a1` | Show assembly instructions |
 | `-a2` | Also show hex byte encoding of each instruction |
-| `-a3` | Also show branch offset optimisation decisions |
+| `-a3` | Also show branch offset optimization decisions |
 | `-a4` | Most verbose — include all internal detail |
 
 Assembly tracing produces large amounts of output. It is most useful
@@ -112,7 +112,7 @@ Controls how the compiler handles consecutive spaces in game text:
 | `-d` or `-d1` | Contract double spaces after full stops in printed text |
 | `-d2` | Trace source line numbers during compilation |
 
-The `-d1` behaviour is a legacy feature from early Z-machine games where
+The `-d1` behavior is a legacy feature from early Z-machine games where
 double spacing after periods was conventional.
 
 **`-e` — Economy Mode**
@@ -184,7 +184,7 @@ Prints a detailed statistical summary of the compiled story file,
 including counts and sizes for objects, properties, dictionary entries,
 action routines, grammar entries, code size, and string space.
 
-**`-u` — Abbreviation Optimisation**
+**`-u` — Abbreviation Optimization**
 
 Analyses all game text to determine the most space-efficient set of
 abbreviations. This process is computationally expensive and may take
@@ -299,7 +299,7 @@ compiling.
 **`-W` — Header Extension Words**
 
 Sets the number of words in the Z-code header extension table. The
-default is `-W3`. This is a specialised setting relevant only to
+default is `-W3`. This is a specialized setting relevant only to
 Z-machine output; most authors will never need to change it.
 
 ```
@@ -410,7 +410,7 @@ Here `mylib` is searched first, then `i6lib`.
 
 ### 12.3.4 Other Path Variables
 
-The compiler recognises several path variable names:
+The compiler recognizes several path variable names:
 
 | Path variable | Purpose |
 | ------------- | ------- |
@@ -579,7 +579,7 @@ inform $WARN_UNUSED_ROUTINES=2 adventure.inf
 
 Controls warnings about routines that are compiled but never called:
 
-| Value | Behaviour |
+| Value | Behavior |
 | ----- | --------- |
 | 0     | No warnings (default) |
 | 1     | Warn about unused routines in the game source only |
@@ -641,9 +641,9 @@ inform $DICT_TRUNCATE_FLAG=1 adventure.inf
 
 Controls the meaning of dictionary flag bit 6:
 
-| Value | Behaviour |
+| Value | Behavior |
 | ----- | --------- |
-| 0     | Flag 6 is set on all verb words (legacy behaviour, default) |
+| 0     | Flag 6 is set on all verb words (legacy behavior, default) |
 | 1     | Flag 6 is set on words that were truncated beyond `$DICT_WORD_SIZE` characters |
 
 When set to 1, the flag provides useful information: it lets the game
@@ -679,9 +679,9 @@ Controls backward compatibility with a long-standing bug in how the
 `//p` (plural) flag was applied to dictionary words longer than
 `$DICT_WORD_SIZE`:
 
-| Value | Behaviour |
+| Value | Behavior |
 | ----- | --------- |
-| 1     | Retain old buggy behaviour (default) |
+| 1     | Retain old buggy behavior (default) |
 | 0     | Use correct flag handling |
 
 The default of 1 preserves compatibility with existing games. Set to 0
@@ -695,8 +695,8 @@ inform $STRIP_UNREACHABLE_LABELS=1 adventure.inf
 ```
 
 When set to 1 (the default), the compiler removes labels in generated
-code that can never be reached. This is a minor optimisation that
-slightly reduces code size with no effect on behaviour. Set to 0 only
+code that can never be reached. This is a minor optimization that
+slightly reduces code size with no effect on behavior. Set to 0 only
 if you suspect a compiler code-generation bug related to label stripping.
 
 ---
@@ -732,14 +732,14 @@ inform --helptrace adventure.inf
 | Trace option | Levels | Description |
 | ------------ | ------ | ----------- |
 | `$!ACTIONS`  | 1–2 | Show all actions defined. Level 2 also lists them as they are defined during compilation. |
-| `$!ASM`      | 1–4 | Trace assembly (same as `-a`). Level 1: instructions. Level 2: add hex encoding. Level 3: add branch optimisation. Level 4: maximum detail. |
+| `$!ASM`      | 1–4 | Trace assembly (same as `-a`). Level 1: instructions. Level 2: add hex encoding. Level 3: add branch optimization. Level 4: maximum detail. |
 | `$!BPATCH`   | 1–2 | Show backpatch results. Level 2 also shows markers as they are added during compilation. |
 | `$!DICT`     | 1–2 | Display the dictionary table. Level 2 also shows the byte encoding of each entry. |
 | `$!EXPR`     | 1–3 | Show expression parse trees. Higher levels show progressively more internal detail. |
 | `$!FILES`    | 1 | List all files opened during compilation. |
-| `$!FINDABBREVS` | 1–2 | Show decisions during abbreviation optimisation (`-u`). Level 2 includes three-letter-block analysis. |
+| `$!FINDABBREVS` | 1–2 | Show decisions during abbreviation optimization (`-u`). Level 2 includes three-letter-block analysis. |
 | `$!FREQ`     | 1 | Show abbreviation frequency data (same as `-f`). Only meaningful with `-e`. |
-| `$!MAP`      | 1–3 | Print memory map (same as `-z`). Level 2 adds percentage utilisation. Level 3 adds byte counts. |
+| `$!MAP`      | 1–3 | Print memory map (same as `-z`). Level 2 adds percentage utilization. Level 3 adds byte counts. |
 | `$!MEM`      | 1 | Show the compiler's own internal memory allocations. |
 | `$!OBJECTS`  | 1 | Display the object tree table. |
 | `$!PROPS`    | 1 | Show all attributes and properties defined. |
@@ -856,7 +856,7 @@ For most new interactive fiction projects:
   widely available on all major platforms.
 
 Versions 3, 4, 6, and 7 are primarily of historical interest or for
-specialised applications.
+specialized applications.
 
 ---
 

@@ -86,7 +86,7 @@ print "Em dash: @{2014}^";
 
 ### 1.1.4 The `Zcharacter` Directive
 
-The `Zcharacter` directive customises the Z-machine's character encoding.
+The `Zcharacter` directive customizes the Z-machine's character encoding.
 It is only meaningful when compiling for the Z-machine; in Glulx mode the
 compiler issues an error. There are several forms:
 
@@ -147,7 +147,7 @@ The compiler accepts all common line-ending conventions:
 - Classic Mac: CR (`\r`, 0x0D)
 
 Form feed (0x0C) is converted to a line break. All line-ending styles are
-normalised internally; the compiler counts lines for error reporting
+normalized internally; the compiler counts lines for error reporting
 regardless of the convention used.
 
 ## 1.2 Comments
@@ -172,21 +172,21 @@ compilation directives such as `#Ifdef`/`#Endif`):
 ! z = 3;
 ```
 
-Comments inside quoted strings are not recognised — `!` is an ordinary
+Comments inside quoted strings are not recognized — `!` is an ordinary
 character in string context:
 
 ```inform6
 print "This is not a comment! It prints.^";
 ```
 
-## 1.3 Tokens and Tokenisation
+## 1.3 Tokens and Tokenization
 
-### 1.3.1 How Tokenisation Works
+### 1.3.1 How Tokenization Works
 
 The lexer reads source text one character at a time, using a
 three-character lookahead buffer (the current character plus two characters
 ahead). It classifies each character using a precomputed 256-entry grid
-called the **tokeniser grid**, which maps each possible byte value to one
+called the **tokenizer grid**, which maps each possible byte value to one
 of the following codes:
 
 | Grid Code | Meaning | Characters |
@@ -249,7 +249,7 @@ types depending on context. For example, `default` may be:
 - A `STATEMENT_TT` when parsed inside a `switch` block (`default:`).
 
 The higher-level parser controls which keyword groups are enabled before
-each call to the tokeniser, so that identifiers are correctly classified.
+each call to the tokenizer, so that identifiers are correctly classified.
 
 The keyword groups are checked in a specific priority order: directives are
 checked first, then all other groups. If no keyword match is found, the
@@ -259,7 +259,7 @@ identifier is looked up in the symbol table and returned as `SYMBOL_TT`.
 
 Whitespace characters (spaces, tabs, newlines, carriage returns) serve
 only to separate tokens. The lexer consumes all consecutive whitespace
-and resumes tokenising at the next non-whitespace character. Whitespace
+and resumes tokenizing at the next non-whitespace character. Whitespace
 within quoted strings is, of course, significant and is handled by the
 string-scanning code (see §1.7).
 
@@ -295,7 +295,7 @@ identifier).
 Inform 6 is **case-insensitive** for both identifiers and keywords. The
 symbol table uses case-insensitive comparison, so `MyVar`, `myvar`, and
 `MYVAR` all refer to the same symbol. Similarly, all keywords are matched
-case-insensitively: `If`, `IF`, and `if` are all recognised as the `if`
+case-insensitively: `If`, `IF`, and `if` are all recognized as the `if`
 statement keyword.
 
 ```inform6
@@ -450,7 +450,7 @@ compile-time error if used.
 ### 1.5.5 Negative Numbers
 
 Negative numbers are **not** single tokens. The expression `-5` is
-tokenised as two separate tokens: the minus separator (`-`) followed by
+tokenized as two separate tokens: the minus separator (`-`) followed by
 the number `5`. The parser handles unary negation at the expression level.
 
 ### 1.5.6 Value Ranges
@@ -478,7 +478,7 @@ print "She said, ~Hello!~^";
 
 The string is scanned from the opening `"` to the closing `"`. Within
 a string, most characters represent themselves, but several escape
-sequences are recognised.
+sequences are recognized.
 
 ### 1.6.2 Escape Sequences
 
@@ -584,7 +584,7 @@ x = '0';    ! x = 48
 x = ' ';    ! x = 32
 ```
 
-Single-character literals are tokenised as `SQ_TT` tokens. The parser
+Single-character literals are tokenized as `SQ_TT` tokens. The parser
 determines whether a single-quoted token is a character constant or a
 dictionary word based on its length: a single character between the
 quotes is a character constant (producing a number), while multiple
@@ -679,7 +679,7 @@ what would otherwise be the end of the literal.
 
 ### 1.9.1 Complete List of Separator Tokens
 
-The lexer recognises exactly **49 separator tokens**. They are
+The lexer recognizes exactly **49 separator tokens**. They are
 matched using longest-match semantics — the lexer always tries to match
 the longest possible separator before falling back to shorter ones.
 
@@ -785,7 +785,7 @@ Multi-character separators are matched greedily. Given the source text
 `-->`, the lexer produces the single token `DARROW_SEP` rather than
 `MINUS_SEP` followed by `ARROW_SEP`. The matching algorithm:
 
-1. The first character is looked up in the tokeniser grid to find which
+1. The first character is looked up in the tokenizer grid to find which
    separators begin with that character and how many.
 2. The lexer checks each candidate separator in order, comparing against
    lookahead characters. The first match wins.

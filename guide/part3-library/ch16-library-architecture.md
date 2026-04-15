@@ -38,7 +38,7 @@ fiction written in Inform 6. It supplies:
 Most programs are built on top of this library. A game author
 writes objects, rooms, and a handful of entry-point routines; the library
 handles everything else. Understanding the library's architecture makes it
-easier to customize behaviour and debug problems.
+easier to customize behavior and debug problems.
 
 ## 16.2 The Three-File Include Pattern
 
@@ -134,7 +134,7 @@ player's starting room:
 ```
 
 If `location` is not set, the player begins in darkness with no valid
-room, which is almost never the intended behaviour.
+room, which is almost never the intended behavior.
 
 ### 16.3.2 Return Values
 
@@ -246,7 +246,7 @@ Each iteration represents one player turn. The steps are:
 turn and `notify_mode` is on, the library prints a score notification.
 
 **Step 2 — Parse player input.** The parser
-(`InformParser.parse_input`) reads a line of input, tokenises it, matches
+(`InformParser.parse_input`) reads a line of input, tokenizes it, matches
 it against the grammar, and writes the results into the `inputobjs` array:
 
 | Entry            | Contains                                |
@@ -260,7 +260,7 @@ The parser also sets the `meta` flag for meta-verbs (such as `save` and
 `score`).
 
 **Step 3 — Action transformations.** Before dispatching the action, the
-library normalises several reversed or compound grammar forms:
+library normalizes several reversed or compound grammar forms:
 
 - **`##GiveR` → `##Give`** and **`##ShowR` → `##Show`**: The grammar
   "give fred biscuit" parses with reversed objects; the library swaps
@@ -342,7 +342,7 @@ Chapter 20; this section provides a structural overview.)
 ### 16.5.1 Before Routines
 
 `BeforeRoutines` gives the game and the world model a chance to intercept
-the action before the default behaviour runs. The checks proceed in this
+the action before the default behavior runs. The checks proceed in this
 order, stopping if any returns true:
 
 1. `GamePreRoutine()` — a global game entry point.
@@ -367,7 +367,7 @@ appropriate action routine via a table lookup:
 > different table layout with an offset.
 
 The action routine (e.g., `TakeSub`, `DropSub`, `ExamineSub`) carries out
-the default behaviour for the verb.
+the default behavior for the verb.
 
 ### 16.5.3 After Routines
 
@@ -411,7 +411,7 @@ formats. Version 2 is standard in all modern programs.
 ## 16.7 Compilation Constants
 
 The game can define constants **before** `Include "Parser"` (or before
-`Include "VerbLib"` where noted) to configure library behaviour. If the
+`Include "VerbLib"` where noted) to configure library behavior. If the
 game does not define a constant, the library provides a default value using
 the `Default` directive.
 
@@ -496,7 +496,7 @@ Object  InformLibrary "(Inform Library)"
 ### 16.8.2 `InformParser`
 
 The parser engine. Its `parse_input` method reads a line of player input,
-tokenises it, matches it against the grammar, resolves ambiguity, and
+tokenizes it, matches it against the grammar, resolves ambiguity, and
 writes the results into the `inputobjs` array. The parser is covered in
 detail in Chapter 19.
 
@@ -548,7 +548,7 @@ player character by setting `player` to a different `animate` object in
 ## 16.9 Library Extensions
 
 The `LibraryExtensions` object provides a hook-based mechanism for
-extending library behaviour without modifying library source. An extension
+extending library behavior without modifying library source. An extension
 object is placed inside `LibraryExtensions` and provides properties that
 match named extension points:
 

@@ -20,14 +20,14 @@
 # Chapter 26: Library Entry Points and Hooks
 
 A **library entry point** is a routine that the game author can define
-to customise the library's behaviour at a specific moment during
+to customize the library's behavior at a specific moment during
 execution. The library checks whether each entry point exists (using
 the `Stub` mechanism or `#Ifdef` tests) and calls it when appropriate.
 Entry points provide the primary way to hook into the library's
 processing pipeline without modifying the library source code.
 
 This chapter provides a complete reference for every entry point
-recognised by library version 6.12.8. Entry points are listed in
+recognized by library version 6.12.8. Entry points are listed in
 rough order of when they are called during a game session: startup,
 parsing, action processing, display, turn end, and death/victory.
 
@@ -129,7 +129,7 @@ and before the first `Look`.
 ## 26.3 `BeforeParsing()`
 
 Called at the start of each turn, *before* the player's input line is
-tokenised and parsed.
+tokenized and parsed.
 
 **When called:** After the prompt is printed and the input line is
 read, but before the parser begins analysis.
@@ -172,7 +172,7 @@ the player's input.
 **When called:** After the parser fails to find the word in the verb
 grammar tables.
 
-**Arguments:** `word` — the dictionary value of the unrecognised word.
+**Arguments:** `word` — the dictionary value of the unrecognized word.
 
 **Return value:**
 
@@ -203,8 +203,8 @@ be successfully parsed.
 
 | Constant               | Value | Meaning                              |
 |----------------------- |------ |------------------------------------- |
-| `STUCK_PE`             | 1     | Input not recognised at all          |
-| `UPTS_PE`              | 2     | Verb recognised, but rest is gibberish |
+| `STUCK_PE`             | 1     | Input not recognized at all          |
+| `UPTS_PE`              | 2     | Verb recognized, but rest is gibberish |
 | `ONLY_PE`              | 3     | Too few nouns matched                |
 | `ANIMA_PE`             | 4     | Can only do that to something animate |
 | `CANTSEE_PE`           | 5     | "You can't see any such thing"       |
@@ -281,7 +281,7 @@ score from 0 to 9, where higher numbers indicate higher preference.
 
 ## 26.7 `InScope(actor)`
 
-Called during every scope determination to allow the game to customise
+Called during every scope determination to allow the game to customize
 what objects are in scope.
 
 **When called:** During scope computation (see §25.1.3), after any
@@ -344,7 +344,7 @@ handler returned `true`.
 | Value   | Effect                                                 |
 |-------- |------------------------------------------------------- |
 | `true`  | Suppress any remaining post-action processing.         |
-| `false` | Default behaviour (no additional effect).               |
+| `false` | Default behavior (no additional effect).               |
 
 **Typical usage:**
 
@@ -639,7 +639,7 @@ already holds `capacity` items.
 ## 26.20 `ParseNumber(buffer, length)`
 
 Called to parse a word as a number when the standard digit parser does
-not recognise it.
+not recognize it.
 
 **When called:** During `TryNumber()` (see §27.6), after the standard
 digit parser fails.
@@ -898,7 +898,7 @@ restore or restart.
 
 ## 26.29 `InitGlkWindow(rock)` *(Glulx only)*
 
-Called during Glk window setup to let the game create or customise
+Called during Glk window setup to let the game create or customize
 windows.
 
 **When called:** During `GGInitialise()`, when the library is about
@@ -908,7 +908,7 @@ to create or reconfigure Glk windows.
 created. The library uses `GG_MAINWIN_ROCK` for the main story
 window, `GG_STATUSWIN_ROCK` for the status line window,
 `GG_QUOTEWIN_ROCK` for quote box windows, 0 at the start of
-initialisation, and 1 at the end.
+initialization, and 1 at the end.
 
 **Return value:**
 

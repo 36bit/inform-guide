@@ -187,7 +187,7 @@ specification after the operands (and after any store byte).
 ### 29.2.1 Opcode Flags
 
 Each opcode in the compiler's tables carries a set of flags describing
-its behaviour:
+its behavior:
 
 | Flag | Value | Meaning |
 |------|-------|---------|
@@ -478,7 +478,7 @@ These EXT opcodes were introduced in version 1.1 of the specification:
 
 ### 29.3.7 Version-Variant Opcodes
 
-Several opcodes change their encoding or behaviour between Z-machine
+Several opcodes change their encoding or behavior between Z-machine
 versions. The compiler tracks these in the `extension_table_z[]` array.
 When the compiler encounters one of these opcodes, it selects the
 appropriate form based on the target version.
