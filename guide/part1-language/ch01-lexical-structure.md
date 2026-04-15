@@ -873,7 +873,7 @@ x = #highest_object_number;  ! Number of the last object
 x = #grammar_table;          ! Address of the grammar table
 ```
 
-The full list of system constants includes:
+The complete list of all 63 system constants is:
 
 `adjectives_table`, `actions_table`, `classes_table`,
 `identifiers_table`, `preactions_table`, `version_number`,
@@ -899,6 +899,9 @@ The full list of system constants includes:
 `lowest_object_number`, `highest_object_number`, `oddeven_packing`,
 `grammar_table`, `dictionary_table`, `dynam_string_table`,
 `highest_meta_action_number`.
+
+For detailed descriptions, VM availability, and usage examples for each
+of these constants, see Appendix G (System Constants Reference).
 
 ---
 
