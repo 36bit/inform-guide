@@ -606,8 +606,10 @@ appropriate byte (`storeb`) or word (`storew`) store instructions.
 ## 4.10 The Superclass Operator (`::`)
 
 The `::` operator accesses a **property value as defined by a specific
-class**, bypassing the object's own definition. It has the highest
-precedence of any operator (level 13).
+class**, bypassing the object's own definition. Among user-accessible
+operators it has the highest precedence (level 13); a single internal
+level 14 exists for the Glulx-only `@push` form, but that level is not
+accessible to ordinary user expressions (see §4.13).
 
 ```inform6
 Class Vehicle
@@ -749,7 +751,7 @@ a routine address) followed by parenthesized arguments:
 
 Function calls have precedence 11, placing them higher than most operators
 but lower than property selection (precedence 12) and the superclass
-operator (precedence 13).
+operator (which is the highest user-accessible precedence at level 13).
 
 Arguments are passed by value. Extra arguments beyond the routine's
 declared locals are silently discarded. Missing arguments cause the
@@ -839,7 +841,8 @@ correspond to the internal levels defined in the compiler's operator table.
 | 10 | `..#` | Infix | Left | Individual property data length (bytes) |
 | 11 | `()` | — | Left | Function call |
 | 12 | `.` | Infix | Left | Property access / message send |
-| 13 | `::` | Infix | Left | Superclass property access |
+| 13 | `::` | Infix | Left | Superclass property access (highest user-accessible level) |
+| 14 | `@push` | — | — | Glulx-internal stack push (not for ordinary user code; see note) |
 
 ### 4.13.1 Precedence Notes
 
@@ -880,6 +883,13 @@ greater than 11, the function call is evaluated first.
 `for` loop headers to separate multiple initializers or update
 expressions. It evaluates both operands and yields the value of the right
 operand.
+
+**Level 14 (Glulx-internal `@push`):** The compiler's operator table
+includes one further level beyond the ones listed above, used internally
+to model Glulx's stack-push semantics. It is not exposed to user code as
+a separate operator and never appears in source expressions; level 13
+(`::`) remains the highest precedence accessible in normal Inform 6
+programs.
 
 ## 4.14 Expression Contexts
 

@@ -82,7 +82,8 @@ Here, `table` and `chair` are children of `kitchen`. The `plate` is a child of `
 
 ## 7.2 The `Nearby` Directive
 
-`Nearby` is syntactic sugar for placing an object as a child of the most recently defined object that has a lower nesting depth:
+`Nearby` is a convenience form for declaring an object as a child of the
+most recently defined root-level object:
 
 ```inform6
 Object cave "Dark Cave";
@@ -92,7 +93,11 @@ Nearby rock "heavy rock"
          description "An enormous boulder.";
 ```
 
-This is equivalent to `Object -> rock "heavy rock" ...`. The `Nearby` directive always places the new object as a sibling of the most recently created object at the same level, or as a child of the most recent object at a higher level.
+It is exactly equivalent to `Object -> rock "heavy rock" ...`. In
+particular, `Nearby` always sets the new object's tree depth to **1**
+(child of the most recent depth-0 object); it does not vary its placement
+based on the previous object's depth, and it is not equivalent to a chain
+of nested arrows.
 
 ---
 
@@ -114,6 +119,14 @@ The following system functions navigate the object tree:
 | `eldest(obj)` | Same as `child(obj)` — the first child |
 | `younger(obj)` | Same as `sibling(obj)` — the next sibling |
 | `youngest(obj)` | The last child of `obj` |
+
+The `child`, `parent`, and `sibling` primitives are recognised directly
+by the compiler (lexed as system functions) and translate to the
+underlying VM tree opcodes. The four convenience accessors `elder`,
+`eldest`, `younger`, and `youngest` are provided by the standard
+library/veneer rather than the compiler core; their precise semantics
+are defined there. See the standard library headers (and Appendix F on
+veneer routines) for the canonical definitions.
 
 ### 7.3.2 Tree Manipulation Statements
 
@@ -268,8 +281,13 @@ Attribute explosive;
 
 ### 7.5.1 Attribute Limits
 
-- **Z-machine**: Up to 48 attributes (numbered 0–47). The standard library uses approximately 30.
-- **Glulx**: Configurable via `NUM_ATTR_BYTES` (default 7, giving 56 attributes; maximum 39 bytes = 312 attributes).
+- **Z-machine**: Up to 48 attributes (numbered 0–47) on Z-machine
+  versions 4 and later (32 attributes on version 3). The standard
+  library uses approximately 30.
+- **Glulx**: Configurable at compile time via the `$NUM_ATTR_BYTES`
+  setting. The **default** is 7 bytes, giving 56 attributes; the
+  maximum is 39 bytes, giving 312 attributes. Set it on the command
+  line, e.g. `$NUM_ATTR_BYTES=15`, to expand the attribute space.
 
 ### 7.5.2 Setting and Testing Attributes
 
@@ -371,7 +389,19 @@ LockableContainer safe "iron safe"
          with_key brass_key;
 ```
 
-When classes define the same property, the first class listed takes precedence for non-additive properties. For additive properties, values from all classes are concatenated.
+When more than one class is listed, properties resolve in the following
+order:
+
+1. **The object's own `with` segment always wins.** Properties defined
+   directly on the object override any value an inherited class would
+   have supplied (for non-additive properties).
+2. **For inherited non-additive properties**, the **first** class in the
+   `class` list that defines the property contributes its value;
+   later classes are ignored for that property.
+3. **For additive properties** (declared with `Property additive ...`,
+   for example `name` and `before`), values **accumulate** across the
+   chain: the object's own value comes first, followed by the
+   contributions of each listed class in declaration order.
 
 ### 7.7.3 Attribute Inheritance
 
