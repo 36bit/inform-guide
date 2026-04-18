@@ -306,11 +306,18 @@ identifier).
 
 ### 1.4.2 Case Sensitivity
 
-Inform 6 is **case-insensitive** for both identifiers and keywords. The
-symbol table uses case-insensitive comparison, so `MyVar`, `myvar`, and
-`MYVAR` all refer to the same symbol. Similarly, all keywords are matched
-case-insensitively: `If`, `IF`, and `if` are all recognized as the `if`
-statement keyword.
+Inform 6 is **case-insensitive** for identifiers (user-defined symbols).
+The symbol table uses case-insensitive comparison, so `MyVar`, `myvar`,
+and `MYVAR` all refer to the same symbol. The `Directive` keyword group
+is also matched case-insensitively, so directive names such as `If`,
+`IF`, and `if` are equivalent (these are directive forms like `Ifdef`).
+
+Other keyword groups — statement keywords, condition operators, system
+functions, segment markers, miscellaneous keywords, etc. — are matched
+**case-sensitively**. The lexer recognizes `if` as the statement keyword
+but treats `If` or `IF` as ordinary identifier text. (For this reason,
+the `misc_keywords` group includes both `the`/`The` and `a`/`A` as
+distinct entries.)
 
 ```inform6
 Global score;
@@ -320,9 +327,8 @@ Score = 10;
 SCORE = 10;
 ```
 
-Although the language is case-insensitive, the conventional style is to use
-lowercase for keywords, mixed case or lowercase for identifiers, and
-uppercase for named constants.
+The conventional style is to use lowercase for keywords, mixed case or
+lowercase for identifiers, and uppercase for named constants.
 
 ### 1.4.3 Identifier Length
 
