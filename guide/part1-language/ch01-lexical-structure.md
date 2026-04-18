@@ -95,13 +95,15 @@ compiler issues an error. There are several forms:
 ```inform6
 Zcharacter "abcdefghijklmnopqrstuvwxyz"
            "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-           " 0123456789.,!?_#'~/\-:()";
+           "0123456789.,!?_#'/\-:()";
 ```
 
-Each double-quoted string must contain exactly 26 characters and replaces
-one of the three alphabets (A0, A1, A2 respectively). The first character
-of the A2 string is ignored by the Z-machine (it is reserved as an escape
-code), and the second character is always interpreted as newline.
+The A0 and A1 strings must each contain exactly 26 characters and replace
+alphabets A0 and A1. The A2 string must contain exactly 23 characters and
+fills positions 3–25 of A2. Positions 0, 1, and 2 of A2 are fixed by
+Inform: position 0 is the escape code, position 1 is newline, and
+position 2 is tilde (so that `~` in strings is encoded as the
+double-quote character).
 
 **Map a single Unicode character into the ZSCII table:**
 
@@ -183,9 +185,10 @@ print "This is not a comment! It prints.^";
 
 ### 1.3.1 How Tokenization Works
 
-The lexer reads source text one character at a time, using a
-three-character lookahead buffer (the current character plus two characters
-ahead). It classifies each character using a precomputed 256-entry grid
+The lexer reads source text one character at a time, with three
+characters of lookahead (the current character plus three characters
+ahead, in the variables `lookahead`, `lookahead2`, and `lookahead3`).
+It classifies each character using a precomputed 256-entry grid
 called the **tokenizer grid**, which maps each possible byte value to one
 of the following codes:
 
@@ -237,6 +240,7 @@ returned as one of the higher-numbered keyword token types instead of
 | `DIR_KEYWORD_TT` | 109 | Directive keyword (`alias`, `long`, `additive`, `meta`, etc.) |
 | `TRACE_KEYWORD_TT` | 110 | Trace keyword (`dictionary`, `symbols`, `on`, `off`, etc.) |
 | `SYSTEM_CONSTANT_TT` | 111 | System constant (`#dictionary_table`, `#code_offset`, etc.) |
+| `OPCODE_MACRO_TT` | 112 | Pseudo-opcode macro (Glulx-only: `push`, `pull`, `dload`, `dstore`) |
 
 ### 1.3.3 Context-Sensitive Lexing
 
@@ -627,10 +631,13 @@ target and version:
 | Z-machine v4+ | 9 |
 | Glulx | `DICT_WORD_SIZE` (default 9, configurable) |
 
-Characters beyond the limit are silently discarded. For Z-machine targets,
-`DICT_WORD_SIZE` is fixed at 6 and cannot be changed (only 4 characters
-are used in version 3 games). For Glulx, `DICT_WORD_SIZE` can be set
-to any value and defaults to 9.
+Characters beyond the limit are silently discarded. In Z-machine v3
+each dictionary word is compressed into 4 bytes of Z-encoded text
+holding up to 6 significant characters; in v4+ it is 6 bytes holding
+up to 9 characters. Neither figure is user-configurable: the Z-code
+compiler forces `DICT_WORD_SIZE` to 6 (in its internal byte-count
+sense) and rejects any attempt to change it. For Glulx, the memory
+setting `$DICT_WORD_SIZE` can be set to any value and defaults to 9.
 
 ```inform6
 ! In Z-machine v5: 'pineapple' is truncated to 'pineappl' (9 chars)
