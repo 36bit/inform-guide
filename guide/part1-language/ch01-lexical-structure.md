@@ -245,9 +245,14 @@ returned as one of the higher-numbered keyword token types instead of
 ### 1.3.3 Context-Sensitive Lexing
 
 Unlike many compilers, the lexer is **not context-free**. It has
-12,288 possible lexical states, determined by which keyword groups are
-currently enabled. The same identifier text can produce different token
-types depending on context. For example, `default` may be:
+8,192 possible lexical states, determined by 13 independent flags (one
+for each of the 11 keyword groups — `opcode_names`, `directives`,
+`trace_keywords`, `segment_markers`, `directive_keywords`,
+`misc_keywords`, `statements`, `conditions`, `system_functions`,
+`system_constants`, `local_variables` — plus the `return_sp_as_variable`
+and `dont_enter_into_symbol_table` flags). The same identifier text can
+produce different token types depending on context. For example,
+`default` may be:
 
 - A `DIRECTIVE_TT` when parsed as a top-level directive (`Default`).
 - A `STATEMENT_TT` when parsed inside a `switch` block (`default:`).
@@ -518,7 +523,8 @@ character escapes:
 | `@^`*X* | Accented character with circumflex |
 | `@:`*X* | Accented character with diaeresis/umlaut |
 | `@~`*X* | Accented character with tilde |
-| `@/`*X* | Accented character with slash |
+| `@/`*X* | Accented character with slash (`@/o`, `@/O`) |
+| `@o`*X* | Accented character with ring (`@oa`, `@oA`) |
 | `@oe` | oe ligature |
 | `@ae` | ae ligature |
 | `@cc` | c-cedilla |
