@@ -58,3 +58,26 @@ Citations refer to files in `Inform6-6.44/`.
     `DICT_WORD_SIZE = 6`); `text.c:1928` (`dictsize =
     (version_number==3) ? 6 : 9`); `symbols.c:900`
     (user-visible `DICT_WORD_SIZE` is 4 for v3 / 6 for v4+).
+
+## Chapter 1 — Lexical Structure (2026-04-18, pass 2)
+
+- **§1.3.3 (Lexical states count)** — Claimed "12,288 possible
+  lexical states"; the `lexical_context()` function actually combines
+  13 independent one-bit flags, giving 2^13 = 8,192 states.
+  - **Before:** "It has 12,288 possible lexical states, determined by
+    which keyword groups are currently enabled."
+  - **After:** "It has 8,192 possible lexical states, determined by
+    13 independent flags (11 keyword groups plus
+    `return_sp_as_variable` and `dont_enter_into_symbol_table`)."
+  - **Source:** `lexer.c:597-624` (`lexical_context()` ORs 13 flag
+    bits 0–12 into the returned context value).
+
+- **§1.6.2 (String escape table)** — Omitted the `@o`*X* ring-accent
+  prefix used for a-with-ring (`@oa` → å) and A-with-ring
+  (`@oA` → Å).
+  - **Added:** a new row `@o`*X* "Accented character with ring
+    (`@oa`, `@oA`)" and annotated the existing `@/`*X* row with the
+    only two forms supported (`@/o`, `@/O`).
+  - **Source:** `chars.c:85-88` (`accents` string contains the pairs
+    `oa`, `oA`, `/o`, `/O`, matching the 69 accent escape codes
+    documented in Appendix J).
