@@ -16,8 +16,8 @@ with the `-C` compiler switch:
 
 | Setting | Encoding |
 | ------- | -------- |
-| 0 (default) | Plain ASCII (0x20–0x7E) |
-| 1 | ISO 8859-1 (Latin-1) |
+| 0 | Plain ASCII (0x20–0x7E) |
+| 1 (default) | ISO 8859-1 (Latin-1) |
 | 2 | ISO 8859-2 (Latin-2) |
 | 3 | ISO 8859-3 (Latin-3) |
 | 4 | ISO 8859-4 (Latin-4) |
@@ -262,6 +262,12 @@ only to separate tokens. The lexer consumes all consecutive whitespace
 and resumes tokenizing at the next non-whitespace character. Whitespace
 within quoted strings is, of course, significant and is handled by the
 string-scanning code (see §1.7).
+
+> Note: tab characters are translated to spaces during the
+> source-to-ISO preprocessing stage (in the `source_to_iso_grid`
+> conversion table) before the tokenizer sees them; the tokenizer's
+> whitespace classification proper recognises only space (0x20),
+> linefeed (0x0A), and carriage return (0x0D).
 
 ### 1.3.5 Token Lookahead
 

@@ -143,8 +143,11 @@ excess arguments are silently ignored on the Z-machine. They are evaluated
 ### 6.4.2 Local Variable Limits
 
 On the Z-machine, a routine may declare at most **15 local variables**
-(the virtual machine's hard limit). On Glulx, the limit is **118 local
-variables** — this is a fixed compiler constant, not user-configurable.
+(the virtual machine's hard limit; the compiler constant
+`MAX_LOCAL_VARIABLES` is 16, which counts the `sp` pseudo-slot at index
+0). On Glulx, the limit is **118 local variables** — `MAX_LOCAL_VARIABLES`
+is 119, again including `sp`. Both limits are fixed compiler constants
+and are not user-configurable.
 
 ### 6.4.3 Locals Are Not Persistent
 
@@ -479,4 +482,81 @@ Array direction_handlers -->
     else
         print "Invalid direction.^";
 ];
+```
+
+## 6.12 The `Replace` Directive
+
+The `Replace` directive lets a later definition supersede an earlier one
+for a named routine. It is the standard mechanism for overriding a
+routine supplied by an included library or extension. `Replace` must
+appear **before** the file containing the original definition is
+included.
+
+### 6.12.1 One-Argument Form
+
+```inform6
+Replace RoutineName;
+```
+
+This form discards any later definition's identification with the
+original symbol: when `RoutineName` is subsequently defined in the
+included source, that new definition replaces the original. The original
+body is silently dropped from the compiled output, although references
+elsewhere in the program are routed to the replacement.
+
+```inform6
+Replace InScope;       ! discard the library's InScope
+Include "Parser";
+Include "VerbLib";
+
+[ InScope actor;
+    ! ... custom scope routine ...
+];
+```
+
+### 6.12.2 Two-Argument Form (compiler 6.33+)
+
+```inform6
+Replace RoutineName OriginalName;
+```
+
+The two-argument form is the same as the one-argument form except that
+the original (replaced) routine remains callable under the second name.
+This is useful when the new definition wants to delegate to or extend
+the original behaviour rather than discarding it entirely.
+
+```inform6
+Replace DrawStatusLine OriginalDrawStatusLine;
+Include "Parser";
+Include "VerbLib";
+
+[ DrawStatusLine;
+    ! Pre-processing of the status line
+    OriginalDrawStatusLine();
+    ! Post-processing of the status line
+];
+```
+
+The original-form symbol becomes available as a regular routine constant
+holding the packed address of the original definition; calling it
+behaves exactly like calling the original routine.
+
+### 6.12.3 Replacing System Functions
+
+`Replace` can also be applied to a small set of built-in system functions
+(such as `random`) that are normally implemented by the virtual machine.
+In this case only the one-argument form is permitted, and the directive
+must appear before the system function is referenced anywhere in the
+program; otherwise the compiler reports
+`You can't 'Replace' a system function already used`.
+
+### 6.12.4 Restrictions
+
+- `Replace` must precede the original definition; the compiler reports
+  `name of routine not yet defined` if the named symbol has already
+  been defined.
+- The original symbol must be a routine, not a constant, object, or
+  other declaration.
+- A routine cannot be replaced more than once.
+- The two-argument form requires compiler 6.33 or later.
 ```

@@ -60,15 +60,26 @@ Global shared_flag;             ! redeclaration permitted since 6.43
 
 > **[Z-machine]** The Z-machine provides exactly **240** global variable
 > slots (numbered 16–255 in the underlying architecture). Seven of these
-> are reserved by the compiler for internal use (temporaries, `self`,
-> `sender`, and `sw__var`), leaving approximately **233** slots for
-> user-declared globals. Attempting to declare more produces a fatal
+> are reserved by the compiler for internal use (four temporaries,
+> `self`, `sender`, and `sw__var`), leaving approximately **233** slots
+> for user-declared globals. Attempting to declare more produces a fatal
 > compile-time error.
 
 The hard limit of 240 is defined by the Z-machine specification: global
 variables occupy entries 16–255 of the variable space (entries 0–15 are
 local variables). The compiler constant `MAX_ZCODE_GLOBAL_VARS` records
 this limit.
+
+> Note: the slot numbers given in this chapter describe the
+> **traditional** Z-code global layout (the default), in which the
+> seven reserved built-ins occupy slots 249–255 and user globals run
+> from slot 16 to slot 248. The compiler also supports an alternate
+> "compact" layout, selected by the `$ZCODE_COMPACT_GLOBALS` setting,
+> which packs the built-ins at the bottom of the global area
+> (slots 16–22 in v4+, or 19–25 in v3 because the first three slots
+> are hard-wired to the status line). When `$ZCODE_COMPACT_GLOBALS=1`
+> is in effect, the specific slot numbers below differ; the *number*
+> of reserved slots stays at seven.
 
 ### 3.1.3 Glulx Limits
 
@@ -359,7 +370,9 @@ Outside a property routine, `self` retains whatever value it had from the
 most recent message send. It is not automatically cleared.
 
 The compiler stores `self` in a reserved global variable slot. In Z-machine
-builds, `self` occupies global slot 255 (the last slot). In Glulx builds,
+builds using the traditional global layout, `self` occupies global slot
+**251** (with slots 252–255 holding the four temporary globals, slot
+250 holding `sender`, and slot 249 holding `sw__var`). In Glulx builds,
 it occupies global index `MAX_LOCAL_VARIABLES + 4` (index 123 with the
 default configuration).
 
@@ -376,9 +389,9 @@ Object guard "burly guard"
   ];
 ```
 
-Like `self`, `sender` is a compiler-reserved global. It occupies global
-slot 249 on the Z-machine and global index `MAX_LOCAL_VARIABLES + 5`
-(index 124) on Glulx.
+Like `self`, `sender` is a compiler-reserved global. In the traditional
+Z-machine layout it occupies global slot **250**, and on Glulx it
+occupies global index `MAX_LOCAL_VARIABLES + 5` (index 124).
 
 In practice, `sender` is used much less frequently than `self`. Most
 programs interact with `self` constantly and with `sender` only in

@@ -245,6 +245,16 @@ a compiler error.
 String initialisers are valid for all five array types, though they are
 most natural with byte arrays and string arrays.
 
+> **Note — two distinct uses of strings in array declarations.** The
+> form above (a single quoted string immediately after the type keyword)
+> stores the **character codes** of the string as successive array
+> entries — one byte (or word) per character. By contrast, a value list
+> made up of multiple string literals — e.g.
+> `Array names table "red" "green" "blue";` — does *not* store
+> characters: each element is the **packed address** of a separate
+> compiled string, so the array holds three printable-string values.
+> See §8.8.2 for that pattern.
+
 ### 8.3.4 Bracketed Value List
 
 A list of expressions enclosed in square brackets provides the same
@@ -631,6 +641,14 @@ Array colour_names table
 Because `colour_names-->0` holds the entry count, adding or removing
 entries from the source declaration automatically updates the loop bound —
 no separate constant is needed.
+
+> **Note.** Although the entries are written as quoted strings, this is
+> a **value list of string constants**, not a string initialiser. Each
+> array element holds a packed string address, which is why the loop
+> body uses `(string) colour_names-->n` to print the referenced
+> string. Contrast with `Array msg -> "red"` (see §8.3.3), where the
+> three character codes `'r'`, `'e'`, `'d'` are stored as bytes
+> directly in the array.
 
 ### 8.8.3 Parallel Arrays
 

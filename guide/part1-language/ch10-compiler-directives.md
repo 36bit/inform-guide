@@ -234,14 +234,17 @@ library for properties such as `name`.
 
 The `individual` keyword declares a property that is stored per-object
 rather than in the common property table. Individual properties have no
-default value, cannot be `additive`, and cannot `alias` another property.
+default value, cannot be combined with `additive`, and cannot be combined
+with `alias` (the compiler rejects these combinations).
 
 The `long` keyword is accepted for backward compatibility but has no
 effect; all properties have been word-sized since Inform 5.
 
 > **[Z-machine]** The Z-machine (version 4 and later) allows up to
-> **63** common properties (numbered 1–63). The compiler reserves
-> three, so 60 are available for the library and game.
+> **63** common properties (numbered 1–63). The compiler reserves the
+> first three slots — `1` (`name`), `2` (the class-inheritance table),
+> and `3` (the instance-variables table) — leaving 60 numbered slots
+> available for the library and the game.
 
 ---
 
@@ -418,6 +421,13 @@ definition.
 Conditional compilation directives allow sections of source code to be
 included or excluded based on compile-time conditions. They can be nested
 up to 32 levels deep.
+
+Every opening directive (`Ifdef`, `Ifndef`, `Iftrue`, `Iffalse`, `IFV3`,
+`IFV5`) must be matched by a closing **`Endif`** directive. The
+`Endif` directive takes no arguments and is terminated by `;` like any
+other directive. An `Ifnot` directive (see §10.5.3) may optionally
+appear once between the opening directive and its `Endif` to introduce
+an "else" branch.
 
 ### 10.5.1 Ifdef and Ifndef
 
@@ -703,14 +713,34 @@ The `fatalerror` form halts compilation immediately.
 ### 10.8.2 Trace
 
 The `Trace` directive adjusts trace and diagnostic settings during
-compilation. As of compiler 6.40, it is deprecated in favor of trace
-options (`$!` settings), but it retains the unique ability to print
-tables and change trace levels partway through compilation.
+compilation. As of compiler 6.40, it is deprecated in favor of the
+compiler-side `$!` trace settings (see Appendix D and Appendix E for the
+full 18-option set), but it retains the unique ability to print tables
+and to change trace levels partway through compilation.
+
+The directive recognises a fixed set of trace keywords, defined in the
+compiler's `trace_keywords` group:
+
+| Keyword | Effect |
+| ------- | ------ |
+| `assembly` | Set the assembly-trace level (also the default if no keyword is given) |
+| `expressions` | Set the expression-tree trace level |
+| `tokens` | Set the token-lexing trace level |
+| `dictionary` | Print the dictionary table at this point in compilation |
+| `objects` | Print the object tree at this point in compilation |
+| `symbols` | Print the symbol table (`Trace symbols 2` adds compiler-defined symbols) |
+| `verbs` | Print the verb-grammar table at this point in compilation |
+| `lines` | Recognised but **not implemented** (warning emitted) |
+| `linker` | Recognised but **no longer implemented** (warning emitted) |
+| `on` / `off` | Modifiers used after a trace keyword to enable (level 1) or disable (level 0) it |
+
+Examples:
 
 ```inform6
 Trace dictionary;          ! print dictionary as of this point
 Trace objects;             ! print object tree as of this point
-Trace symbols;             ! print symbol table (Trace symbols 2 for detail)
+Trace symbols;             ! print symbol table
+Trace symbols 2;           ! ...with compiler-defined symbols too
 Trace verbs;               ! print grammar table as of this point
 
 Trace assembly on;         ! enable assembly tracing
@@ -719,7 +749,17 @@ Trace expressions 2;       ! set expression trace to level 2
 Trace tokens on;           ! enable token tracing
 ```
 
-The bare form `Trace N;` is equivalent to `Trace assembly N;`.
+The bare form `Trace;` and the numeric form `Trace N;` are both
+equivalent to `Trace assembly N;` (with `N` defaulting to 1).
+
+Inside the compiler, the larger family of 18 `$!` trace options
+(`$!ACTIONS`, `$!ASM`, `$!BPATCH`, `$!DICT`, `$!EXPR`, `$!FILES`,
+`$!FINDABBREVS`, `$!FREQ`, `$!MAP`, `$!MEM`, `$!OBJECTS`, `$!PROPS`,
+`$!RUNTIME`, `$!STATS`, `$!SYMBOLS`, `$!SYMDEF`, `$!TOKENS`,
+`$!VERBS`) covers strictly more diagnostic categories — including
+several (memory map, abbreviation frequencies, action listings) that
+the directive form cannot reach. New code should generally prefer the
+`$!` settings; see Appendix D for full details.
 
 ### 10.8.3 Origsource
 

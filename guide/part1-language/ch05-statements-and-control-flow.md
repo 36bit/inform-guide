@@ -378,7 +378,23 @@ To iterate over objects that possess a particular attribute:
 ];
 ```
 
-### 5.8.6 General Condition Form
+### 5.8.6 Property Test (`provides`)
+
+To iterate over objects that define a given property (whether common or
+individual):
+
+```inform6
+[ CallEveryDescribe obj;
+    objectloop (obj provides describe)
+        obj.describe();
+];
+```
+
+The `provides` filter visits every object whose property table or
+inherited-class chain supplies the named property; absence of the
+property simply skips the object.
+
+### 5.8.7 General Condition Form
 
 A general boolean condition may be placed after the loop variable. The loop
 iterates over all objects and executes the body only for those where the
@@ -389,7 +405,7 @@ objectloop (obj has edible && obj in player)
     print (The) obj, " looks tasty.^";
 ```
 
-### 5.8.7 Modifying the Object Tree During `objectloop`
+### 5.8.8 Modifying the Object Tree During `objectloop`
 
 When iterating with `objectloop (x in parent)`, the compiler pre-fetches
 the "next sibling" before executing the loop body, so it is safe to `move`
