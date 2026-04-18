@@ -255,9 +255,13 @@ types depending on context. For example, `default` may be:
 The higher-level parser controls which keyword groups are enabled before
 each call to the tokenizer, so that identifiers are correctly classified.
 
-The keyword groups are checked in a specific priority order: directives are
-checked first, then all other groups. If no keyword match is found, the
-identifier is looked up in the symbol table and returned as `SYMBOL_TT`.
+The keyword groups are stored in a single hash table built at compiler
+startup. When an identifier is looked up, the lexer walks the hash
+collision chain and returns the first match whose group is currently
+enabled. Because the parser typically enables only the keyword group(s)
+relevant to the current syntactic context, collisions between groups
+rarely matter in practice. If no enabled keyword matches, the identifier
+is looked up in the symbol table and returned as `SYMBOL_TT`.
 
 ### 1.3.4 Whitespace Handling
 
@@ -322,11 +326,12 @@ uppercase for named constants.
 
 ### 1.4.3 Identifier Length
 
-Identifiers may contain up to **32 characters** of letters, digits, and
-underscores. The compiler does not reject longer identifiers but only the
-first 32 characters are significant for purposes of symbol lookup. Two
-identifiers that share the same first 32 characters but differ only after
-that point would be considered the same symbol.
+Identifiers may be of **any length**, and the entire identifier is
+significant for symbol lookup. The lexer reads identifier characters into
+a dynamically grown buffer with no fixed length cap, so two identifiers
+that differ at any position — even far past character 32 — are treated
+as distinct symbols. (Earlier versions of Inform 6 enforced a 32-character
+limit; that limit was removed in Inform 6.34.)
 
 ### 1.4.4 Reserved Words (Keywords)
 
@@ -871,8 +876,14 @@ x = #g$score;      ! Address of the global variable 'score'
 x = #w$lamp;       ! Dictionary address of the word 'lamp'
 ```
 
-For `#a$` and `#g$`, the following text may begin with a letter or digit.
-For `#r$` and `##`, it must begin with a letter.
+For `#a$`, `#g$`, `#r$`, and `##`, the character following the prefix
+must be a letter or underscore (the start of an identifier); a digit in
+this position is rejected with the error "Alphabetic character expected
+after ...". For `#n$` and `#w$`, the following character may be any
+non-whitespace character; only an immediately-following whitespace
+character is rejected, with the error "Character expected after ...".
+After the first character, all six prefixes accept any combination of
+letters, digits, and underscores.
 
 ### 1.10.4 System Constants
 
