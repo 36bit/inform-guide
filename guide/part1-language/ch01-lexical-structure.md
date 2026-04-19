@@ -100,10 +100,11 @@ Zcharacter "abcdefghijklmnopqrstuvwxyz"
 
 The A0 and A1 strings must each contain exactly 26 characters and replace
 alphabets A0 and A1. The A2 string must contain exactly 23 characters and
-fills positions 3–25 of A2. Positions 0, 1, and 2 of A2 are fixed by
-Inform: position 0 is the escape code, position 1 is newline, and
-position 2 is tilde (so that `~` in strings is encoded as the
-double-quote character).
+fills positions 3–25 of A2. Positions 0 and 1 of A2 are fixed by the Z-machine
+standard: position 0 is an escape code, and position 1 is a newline
+(which is why `^` in strings produces a newline). Position 2 is fixed by
+Inform to hold the tilde character (which is why `~` in strings is
+encoded as the double-quote character).
 
 **Map a single Unicode character into the ZSCII table:**
 
@@ -314,8 +315,8 @@ identifier).
 Inform 6 is **case-insensitive** for identifiers (user-defined symbols).
 The symbol table uses case-insensitive comparison, so `MyVar`, `myvar`,
 and `MYVAR` all refer to the same symbol. The `Directive` keyword group
-is also matched case-insensitively, so directive names such as `If`,
-`IF`, and `if` are equivalent (these are directive forms like `Ifdef`).
+is also matched case-insensitively, so directive names such as `Ifdef`,
+`IFDEF`, and `ifdef` are equivalent.
 
 Other keyword groups — statement keywords, condition operators, system
 functions, segment markers, miscellaneous keywords, etc. — are matched
@@ -657,8 +658,8 @@ sense) and rejects any attempt to change it. For Glulx, the memory
 setting `$DICT_WORD_SIZE` can be set to any value and defaults to 9.
 
 ```inform6
-! In Z-machine v5: 'pineapple' is truncated to 'pineappl' (9 chars)
-! and matches 'pineapples' (also truncated to 'pineappl')
+! In Z-machine v5: 'pineapples' is truncated to 'pineapple' (9 chars)
+! and matches 'pineapple' (also 9 chars, so not truncated)
 ```
 
 ### 1.8.3 Suffix Flags
