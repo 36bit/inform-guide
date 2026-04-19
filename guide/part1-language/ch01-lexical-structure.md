@@ -31,15 +31,15 @@ When a non-zero character set is selected, bytes in the range 0xA1–0xFF are
 treated as valid characters and are mapped through the `source_to_iso_grid`
 conversion table. Regardless of setting, bytes in the ASCII range
 0x20–0x7E always have their standard ASCII meanings. The compiler also
-supports reading UTF-8 encoded source when Unicode mode is enabled.
+supports reading UTF-8 encoded source when Unicode mode is enabled with
+the `-Cu` switch.
 
-The compiler internally uses six character representations, ordered from
-most raw to most abstract:
+The compiler internally uses six character representations:
 
-1. **Source** — raw bytes from the source file.
-2. **ISO** — bytes interpreted according to the selected ISO 8859 character
+1. **ASCII** — the 7-bit subset (0x20–0x7E) common to all sets.
+2. **Source** — raw bytes from the source file.
+3. **ISO** — bytes interpreted according to the selected ISO 8859 character
    set.
-3. **ASCII** — the 7-bit subset (0x20–0x7E) common to all sets.
 4. **ZSCII** — the Z-machine's 10-bit character set (values 0–1023).
 5. **Textual** — escape notation such as `@'e` for e-acute or `@{03a3}`
    for Unicode U+03A3.
@@ -48,6 +48,10 @@ most raw to most abstract:
 
 Conversion can always proceed downward through this list but generally not
 upward.
+
+There is a seventh form: sequences of 5-bit "Z-chars" which encode ZSCII
+into the story file in compressed form. Conversion of ZSCII to and from
+Z-char sequences is handled separately.
 
 ### 1.1.2 ZSCII (Z-Machine Character Set)
 
@@ -139,7 +143,7 @@ Zcharacter terminating 255;
 
 This declares additional ZSCII codes (beyond the default 13 for Enter)
 that terminate keyboard input. The value 255 is commonly used to mean
-"any function key."
+"any function key." You can specify up to 32 terminating characters.
 
 ### 1.1.5 Line Endings
 
@@ -651,11 +655,11 @@ target and version:
 
 Characters beyond the limit are silently discarded. In Z-machine v3
 each dictionary word is compressed into 4 bytes of Z-encoded text
-holding up to 6 significant characters; in v4+ it is 6 bytes holding
-up to 9 characters. Neither figure is user-configurable: the Z-code
-compiler forces `DICT_WORD_SIZE` to 6 (in its internal byte-count
-sense) and rejects any attempt to change it. For Glulx, the memory
-setting `$DICT_WORD_SIZE` can be set to any value and defaults to 9.
+holding up to 6 Z-characters; in v4+ it is 6 bytes holding
+up to 9 Z-characters. Neither figure is user-configurable: the Z-code
+compiler forces `DICT_WORD_SIZE` to 6 and rejects any attempt to change
+it. For Glulx, the memory setting `$DICT_WORD_SIZE` can be set to any
+value and defaults to 9.
 
 ```inform6
 ! In Z-machine v5: 'pineapples' is truncated to 'pineapple' (9 chars)
