@@ -261,9 +261,9 @@ but no object is appropriate:
 ```
 
 Properties that hold object references conventionally use `nothing` (or
-simply `0`) to indicate "no object." The tree-manipulation routines
-`parent()`, `child()`, `sibling()`, and `children()` return `nothing` when
-the requested relation does not exist.
+simply `0`) to indicate "no object." The tree-manipulation system functions
+`parent()`, `child()`, and `sibling()` return `nothing` when the requested
+relation does not exist.
 
 ### 2.5.3 Objects as Values
 
