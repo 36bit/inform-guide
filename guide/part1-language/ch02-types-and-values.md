@@ -232,18 +232,19 @@ value `0`, represented by the constant `nothing`, means "no object."
 ### 2.5.1 Object Numbering
 
 The compiler assigns object numbers in the order that `Object` and `Class`
-declarations appear in the source. Classes defined with `Class` receive the
-lowest numbers, followed by objects defined with `Object`. The exact
-numbering depends on declaration order and on how the library defines its own
-objects.
+declarations appear in the source. Classes and objects share a single
+numbering space — both `Class` and `Object` definitions draw from the same
+running counter, so the numbering simply reflects declaration order. The
+first four object numbers are reserved by the compiler for the built-in
+metaclass objects `Class`, `Object`, `Routine`, and `String`.
 
 > **[Z-machine]** In Z-machine version 3, the maximum number of objects is
-> 255. In versions 5 and 8, the limit is configurable via the `MAX_OBJECTS`
-> compiler setting but defaults to 512.
+> 255, a hard limit of the Z-machine specification. In versions 4 and later,
+> the object tree uses 16-bit object references, so the architectural limit
+> is 65535.
 
 > **[Glulx]** Glulx imposes no hard architectural limit on the number of
-> objects. The practical limit is determined by available memory and the
-> `MAX_OBJECTS` compiler setting.
+> objects. The practical limit is determined by available memory.
 
 ### 2.5.2 The `nothing` Constant
 
@@ -351,7 +352,7 @@ On the Z-machine, each word is 2 bytes, so `a-->n` accesses address
 > | Z-machine version | Scale factor |
 > | ------------------ | ------------ |
 > | Version 3          | 2            |
-> | Versions 4–5       | 4            |
+> | Versions 4–7       | 4            |
 > | Version 8          | 8            |
 >
 > Routine addresses and string addresses in the Z-machine are always packed.
@@ -407,7 +408,7 @@ called directly, the compiler emits its address as a constant value:
 ### 2.7.2 Calling Routine Values with `indirect()`
 
 The `indirect()` system function calls a routine through its address. It
-accepts the routine address as its first argument, followed by up to seven
+accepts the routine address as its first argument, followed by the
 arguments to pass to the routine:
 
 ```inform6
@@ -422,8 +423,14 @@ arguments to pass to the routine:
 ];
 ```
 
-The `indirect()` function is a compiler built-in (system function number 4).
-It generates the appropriate call instruction for the target VM.
+> **[Z-machine]** `indirect()` accepts the routine address plus up to six
+> additional arguments.
+
+> **[Glulx]** There is no fixed limit on the number of arguments passed
+> through `indirect()`.
+
+The `indirect()` function is a compiler built-in system function. It
+generates the appropriate call instruction for the target VM.
 
 ### 2.7.3 Routines in Properties
 
@@ -571,7 +578,7 @@ limit compare as equal:
 
 ```inform6
 ! Z-machine: dictionary words are truncated to 6 characters (v3)
-! or 9 characters (v5+). On Glulx, the limit is also 9 by default.
+! or 9 characters (v4+). On Glulx, the limit is also 9 by default.
 if ('examine' == 'examin') ...   ! true if truncated to 6 characters
 ```
 
