@@ -755,7 +755,7 @@ assembly opcodes listed above.
 
 ### 2.11.4 Double-Precision Extensions
 
-> **[Compiler 6.40+]** The compiler also supports 64-bit double-precision
+> **[Glulx]** The compiler also supports 64-bit double-precision
 > float literals using `$>` (high 32 bits) and `$<` (low 32 bits) prefixes.
 > These split an IEEE 754 double into two 32-bit words:
 
