@@ -35,25 +35,25 @@ Global darkness_flag = 1;       ! initialized to integer 1
 Global saved_score;             ! initialized to 0
 ```
 
-As of compiler version 6.40, the `=` sign is optional when giving an
-initial value. The following two declarations are equivalent:
+The `=` sign is optional when giving an initial value. The following two
+declarations are equivalent:
 
 ```inform6
 Global foo = 12;
 Global foo 12;
 ```
 
-This brings `Global` into harmony with `Constant`, for which `=` has
-always been optional.
+This brings `Global` into harmony with `Constant`, for which `=` is also
+optional.
 
-As of compiler version 6.43, it is safe to declare a global variable more
-than once. If a global is declared more than once, at most one declaration
-should give an initial value. It is also safe to give each declaration the
-*same* initial value, as long as the value is a compile-time constant.
+It is safe to declare a global variable more than once. If a global is
+declared more than once, at most one declaration should give an initial
+value. It is also safe to give each declaration the *same* initial
+value, as long as the value is a compile-time constant.
 
 ```inform6
 Global shared_flag;             ! first declaration, no initial value
-Global shared_flag;             ! redeclaration permitted since 6.43
+Global shared_flag;             ! redeclaration permitted
 ```
 
 ### 3.1.2 Z-Machine Limits
@@ -61,8 +61,8 @@ Global shared_flag;             ! redeclaration permitted since 6.43
 > **[Z-machine]** The Z-machine provides exactly **240** global variable
 > slots (numbered 16–255 in the underlying architecture). Seven of these
 > are reserved by the compiler for internal use (four temporaries,
-> `self`, `sender`, and `sw__var`), leaving approximately **233** slots
-> for user-declared globals. Attempting to declare more produces a fatal
+> `self`, `sender`, and `sw__var`), leaving exactly **233** slots for
+> user-declared globals. Attempting to declare more produces a
 > compile-time error.
 
 The hard limit of 240 is defined by the Z-machine specification: global
@@ -96,22 +96,27 @@ that previously needed to pack data into arrays to conserve global slots.
 Internally, the compiler indexes every variable—local and global—with a
 single numbering scheme. Local variables occupy indices 0 through
 `MAX_LOCAL_VARIABLES − 1`, and globals occupy indices starting at
-`MAX_LOCAL_VARIABLES`. On the Z-machine, `MAX_LOCAL_VARIABLES` is 16, so
-the first user global is index 16. On Glulx it is 119, so the first user
-global is index 119.
+`MAX_LOCAL_VARIABLES`. On the Z-machine, `MAX_LOCAL_VARIABLES` is 16, and
+because the seven compiler-reserved globals sit at the top of the global
+area in the traditional layout, the first user global is index 16. On
+Glulx, `MAX_LOCAL_VARIABLES` is 119 and the compiler reserves eleven
+built-in globals (the four temporaries, `self`, `sender`, `sw__var`, and
+four further internal slots) at indices 119 through 129, so the first user
+global is index 130.
 
-In the Z-machine, the values of all global variables are stored in a
-contiguous 480-byte table (240 words of 2 bytes each) located at the start
-of dynamic memory. This table is part of the game file's header-specified
-globals area. In Glulx, global variables are stored in a RAM segment whose
-size adjusts to the number of globals actually declared.
+In the Z-machine default layout, the values of all global variables are
+stored in a contiguous 480-byte table (240 words of 2 bytes each) within
+the game file's header-specified globals area. Under
+`$ZCODE_COMPACT_GLOBALS=1`, the table holds only as many words as there
+are declared globals (two bytes per global), with arrays packed
+immediately afterward. In Glulx, global variables are stored in a RAM
+segment whose size adjusts to the number of globals actually declared.
 
 ### 3.1.5 Obsolete `Global` Array Syntax
 
 In early versions of Inform, the `Global` directive could also define
-arrays using forms like `Global array --> 8;`. As of compiler version
-6.40, these obsolete forms have been removed. Use `Global` for variables
-and `Array` for arrays.
+arrays using forms like `Global array --> 8;`. These obsolete forms are
+no longer supported. Use `Global` for variables and `Array` for arrays.
 
 ## 3.2 Local Variables
 
@@ -508,7 +513,6 @@ compilation environment:
 | `TARGET_GLULX` | Defined when compiling for Glulx |
 | `WORDSIZE` | 2 on Z-machine, 4 on Glulx |
 | `DICT_WORD_SIZE` | Number of bytes per dictionary word |
-| `NULL` | 0 (the null value) |
 | `true` | 1 |
 | `false` | 0 |
 | `nothing` | 0 (the null object) |
@@ -551,8 +555,8 @@ Default MAX_SCORE 100;            ! used if MAX_SCORE not already defined
 - Conditional compilation (`Ifdef`, `Ifndef`) can guard constant
   declarations to prevent redefinition.
 
-- The `Undef` directive (available since compiler version 6.33) removes
-  a constant's definition, allowing it to be redefined:
+- The `Undef` directive removes a constant's definition, allowing it to
+  be redefined:
 
 ```inform6
 Constant VERSION = 1;
