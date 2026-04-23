@@ -61,8 +61,8 @@ Global shared_flag;             ! redeclaration permitted since 6.43
 > **[Z-machine]** The Z-machine provides exactly **240** global variable
 > slots (numbered 16–255 in the underlying architecture). Seven of these
 > are reserved by the compiler for internal use (four temporaries,
-> `self`, `sender`, and `sw__var`), leaving approximately **233** slots
-> for user-declared globals. Attempting to declare more produces a fatal
+> `self`, `sender`, and `sw__var`), leaving exactly **233** slots for
+> user-declared globals. Attempting to declare more produces a
 > compile-time error.
 
 The hard limit of 240 is defined by the Z-machine specification: global
@@ -96,15 +96,21 @@ that previously needed to pack data into arrays to conserve global slots.
 Internally, the compiler indexes every variable—local and global—with a
 single numbering scheme. Local variables occupy indices 0 through
 `MAX_LOCAL_VARIABLES − 1`, and globals occupy indices starting at
-`MAX_LOCAL_VARIABLES`. On the Z-machine, `MAX_LOCAL_VARIABLES` is 16, so
-the first user global is index 16. On Glulx it is 119, so the first user
-global is index 119.
+`MAX_LOCAL_VARIABLES`. On the Z-machine, `MAX_LOCAL_VARIABLES` is 16, and
+because the seven compiler-reserved globals sit at the top of the global
+area in the traditional layout, the first user global is index 16. On
+Glulx, `MAX_LOCAL_VARIABLES` is 119 and the compiler reserves eleven
+built-in globals (the four temporaries, `self`, `sender`, `sw__var`, and
+four further internal slots) at indices 119 through 129, so the first user
+global is index 130.
 
-In the Z-machine, the values of all global variables are stored in a
-contiguous 480-byte table (240 words of 2 bytes each) located at the start
-of dynamic memory. This table is part of the game file's header-specified
-globals area. In Glulx, global variables are stored in a RAM segment whose
-size adjusts to the number of globals actually declared.
+In the Z-machine default layout, the values of all global variables are
+stored in a contiguous 480-byte table (240 words of 2 bytes each) within
+the game file's header-specified globals area. Under
+`$ZCODE_COMPACT_GLOBALS=1`, the table holds only as many words as there
+are declared globals (two bytes per global), with arrays packed
+immediately afterward. In Glulx, global variables are stored in a RAM
+segment whose size adjusts to the number of globals actually declared.
 
 ### 3.1.5 Obsolete `Global` Array Syntax
 
@@ -508,7 +514,6 @@ compilation environment:
 | `TARGET_GLULX` | Defined when compiling for Glulx |
 | `WORDSIZE` | 2 on Z-machine, 4 on Glulx |
 | `DICT_WORD_SIZE` | Number of bytes per dictionary word |
-| `NULL` | 0 (the null value) |
 | `true` | 1 |
 | `false` | 0 |
 | `nothing` | 0 (the null object) |
