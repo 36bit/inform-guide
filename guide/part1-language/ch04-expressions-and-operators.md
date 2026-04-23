@@ -353,10 +353,10 @@ if (x <= 100 or y)    ! true if (x <= 100) AND (x <= y)
 if (x >= 100 or y)    ! true if (x >= 100) AND (x >= y)
 ```
 
-This is counterintuitive. As of compiler version 6.36, using `or` with
-`>=` or `<=` produces a compiler warning. The clearest approach is to
-avoid `or` with ordering comparisons and write the conditions out
-explicitly.
+This is counterintuitive. The compiler issues a warning ("The behavior of
+(>= or) may be unexpected." or the `<=` equivalent) when `or` is used with
+`>=` or `<=`. The clearest approach is to avoid `or` with ordering
+comparisons and write the conditions out explicitly.
 
 ### 4.6.4 Restrictions on `or`
 
@@ -608,7 +608,8 @@ appropriate byte (`storeb`) or word (`storew`) store instructions.
 The `::` operator accesses a **property value as defined by a specific
 class**, bypassing the object's own definition. Among user-accessible
 operators it has the highest precedence (level 13); a single internal
-level 14 exists for the Glulx-only `@push` form, but that level is not
+level 14 exists for a compiler-generated stack-push operation used when
+lowering function-call arguments on Glulx, but that level is not
 accessible to ordinary user expressions (see §4.13).
 
 ```inform6
@@ -801,8 +802,10 @@ routine address:
 The `indirect()` built-in handles indirect calls with zero arguments.
 For calls with arguments, `indirect(fn, arg1, arg2, ...)` passes them
 through. On Glulx, the number of arguments that `indirect()` can accept
-is essentially unlimited. On the Z-machine, it is limited to the operand
-count of the `call_vs2` instruction (up to 7 arguments).
+is essentially unlimited. On the Z-machine, `indirect()` is limited to
+passing at most **six** arguments to the called function (the compiler
+counts the routine address plus its arguments together and rejects more
+than seven operands in total).
 
 ## 4.13 Operator Precedence Table
 
@@ -840,9 +843,9 @@ correspond to the internal levels defined in the compiler's operator table.
 | 10 | `..&` | Infix | Left | Individual property data address |
 | 10 | `..#` | Infix | Left | Individual property data length (bytes) |
 | 11 | `()` | — | Left | Function call |
-| 12 | `.` | Infix | Left | Property access / message send |
+| 12 | `.` `..` | Infix | Left | Property access / message send (`.` common, `..` individual) |
 | 13 | `::` | Infix | Left | Superclass property access (highest user-accessible level) |
-| 14 | `@push` | — | — | Glulx-internal stack push (not for ordinary user code; see note) |
+| 14 | *(internal)* | — | — | Compiler-generated stack-push used when lowering function-call arguments on Glulx (not for ordinary user code; see note) |
 
 ### 4.13.1 Precedence Notes
 
@@ -884,12 +887,12 @@ greater than 11, the function call is evaluated first.
 expressions. It evaluates both operands and yields the value of the right
 operand.
 
-**Level 14 (Glulx-internal `@push`):** The compiler's operator table
-includes one further level beyond the ones listed above, used internally
-to model Glulx's stack-push semantics. It is not exposed to user code as
-a separate operator and never appears in source expressions; level 13
-(`::`) remains the highest precedence accessible in normal Inform 6
-programs.
+**Level 14 (compiler-internal stack push):** The compiler's operator
+table includes one further level beyond the ones listed above, used
+internally when lowering function-call arguments on Glulx so that they
+are pushed onto the stack. It is not exposed to user code as a separate
+operator and never appears in source expressions; level 13 (`::`) remains
+the highest precedence accessible in normal Inform 6 programs.
 
 ## 4.14 Expression Contexts
 
