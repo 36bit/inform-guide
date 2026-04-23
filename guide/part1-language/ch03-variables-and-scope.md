@@ -35,25 +35,25 @@ Global darkness_flag = 1;       ! initialized to integer 1
 Global saved_score;             ! initialized to 0
 ```
 
-As of compiler version 6.40, the `=` sign is optional when giving an
-initial value. The following two declarations are equivalent:
+The `=` sign is optional when giving an initial value. The following two
+declarations are equivalent:
 
 ```inform6
 Global foo = 12;
 Global foo 12;
 ```
 
-This brings `Global` into harmony with `Constant`, for which `=` has
-always been optional.
+This brings `Global` into harmony with `Constant`, for which `=` is also
+optional.
 
-As of compiler version 6.43, it is safe to declare a global variable more
-than once. If a global is declared more than once, at most one declaration
-should give an initial value. It is also safe to give each declaration the
-*same* initial value, as long as the value is a compile-time constant.
+It is safe to declare a global variable more than once. If a global is
+declared more than once, at most one declaration should give an initial
+value. It is also safe to give each declaration the *same* initial
+value, as long as the value is a compile-time constant.
 
 ```inform6
 Global shared_flag;             ! first declaration, no initial value
-Global shared_flag;             ! redeclaration permitted since 6.43
+Global shared_flag;             ! redeclaration permitted
 ```
 
 ### 3.1.2 Z-Machine Limits
@@ -115,9 +115,8 @@ segment whose size adjusts to the number of globals actually declared.
 ### 3.1.5 Obsolete `Global` Array Syntax
 
 In early versions of Inform, the `Global` directive could also define
-arrays using forms like `Global array --> 8;`. As of compiler version
-6.40, these obsolete forms have been removed. Use `Global` for variables
-and `Array` for arrays.
+arrays using forms like `Global array --> 8;`. These obsolete forms are
+no longer supported. Use `Global` for variables and `Array` for arrays.
 
 ## 3.2 Local Variables
 
@@ -556,8 +555,8 @@ Default MAX_SCORE 100;            ! used if MAX_SCORE not already defined
 - Conditional compilation (`Ifdef`, `Ifndef`) can guard constant
   declarations to prevent redefinition.
 
-- The `Undef` directive (available since compiler version 6.33) removes
-  a constant's definition, allowing it to be redefined:
+- The `Undef` directive removes a constant's definition, allowing it to
+  be redefined:
 
 ```inform6
 Constant VERSION = 1;
