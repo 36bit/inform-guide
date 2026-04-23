@@ -491,7 +491,7 @@ program. Valid constant expressions include:
 - Object names: `Kitchen`
 - Routine addresses: `MyFunc`
 - Arithmetic on constants: `MAX_SCORE + 1`
-- The `#` notation for system constants: `#n$word`
+- The `#` notation for system constants: `#largest_object`
 
 Invalid constant expressions include anything that depends on runtime
 state, such as global or local variable values, function calls, or
