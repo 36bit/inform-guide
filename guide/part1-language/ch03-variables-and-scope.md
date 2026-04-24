@@ -407,9 +407,12 @@ advanced message-routing patterns.
 The compiler also reserves several global variables for internal
 expression evaluation. These are named `temp_global`, `temp__global2`,
 `temp__global3`, and `temp__global4`. A further reserved variable,
-`sw__var`, is used in the compilation of `switch` statements. These
-variables should never be accessed directly by user code; their values are
-ephemeral and may change between any two statements.
+`sw__var`, is used internally by the compiler, principally to hold the
+current action during property-message dispatch (such as `react_before`
+and `react_after` handling) and as the implicit switch variable for case
+clauses inside property-value routines. These variables should never be
+accessed directly by user code; their values are ephemeral and may change
+between any two statements.
 
 ## 3.7 System-Defined Globals
 
