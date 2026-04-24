@@ -531,7 +531,7 @@ It is important to distinguish constants from globals:
 | Mutable at runtime? | No | Yes |
 | Occupies memory at runtime? | No (inlined) | Yes (one word) |
 | Valid in constant contexts? | Yes | No |
-| Can be used in `#if` / `Iftrue`? | Yes | No |
+| Can be used in `Iftrue` / `Iffalse`? | Yes | No |
 | Counted toward global limit? | No | Yes |
 
 Because constants are inlined, they incur no runtime memory cost and no
