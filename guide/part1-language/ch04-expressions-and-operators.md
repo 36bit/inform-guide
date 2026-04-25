@@ -915,9 +915,12 @@ standalone expression statements.
 ```
 
 In void context, the compiler generates code for any side effects but does
-not store the expression's result. An expression with no side effects in
-void context (such as a bare variable name or literal) triggers the
-warning "expression has no side effects."
+not store the expression's result. If the top-level operator produces a
+value but has no side effect (for example, an arithmetic operator used as
+a statement), the compiler raises the error "Evaluating this has no
+effect:" naming the offending operator. A purely logical expression used
+in void context (for example, `x == 5;` written instead of `x = 5;`)
+triggers the warning "Logical expression has no side-effects."
 
 ### 4.14.2 Condition Context (`CONDITION_CONTEXT`)
 
@@ -968,32 +971,44 @@ leave it in a specified result location (a variable or the stack).
 
 ### 4.14.5 Action Context (`ACTION_Q_CONTEXT`)
 
-An expression appearing where an **action value** is expected, such as in
-angle-bracket action statements:
+An expression appearing as an **argument to an angle-bracket action
+statement**, or as the parenthesized form of the action itself:
 
 ```inform6
-<Take lamp>;               ! Take is in action context
+<Take lamp>;
+<Insert button (random(pocket1, pocket2))>;
 ```
 
-In action context, the compiler recognizes bare action names (without the
-`##` prefix) as action constants.
+Action context behaves like quantity context, except that postfixed
+brackets at the top level are **not** treated as a function call. That
+distinction is what allows the second example above to parse `lamp` and
+`(random(pocket1, pocket2))` as two separate arguments rather than as a
+single expression `lamp(random(pocket1, pocket2))`.
 
 ### 4.14.6 Assembly Context (`ASSEMBLY_CONTEXT`)
 
 An expression appearing as an operand of an **assembly language**
-instruction (following `@`). In this context, the pseudo-variable `sp` is
-recognized for direct stack manipulation.
+instruction (following `@`). Assembly context behaves like quantity
+context with two differences: the byte-array operator `->` is forbidden
+(because `->` is reserved at the assembly-statement level to mark the
+store destination), and unbracketed minus signs and parenthesised
+sub-expressions are treated the same way as in array context.
 
 ```inform6
-@add x 1 -> y;             ! x, 1, and y are in assembly context
-@push sp;                   ! sp is recognized in assembly context
+@add x 1 -> y;             ! x, 1, and y are in assembly context;
+                            ! the -> here is the store marker, not an
+                            ! operand operator
 ```
 
 ### 4.14.7 Array Context (`ARRAY_CONTEXT`)
 
-An expression appearing in an **array initializer** list. Array context is
-similar to constant context, but additionally permits certain forward
-references that are resolved by back-patching.
+An expression appearing in an **array initializer** list. Array context
+behaves like constant context with two additional rules: parenthesised
+groupings are always parsed as sub-expressions rather than as function
+calls (so `Array a --> (1+2) (3+4);` cleanly yields two entries), and an
+unbracketed minus sign that could attach to either the previous entry
+or the next entry triggers the warning "Without bracketing, the minus
+sign '-' is ambiguous."
 
 ```inform6
 Array rooms --> Kitchen Hallway Garden;   ! each name is in array context
@@ -1001,9 +1016,13 @@ Array rooms --> Kitchen Hallway Garden;   ! each name is in array context
 
 ### 4.14.8 For-Loop Initialization Context (`FORINIT_CONTEXT`)
 
-The initialization clause of a `for` loop. This context behaves like void
-context but allows the parser to recognize the `:` separator that divides
-the `for` header into its three clauses.
+The initialization clause of a `for` loop. (The condition clause is
+parsed in condition context and the update clause in void context.)
+For-init context behaves like void context, except that the superclass
+operator `::` is forbidden at the top level: an unbracketed `::` ends
+the expression so that the surrounding `for` parser can recognise it as
+a marker for an omitted clause. To use `::` inside the initialiser
+itself, wrap it in parentheses.
 
 ```inform6
 for (i = 0 : i < 10 : i++) ...   ! i = 0 is in for-init context
@@ -1011,8 +1030,11 @@ for (i = 0 : i < 10 : i++) ...   ! i = 0 is in for-init context
 
 ### 4.14.9 Return Context (`RETURN_Q_CONTEXT`)
 
-An expression appearing in a `return` statement. This context behaves like
-quantity context and produces the routine's return value.
+An expression appearing in a `return` statement. Return context behaves
+like quantity context, with one relaxation: a bare property name as the
+returned expression does **not** trigger the warning that quantity
+context would otherwise issue, because returning a property name (so
+that the caller can read or call it on `self`) is a legitimate idiom.
 
 ```inform6
 [ Double n;
