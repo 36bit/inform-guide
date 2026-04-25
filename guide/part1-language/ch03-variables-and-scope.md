@@ -359,8 +359,14 @@ about the current message-sending context.
 The variable `self` refers to the **object currently receiving a
 message**—that is, the object whose property routine is executing. When a
 property routine is called via the `.` (property) or `..` (individual
-property) operators, the interpreter sets `self` to the object on the left
-side of the operator before entering the routine.
+property) operators, the compiled code (in particular, the small set of
+internal "veneer" routines that the compiler emits to implement these
+operators) saves the previous value of `self`, sets `self` to the object
+on the left side of the operator, calls the routine, and then restores
+the previous `self` on return. The Z-machine and Glulx interpreters
+themselves have no knowledge of `self`; it is an ordinary global
+variable, and its save-set-restore behaviour is part of the code the
+compiler stitches in around the call.
 
 ```inform6
 Object lamp "brass lamp"
