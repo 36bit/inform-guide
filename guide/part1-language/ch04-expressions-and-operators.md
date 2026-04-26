@@ -296,9 +296,13 @@ Inform 6 uses distinct symbols for logical and bitwise operations:
 | `\|\|` | `\|` | OR |
 | `~~` | `~` | NOT |
 
-Despite different symbols, the bitwise and logical operators have similar
-precedence levels, which can cause confusion. When mixing them, always use
-parentheses to make intent explicit.
+The two families have **different** precedence levels: the logical
+operators sit at precedence 2 (low), while the bitwise operators sit at
+precedence 6 (high, alongside `*`, `/`, and `%`). Because the symbols
+look so similar, it is easy to type one when the other was intended,
+and the resulting expression may parse in a surprising way. When mixing
+either family with comparisons or with each other, use parentheses to
+make intent explicit.
 
 ## 4.6 The `or` Operator
 
