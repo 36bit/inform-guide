@@ -364,10 +364,10 @@ comparisons and write the conditions out explicitly.
 
 ### 4.6.4 Restrictions on `or`
 
-The `or` operator has precedence 4, placing it between the logical
-operators (precedence 2) and the arithmetic operators (precedence 5).
-It may only appear as the right operand of a comparison or condition
-operator. Using `or` in any other position is a compile-time error:
+The `or` operator has precedence 4, placing it between the
+comparison and condition operators (precedence 3) and the arithmetic
+operators (precedence 5). It may only appear as the right operand of
+a comparison or condition operator. Using `or` in any other position is a compile-time error:
 
 ```inform6
 ! INVALID — or cannot be used as a standalone boolean connective:
