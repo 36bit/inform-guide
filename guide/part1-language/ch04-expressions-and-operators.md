@@ -716,9 +716,12 @@ Object lamp "lamp"
 ];
 ```
 
-The compiler translates property increments and decrements into calls to
-veneer routines that handle the load-modify-store sequence for the
-appropriate property type.
+For common properties on the Z-machine, the compiler emits an inline
+load–modify–store sequence using `get_prop`, the appropriate increment
+or decrement opcode, and `put_prop`. For individual properties on the
+Z-machine, and for property increments and decrements of either kind on
+Glulx, the compiler instead calls a veneer routine that performs the
+load–modify–store on the caller's behalf.
 
 ### 4.11.3 Compound Assignment Through Properties and Arrays
 
@@ -806,10 +809,12 @@ routine address:
 The `indirect()` built-in handles indirect calls with zero arguments.
 For calls with arguments, `indirect(fn, arg1, arg2, ...)` passes them
 through. On Glulx, the number of arguments that `indirect()` can accept
-is essentially unlimited. On the Z-machine, `indirect()` is limited to
-passing at most **six** arguments to the called function (the compiler
-counts the routine address plus its arguments together and rejects more
-than seven operands in total).
+is essentially unlimited. On the Z-machine (version 5 and later), the
+compiler counts the routine address plus its arguments together as
+operands and rejects more than eight operands in total, so `indirect()`
+is limited to passing at most **seven** arguments to the called function.
+On version 3 story files, the underlying call opcode supports far fewer
+operands and the limit drops to at most three arguments.
 
 ## 4.13 Operator Precedence Table
 
