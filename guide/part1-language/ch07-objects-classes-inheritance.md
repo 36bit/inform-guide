@@ -175,8 +175,15 @@ Property weight;
 Every object in the game can then use the `weight` property. If an object does not explicitly define a common property, accessing it returns the property's default value (0 unless set otherwise).
 
 The number of common properties is limited:
-- **Z-machine**: 63 common properties (numbered 1–63). Properties 1–46 are typically used by the standard library.
-- **Glulx**: Limit depends on the `INDIV_PROP_START` setting (default 256), but in practice the limit is much higher.
+- **Z-machine**: 63 common properties on Z-machine versions 4 and
+  later (numbered 1–63), or 31 common properties on version 3
+  (numbered 1–31). The standard library declares approximately 48
+  common properties (47 named with `Property` plus the built-in
+  `name` property).
+- **Glulx**: Limit depends on the `INDIV_PROP_START` setting (default
+  256), so by default common properties are numbered 1–255. In
+  practice the limit is much higher than the standard library
+  requires.
 
 A default value can be set:
 
@@ -281,7 +288,7 @@ Attribute explosive;
 
 - **Z-machine**: Up to 48 attributes (numbered 0–47) on Z-machine
   versions 4 and later (32 attributes on version 3). The standard
-  library uses approximately 30.
+  library declares approximately 32.
 - **Glulx**: Configurable at compile time via the `$NUM_ATTR_BYTES`
   setting. The **default** is 7 bytes, giving 56 attributes; the
   maximum is 39 bytes, giving 312 attributes. Set it on the command
@@ -620,10 +627,10 @@ access control is not part of the language.
 | Limit | Z-machine | Glulx |
 |---|---|---|
 | Maximum objects | 255 (v3); v4+ limited only by memory | Limited only by memory |
-| Maximum common properties | 63 | `INDIV_PROP_START - 1` (default 255) |
+| Maximum common properties | 31 (v3), 63 (v4+) | `INDIV_PROP_START - 1` (default 255) |
 | Maximum attributes | 32 (v3), 48 (v4+) | `NUM_ATTR_BYTES × 8` (default 56, max 312) |
-| Maximum data per common property | 8 bytes / 4 words (v3), 64 bytes / 32 words (v4+) | Limited only by memory |
-| Maximum data per individual property | 64 bytes / 32 words | Limited only by memory |
+| Maximum data per common property | 8 bytes / 4 words (v3), 64 bytes / 32 words (v4+) | 32768 values per property |
+| Maximum data per individual property | 64 bytes / 32 words | 32768 values per property |
 | Maximum classes | No fixed limit | No fixed limit |
 
 ---
