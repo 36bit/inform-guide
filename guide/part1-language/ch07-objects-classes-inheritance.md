@@ -175,11 +175,15 @@ Property weight;
 Every object in the game can then use the `weight` property. If an object does not explicitly define a common property, accessing it returns the property's default value (0 unless set otherwise).
 
 The number of common properties is limited:
-- **Z-machine**: 63 common properties on Z-machine versions 4 and
-  later (numbered 1–63), or 31 common properties on version 3
-  (numbered 1–31). The standard library declares approximately 48
-  common properties (47 named with `Property` plus the built-in
-  `name` property).
+- **Z-machine**: Common properties occupy property numbers 1–63 on
+  Z-machine versions 4 and later, or 1–31 on version 3. Two of those
+  numbered slots are reserved by the compiler for internal use, and
+  property 1 is always the built-in `name` property, so the
+  user-declarable limit is 61 common properties on v4 and later (one
+  built-in `name` plus up to 60 declared with `Property`) and 29 on
+  version 3 (one built-in `name` plus up to 28 declared with
+  `Property`). The standard library declares 47 with `Property`,
+  which together with `name` gives 48 user-visible common properties.
 - **Glulx**: Limit depends on the `INDIV_PROP_START` setting (default
   256), so by default common properties are numbered 1–255. In
   practice the limit is much higher than the standard library
@@ -541,12 +545,19 @@ object provides a `destroy` property, it is called first.
 ### 7.11.4 `copy`
 
 ```inform6
-ClassName.copy(src, dst);
+ClassName.copy(dst, src);
 ```
 
-Copies all property values and attributes from `src` to `dst`. Both
-`src` and `dst` must be `ofclass ClassName`. This performs a shallow
-copy of property data.
+Copies attributes and property values from `src` to `dst`. The first
+argument is the destination and the second is the source. Both `src`
+and `dst` must be `ofclass ClassName`.
+
+All attributes (positive and negative) are copied. For properties,
+only those that are declared by **both** `src` and `dst` and have the
+**same length** in both objects are copied; properties unique to one
+side, or declared with different lengths, are left unchanged. The
+copy is shallow: any addresses or object references stored in
+property data are duplicated as-is, not deep-copied.
 
 ### 7.11.5 `remaining`
 
@@ -627,11 +638,11 @@ access control is not part of the language.
 | Limit | Z-machine | Glulx |
 |---|---|---|
 | Maximum objects | 255 (v3); v4+ limited only by memory | Limited only by memory |
-| Maximum common properties | 31 (v3), 63 (v4+) | `INDIV_PROP_START - 1` (default 255) |
+| Maximum common properties | 31 (v3, of which 29 are user-declarable), 63 (v4+, of which 61 are user-declarable) | `INDIV_PROP_START - 1` (default 255) |
 | Maximum attributes | 32 (v3), 48 (v4+) | `NUM_ATTR_BYTES × 8` (default 56, max 312) |
 | Maximum data per common property | 8 bytes / 4 words (v3), 64 bytes / 32 words (v4+) | 32768 values per property |
 | Maximum data per individual property | 64 bytes / 32 words | 32768 values per property |
-| Maximum classes | No fixed limit | No fixed limit |
+| Maximum classes | 256 (including the four built-in metaclasses) | 32768 (including the four built-in metaclasses) |
 
 ---
 
