@@ -603,8 +603,9 @@ A bare double-quoted string as a statement is syntactic sugar for
 
 ## 5.13 `new_line`
 
-The `new_line` statement prints a newline character. It is equivalent to
-`print "^"` but generates a single opcode:
+The `new_line` statement prints a newline character. It compiles to the
+single Z-machine `@new_line` opcode and is equivalent to `print "^"`
+(which the compiler also reduces to a bare `@new_line`):
 
 ```inform6
 print "First line.";
