@@ -85,11 +85,14 @@ Object lamp "brass lamp"
        ];
 ```
 
-The compiler assigns an internal name to each embedded routine (derived
-from the object and property names, e.g. `lamp.description`). Embedded
-routines are not callable by name from other parts of the program — they
-are invoked automatically by the library when the relevant property is
-accessed, or explicitly via `obj.prop()`.
+The compiler assigns an internal name to each embedded routine, derived
+from the enclosing object or class and the property name. For an
+embedded routine inside an object's property the parts are joined by a
+period, e.g. `lamp.description`; for a class property they are joined
+by `::`, e.g. `Container::before`. Embedded routines are not callable
+by name from other parts of the program — they are invoked automatically
+by the library when the relevant property is accessed, or explicitly via
+`obj.prop()`.
 
 Embedded routines may only appear as the value of an object or class
 property. They are not accepted as values in arbitrary expressions, in
