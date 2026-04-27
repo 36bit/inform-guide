@@ -70,7 +70,7 @@ The compiler maintains an **alphabet table** of three 26-letter alphabets
 
 Two positions in A2 have special meaning: position 1 encodes newline
 (which is why `^` in strings produces a newline), and position 19 holds
-the tilde, which Inform maps to the double-quote character (which is why
+the tilde, which the language maps to the double-quote character (which is why
 `~` in strings produces `"`).
 
 ### 1.1.3 Unicode Support (Glulx)
@@ -107,7 +107,7 @@ alphabets A0 and A1. The A2 string must contain exactly 23 characters and
 fills positions 3–25 of A2. Positions 0 and 1 of A2 are fixed by the Z-machine
 standard: position 0 is an escape code, and position 1 is a newline
 (which is why `^` in strings produces a newline). Position 2 is fixed by
-Inform to hold the tilde character (which is why `~` in strings is
+the language to hold the tilde character (which is why `~` in strings is
 encoded as the double-quote character).
 
 **Map a single Unicode character into the ZSCII table:**
@@ -159,7 +159,7 @@ regardless of the convention used.
 
 ## 1.2 Comments
 
-Inform 6 has only **single-line comments**, introduced by the exclamation
+The language has only **single-line comments**, introduced by the exclamation
 mark (`!`). Everything from `!` to the end of the line is discarded by
 the lexer:
 
@@ -316,7 +316,7 @@ identifier).
 
 ### 1.4.2 Case Sensitivity
 
-Inform 6 is **case-insensitive** for identifiers (user-defined symbols).
+The language is **case-insensitive** for identifiers (user-defined symbols).
 The symbol table uses case-insensitive comparison, so `MyVar`, `myvar`,
 and `MYVAR` all refer to the same symbol. The `Directive` keyword group
 is also matched case-insensitively, so directive names such as `Ifdef`,
@@ -346,8 +346,8 @@ Identifiers may be of **any length**, and the entire identifier is
 significant for symbol lookup. The lexer reads identifier characters into
 a dynamically grown buffer with no fixed length cap, so two identifiers
 that differ at any position — even far past character 32 — are treated
-as distinct symbols. (Earlier versions of Inform 6 enforced a 32-character
-limit; that limit was removed in Inform 6.34.)
+as distinct symbols. (Earlier versions of the compiler enforced a 32-character
+limit; that limit was removed in version 6.34.)
 
 ### 1.4.4 Reserved Words (Keywords)
 
@@ -513,7 +513,7 @@ sequences are recognized.
 
 ### 1.6.2 Escape Sequences
 
-Inform 6 strings use a set of escape sequences that differ from the C
+Strings use a set of escape sequences that differ from the C
 convention. The backslash is used only for line continuation, not for
 character escapes:
 
@@ -561,7 +561,7 @@ print "@<<Bonjour@>>^";           ! prints: «Bonjour»
 ```
 
 The `@@` escape is particularly useful for characters that have special
-meaning in Inform strings. For example, `@@94` produces a literal
+meaning in strings. For example, `@@94` produces a literal
 circumflex (ASCII 94) without it being interpreted as a newline, and
 `@@126` produces a literal tilde without it being interpreted as a
 double-quote.
@@ -840,7 +840,7 @@ after them; and `.` is a prefix of all the others, so it comes last.
 ### 1.10.1 `#` as Directive Prefix
 
 At the top level of source code, the `#` character introduces a compiler
-directive. Although Inform 6 directives can be written without `#` in most
+directive. Although directives can be written without `#` in most
 cases, using `#` makes the directive nature explicit:
 
 ```inform6

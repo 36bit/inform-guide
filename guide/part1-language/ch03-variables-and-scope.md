@@ -114,7 +114,7 @@ segment whose size adjusts to the number of globals actually declared.
 
 ### 3.1.5 Obsolete `Global` Array Syntax
 
-In early versions of Inform, the `Global` directive could also define
+In early versions of the compiler, the `Global` directive could also define
 arrays using forms like `Global array --> 8;`. These obsolete forms are
 no longer supported. Use `Global` for variables and `Array` for arrays.
 
@@ -159,7 +159,7 @@ argument was passed are initialized to zero.
 
 ### 3.2.2 Default Values for Locals
 
-Inform 6 does not provide syntax for giving local variables default
+The language does not provide syntax for giving local variables default
 values in the declaration. Every local variable begins life as zero unless
 a corresponding argument is passed by the caller. If you need a local
 initialized to a non-zero value, assign it at the start of the routine
@@ -226,7 +226,7 @@ stack, and writing to `sp` pushes a value onto it.
 ```
 
 The identifier `sp` is recognized **only in assembly-language context**—
-that is, within `@`-prefixed instructions. In ordinary Inform 6
+that is, within `@`-prefixed instructions. In ordinary
 expressions, the compiler manages the stack implicitly and the name `sp`
 has no special meaning unless you have defined a local or global variable
 with that name (which is strongly discouraged).
@@ -237,7 +237,7 @@ is why the maximum number of user-declared locals is one fewer than
 
 ## 3.4 Scope Rules
 
-Inform 6 uses a simple, two-level scoping model: names are either **local**
+The language uses a simple, two-level scoping model: names are either **local**
 (visible only within one routine) or **global** (visible everywhere). There
 is no block-level scoping; a local variable declared in a routine header is
 visible throughout the entire body of that routine, including nested blocks.
@@ -269,7 +269,7 @@ local with the same name and leave the global untouched.
 
 ### 3.4.2 No Block Scoping
 
-Unlike C, Inform 6 does not restrict the visibility of a variable to the
+Unlike C, the language does not restrict the visibility of a variable to the
 block in which it is introduced. A local declared in the routine header is
 accessible in every `if` branch, `for` loop, `while` loop, and `switch`
 case within that routine:
@@ -422,7 +422,7 @@ between any two statements.
 
 ## 3.7 System-Defined Globals
 
-The standard Inform library declares a number of global variables that
+The standard library declares a number of global variables that
 form the backbone of the interactive-fiction world model. These include:
 
 | Variable | Purpose |

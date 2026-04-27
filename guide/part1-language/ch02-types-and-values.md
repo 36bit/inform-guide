@@ -7,9 +7,9 @@ depends entirely on context. Understanding this model is essential for
 writing correct programs and avoiding subtle errors that arise from treating
 a value as the wrong kind of thing.
 
-## 2.1 The Untyped Nature of Inform 6
+## 2.1 The Untyped Nature of the Language
 
-Inform 6 has no static type system. Every variable, property value, array
+The language has no static type system. Every variable, property value, array
 element, routine argument, and return value occupies exactly one **machine
 word**, and the compiler imposes no type discipline on how that word is used.
 A variable that holds an object number can be passed to an arithmetic
@@ -93,7 +93,7 @@ Constant LIMIT = WORDSIZE * 8;   ! 16 or 32
 
 ### 2.3.1 Signed Integer Representation
 
-Inform 6 integers use **two's complement** representation, the standard
+Integers use **two's complement** representation, the standard
 encoding for signed integers on both virtual machines. In two's complement,
 the most significant bit serves as the sign bit: 0 for non-negative values,
 1 for negative values.
@@ -164,7 +164,7 @@ range must account for this.
 
 ### 2.3.5 Bitwise Operations
 
-Inform 6 provides bitwise operators that treat values as unsigned bit
+The language provides bitwise operators that treat values as unsigned bit
 patterns:
 
 | Operator | Meaning |
@@ -186,7 +186,7 @@ dictionary word flags, and perform low-level address calculations.
 
 ## 2.4 Boolean Values
 
-Inform 6 does not have a dedicated boolean type. Boolean logic uses integer
+The language does not have a dedicated boolean type. Boolean logic uses integer
 conventions:
 
 - **`true`** is predefined as the constant `1`.
@@ -225,7 +225,7 @@ the null pointer — tests as false.
 
 ## 2.5 Object References
 
-Objects in Inform 6 are identified by **object numbers**: small positive
+Objects are identified by **object numbers**: small positive
 integers assigned sequentially by the compiler, starting from 1. The special
 value `0`, represented by the constant `nothing`, means "no object."
 
@@ -303,7 +303,7 @@ and `Class` for class objects:
 
 ## 2.6 Addresses and Pointers
 
-Values in Inform 6 frequently represent memory addresses. The language
+Values frequently represent memory addresses. The language
 provides two forms of array access based on the kind of address:
 
 ### 2.6.1 Byte Addresses
@@ -380,7 +380,7 @@ comparable and arithmetic on them is straightforward.
 
 ## 2.7 Routine References
 
-A routine (function) in Inform 6 can be treated as a first-class value: its
+A routine (function) can be treated as a first-class value: its
 address can be stored in a variable, placed in a property, passed as an
 argument, and invoked at runtime.
 
@@ -485,7 +485,7 @@ address falls within the code segment of the story file (see §2.12).
 
 ## 2.8 String References
 
-Strings in Inform 6 are compiled into a dedicated region of the story file,
+Strings are compiled into a dedicated region of the story file,
 and references to strings are stored as addresses.
 
 ### 2.8.1 Strings as Values
@@ -700,7 +700,7 @@ otherwise unrepresentable.
 ### 2.11.3 Floating-Point Operations
 
 Glulx provides dedicated opcodes for floating-point arithmetic. These are
-accessed in Inform 6 through assembly statements:
+accessed through assembly statements:
 
 ```inform6
 [ FloatAdd a b result;
@@ -748,7 +748,7 @@ The key floating-point opcodes include:
 | `@ftonumz` | Float to integer (truncate toward zero) |
 | `@ftonumn` | Float to integer (round to nearest) |
 
-Standard Inform 6 arithmetic operators (`+`, `-`, `*`, `/`) perform
+Standard arithmetic operators (`+`, `-`, `*`, `/`) perform
 **integer** arithmetic even when applied to values that contain float bit
 patterns. To perform floating-point arithmetic, the programmer must use the
 assembly opcodes listed above.
@@ -771,7 +771,7 @@ support for double-precision opcodes.
 ## 2.12 The `metaclass()` Function
 
 The `metaclass()` function is the primary mechanism for runtime type
-inspection in Inform 6. It examines a value and returns one of five results:
+inspection. It examines a value and returns one of five results:
 
 | Return value | Meaning |
 | ------------ | ------- |
@@ -864,7 +864,7 @@ reference whose object has been removed will produce unpredictable results.
 
 ### 2.13.1 No Implicit Type Conversion
 
-Inform 6 performs **no implicit type conversion**. The compiler does not
+The language performs **no implicit type conversion**. The compiler does not
 convert between integers, objects, strings, or routines. Every value is a raw
 machine word, and every operation interprets that word according to its own
 rules:
