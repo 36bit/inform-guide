@@ -115,18 +115,16 @@ The following system functions navigate the object tree:
 | `child(obj)` | The first child of `obj`, or `nothing` if no children |
 | `children(obj)` | The number of direct children of `obj` |
 | `sibling(obj)` | The next sibling of `obj`, or `nothing` if last |
-| `elder(obj)` | The previous sibling of `obj`, or the parent if first child |
+| `elder(obj)` | The previous sibling of `obj`, or `nothing` if `obj` is the first child |
 | `eldest(obj)` | Same as `child(obj)` — the first child |
 | `younger(obj)` | Same as `sibling(obj)` — the next sibling |
 | `youngest(obj)` | The last child of `obj` |
 
-The `child`, `parent`, and `sibling` primitives are recognised directly
-by the compiler (lexed as system functions) and translate to the
-underlying VM tree opcodes. The four convenience accessors `elder`,
-`eldest`, `younger`, and `youngest` are provided by the standard
-library/veneer rather than the compiler core; their precise semantics
-are defined there. See the standard library headers (and Appendix F on
-veneer routines) for the canonical definitions.
+All eight tree-navigation functions above are system functions
+recognised directly by the compiler. `parent`, `child`/`eldest`, and
+`sibling`/`younger` translate straight to the underlying VM tree
+opcodes; `children`, `youngest`, and `elder` are compiled inline as
+short loops over those same opcodes.
 
 ### 7.3.2 Tree Manipulation Statements
 
@@ -251,7 +249,7 @@ A property declared as `additive` accumulates values through inheritance rather 
 Property additive before;
 ```
 
-When a class defines `before` and a subclass also defines `before`, the values are concatenated rather than replaced. The standard library declares `before`, `after`, `life`, `describe`, `each_turn`, `time_out`, `orders`, and `daemon` as additive.
+When a class defines `before` and a subclass also defines `before`, the values are concatenated rather than replaced. The standard library declares `before`, `after`, `life`, `orders`, `describe`, `time_out`, and `each_turn` as additive. The compiler also treats its built-in `name` property as additive without an explicit declaration.
 
 ### 7.4.6 Long Properties
 
@@ -335,16 +333,28 @@ Treasure gold_coin "gold coin"
 
 The `gold_coin` object inherits all properties and attributes from `Treasure`, with `value` overridden to 50.
 
-### 7.6.2 Specifying Instance Count
+### 7.6.2 Pre-Created Instances
 
-A class can specify how many instances may be created:
+A class can specify a number of pre-created duplicate instances, made
+available as a pool for the `create`/`destroy`/`recreate`/`copy`
+class methods (see §7.11):
 
 ```inform6
 Class Weapon(10)
     with damage 1;
 ```
 
-The `(10)` means at most 10 instances of `Weapon` may exist. If omitted, there is no compile-time limit on instances.
+The `(10)` causes the compiler to manufacture 10 anonymous instances
+of `Weapon` at compile time. Each duplicate is initially placed as a
+child of the `Weapon` class object and serves as a ready-to-use
+instance that `Weapon.create()` can hand out and `Weapon.destroy(obj)`
+can return to the pool. The number of duplicates must be in the range
+0 to 10000; if `(N)` is omitted, no duplicates are pre-created and the
+class has no pool.
+
+The `(N)` notation does **not** impose a global limit on how many
+instances of the class may exist: ordinary instance declarations
+(`Weapon sword ...;`) are unaffected by it.
 
 ### 7.6.3 Class as Object
 
@@ -472,17 +482,22 @@ This is essential for individual properties, which may not exist on all objects.
 
 ---
 
-## 7.11 The `copy` and `recreate` Class Methods
+## 7.11 The `create`, `recreate`, `destroy`, `copy`, and `remaining` Class Methods
 
-Classes provide two built-in methods for managing object lifecycle:
+Classes provide built-in methods for managing a pool of pre-created
+instances (see §7.6.2). All of them are invoked on the *class* object,
+not on an individual instance:
 
-### 7.11.1 `copy`
+### 7.11.1 `create`
 
 ```inform6
-obj.copy(target);
+new_obj = ClassName.create();
 ```
 
-Copies all property values and attributes from `obj` to `target`. Both must be instances of the same class. This performs a shallow copy of property data.
+Removes one of the class's pre-created duplicates from the pool and
+returns it as a fresh instance. Returns `false` (0) if the pool is
+empty. Up to three extra arguments may be passed; if the new object
+provides a `create` property, it is called with those arguments.
 
 ### 7.11.2 `recreate`
 
@@ -490,7 +505,11 @@ Copies all property values and attributes from `obj` to `target`. Both must be i
 ClassName.recreate(obj);
 ```
 
-Resets `obj` to its initial state as defined by `ClassName`, restoring all properties and attributes to their class-defined defaults. This is useful for object pooling.
+Resets `obj` to its initial class-defined state, restoring all
+property values and attributes to those of the class prototype. `obj`
+must be `ofclass ClassName`. Up to three extra arguments may be
+passed, in which case the object's `create` property (if any) is then
+called with them. This is useful for object pooling.
 
 ```inform6
 Class Bullet(20)
@@ -500,6 +519,35 @@ Class Bullet(20)
 ! Reset a used bullet to its original state
 Bullet.recreate(bullet_obj);
 ```
+
+### 7.11.3 `destroy`
+
+```inform6
+ClassName.destroy(obj);
+```
+
+Resets `obj` to its initial state and returns it to the class's pool
+of available duplicates so that a subsequent `ClassName.create()`
+call can re-issue it. `obj` must be `ofclass ClassName`. If the
+object provides a `destroy` property, it is called first.
+
+### 7.11.4 `copy`
+
+```inform6
+ClassName.copy(src, dst);
+```
+
+Copies all property values and attributes from `src` to `dst`. Both
+`src` and `dst` must be `ofclass ClassName`. This performs a shallow
+copy of property data.
+
+### 7.11.5 `remaining`
+
+```inform6
+n = ClassName.remaining();
+```
+
+Returns the number of unused duplicates still in the class's pool.
 
 ---
 
@@ -553,21 +601,17 @@ Vehicle car "car" with speed 120;
 
 ---
 
-## 7.14 Private Properties
+## 7.14 Property Visibility
 
-Properties defined inside a `Class` body that are not common properties are private by default. They can only be accessed from within routines that belong to the same class:
+Inform 6 does not have a notion of "private" properties: any property
+of any object is accessible from anywhere in the program through
+the property operators (§7.4.4) and the `provides` operator (§7.10),
+subject only to the runtime checks that confirm the object actually
+supplies that property.
 
-```inform6
-Class Secret
-    with hidden_data 42,
-         reveal [;
-             return self.hidden_data;
-         ];
-```
-
-Attempting to access `obj.hidden_data` from outside the class results in a runtime error. The `reveal` method, being part of the class, can access it.
-
-> **Note:** Privacy enforcement occurs only at runtime through the veneer routines. The compiler does not perform static access checking.
+In particular, declaring a property inside a `Class` body does not
+restrict access to routines defined within the class. Compiler-level
+access control is not part of the language.
 
 ---
 
@@ -575,19 +619,33 @@ Attempting to access `obj.hidden_data` from outside the class results in a runti
 
 | Limit | Z-machine | Glulx |
 |---|---|---|
-| Maximum objects | 255 (v3), 65535 (v4+) | Configurable (`MAX_OBJECTS`) |
-| Maximum common properties | 63 | `INDIV_PROP_START` (default 256) |
-| Maximum attributes | 32 (v3), 48 (v4+) | `NUM_ATTR_BYTES × 8` (default 56) |
-| Property data per object | 64 bytes (v3), ~2KB (v4+) | Effectively unlimited |
+| Maximum objects | 255 (v3); v4+ limited only by memory | Limited only by memory |
+| Maximum common properties | 63 | `INDIV_PROP_START - 1` (default 255) |
+| Maximum attributes | 32 (v3), 48 (v4+) | `NUM_ATTR_BYTES × 8` (default 56, max 312) |
+| Maximum data per common property | 8 bytes / 4 words (v3), 64 bytes / 32 words (v4+) | Limited only by memory |
+| Maximum data per individual property | 64 bytes / 32 words | Limited only by memory |
 | Maximum classes | No fixed limit | No fixed limit |
 
 ---
 
 ## 7.16 Object Numbering
 
-Objects are numbered sequentially starting from 1 in the order they are defined in source code. Class objects are also numbered. The constant `nothing` (0) represents the absence of an object.
+Objects are numbered sequentially in the order they are encountered
+in source code. The first four object numbers are reserved for the
+built-in metaclasses, in this order: `Class` (1), `Object` (2),
+`Routine` (3), and `String` (4). User-defined classes and objects
+share a single counter and are numbered from 5 upward in declaration
+order. The constant `nothing` (0) represents the absence of an
+object.
 
-Object numbers are stable within a single compilation but may change if the source is modified. Code should always refer to objects by name, never by number.
+In Z-machine version 3 the object number must fit in a single byte,
+limiting the total to 255. In v4+ object numbers are 16-bit, and in
+Glulx they are 32-bit; in both cases the practical limit is set by
+available memory rather than a fixed cap.
+
+Object numbers are stable within a single compilation but may change
+if the source is modified. Code should always refer to objects by
+name, never by number.
 
 ---
 
