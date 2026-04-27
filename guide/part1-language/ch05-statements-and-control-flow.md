@@ -423,10 +423,10 @@ objectloop (obj has edible && obj in player)
 
 ### 5.8.9 Modifying the Object Tree During `objectloop`
 
-For an `objectloop (x in parent)`, after each iteration of the body the
-compiler advances the loop variable by taking *the sibling of the current
-value of `x`*. This means modifying the object tree during iteration
-needs care:
+For an `objectloop (x in parent)`, at the end of each iteration — after
+the body has finished executing — the compiler advances the loop variable
+by taking *the sibling of the current value of `x`*. This means modifying
+the object tree during iteration needs care:
 
 - If the body `move`s `x` somewhere else, the next iteration will visit
   whatever sibling `x` now has under its new parent — almost certainly
@@ -876,9 +876,11 @@ be referenced in printed text:
 ```
 
 The first argument is the slot number. By default, slots `0` through `31`
-are available (this is the default value of the compiler setting that
-controls the dynamic-string table size). The maximum number of slots can
-be raised — up to 96 in Z-code — by setting `$MAX_DYNAMIC_STRINGS` higher.
+are available (this is the default value of the `$MAX_DYNAMIC_STRINGS`
+memory setting that controls the dynamic-string table size). The maximum
+number of slots can be raised — up to 96 in Z-code — by passing the
+setting on the command line, e.g. `inform '$MAX_DYNAMIC_STRINGS=64' …`,
+or as a `$MAX_DYNAMIC_STRINGS=…` ICL directive in the source.
 The second argument is a string literal. The `@00` notation in printed
 strings expands to whatever string is currently assigned to slot 0.
 
