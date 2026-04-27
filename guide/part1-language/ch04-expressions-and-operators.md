@@ -8,7 +8,7 @@ context in which they appear.
 
 ### 4.1.1 Left-to-Right Evaluation
 
-Inform 6 evaluates most binary operators **left to right**, consistent with
+The language evaluates most binary operators **left to right**, consistent with
 the left-associative grouping rules defined for each precedence level. In
 an expression like `a + b + c`, the compiler first evaluates `a + b` and
 then adds `c` to the result.
@@ -55,7 +55,7 @@ without evaluating the right-hand expression.
 
 ## 4.2 Arithmetic Operators
 
-Inform 6 provides the standard five arithmetic operators. All operate on
+The language provides the standard five arithmetic operators. All operate on
 **signed** machine words (16-bit on the Z-machine, 32-bit on Glulx).
 
 | Operator | Meaning | Precedence | Associativity |
@@ -160,13 +160,13 @@ operator table: `==` and `~=` are negations of each other, `>` and `<=`
 are negations of each other, and `<` and `>=` are negations of each other.
 The compiler uses this pairing to invert branch conditions efficiently.
 
-> **Note:** Inform uses `==` for equality testing (not `=`, which is
+> **Note:** The language uses `==` for equality testing (not `=`, which is
 > assignment). Using `=` in a condition is a common mistake that assigns
 > rather than compares.
 
 ## 4.4 Logical Operators
 
-The logical operators combine boolean conditions. In Inform 6, any
+The logical operators combine boolean conditions. Any
 non-zero value is **true** and zero is **false**.
 
 | Operator | Meaning | Precedence | Associativity |
@@ -303,7 +303,7 @@ make intent explicit.
 
 ## 4.6 The `or` Operator
 
-The `or` operator has unique semantics in Inform 6. It is **not** a general
+The `or` operator has unique semantics. It is **not** a general
 boolean connective; it may only appear on the **right-hand side** of a
 comparison or condition operator, providing a list of alternative values to
 test against.
@@ -820,7 +820,7 @@ in the indirect form the routine address itself counts toward the limit.
 
 ## 4.13 Operator Precedence Table
 
-The following table lists every Inform 6 operator from **lowest** to
+The following table lists every operator from **lowest** to
 **highest** precedence. Operators at the same precedence level are
 evaluated according to their stated associativity. The precedence numbers
 correspond to the internal levels defined in the compiler's operator table.
@@ -903,7 +903,7 @@ table includes one further level beyond the ones listed above, used
 internally when lowering function-call arguments on Glulx so that they
 are pushed onto the stack. It is not exposed to user code as a separate
 operator and never appears in source expressions; level 13 (`::`) remains
-the highest precedence accessible in normal Inform 6 programs.
+the highest precedence accessible in normal programs.
 
 ## 4.14 Expression Contexts
 

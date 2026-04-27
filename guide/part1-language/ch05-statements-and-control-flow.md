@@ -39,7 +39,7 @@ evaluates the expression for its side effects and discards the result.
 
 An expression statement is the most common statement form. Assignments,
 function calls, and increment/decrement operations are all expressions in
-Inform 6, so they become statements simply by appending a semicolon.
+the language, so they become statements simply by appending a semicolon.
 
 ## 5.2 Compound Statements (Blocks)
 
@@ -108,7 +108,7 @@ if (x > 0) {
 
 ### 5.3.2 `if` with `rtrue` / `rfalse` Shorthand
 
-A common Inform idiom combines `if` with an immediate return:
+A common idiom combines `if` with an immediate return:
 
 ```inform6
 if (x == 0) rfalse;     ! return false immediately
@@ -209,7 +209,7 @@ is optional and, if present, must be the last case in the switch body.
 
 ## 5.5 `for` Loops
 
-The `for` loop in Inform 6 follows the same three-part structure as in C,
+The `for` loop follows the same three-part structure as in C,
 but uses **colons** (`:`) to separate the parts, not semicolons.
 
 ```
@@ -303,7 +303,7 @@ The condition is enclosed in parentheses and the construct ends with a
 semicolon after the closing parenthesis.
 
 > **Contrast with C:** In C the equivalent construct is `do { ... }
-> while (condition)` with positive logic. Inform's `until` uses negative
+> while (condition)` with positive logic. The `until` loop uses negative
 > logic: the loop exits when the condition is **true**.
 
 ## 5.8 `objectloop`
@@ -504,7 +504,7 @@ The compiler optimizes these into single Z-machine instructions.
 
 ## 5.11 `print` Statement
 
-The `print` statement is one of the most versatile constructs in Inform 6.
+The `print` statement is one of the most versatile constructs.
 It accepts a comma-separated list of **print items**, each of which may be
 a string literal, a numeric expression, or a format specifier.
 
@@ -782,7 +782,7 @@ give treasure light ~concealed scored;
 ## 5.20 `move` and `remove`
 
 These statements manipulate the object tree, the central data structure
-that represents spatial containment in an Inform game.
+that represents spatial containment in a game.
 
 ### 5.20.1 `move`
 
@@ -901,7 +901,7 @@ other variable text.
 
 ## 5.24 Assembly Language (`@`)
 
-Inform 6 allows direct embedding of virtual machine instructions using the
+The language allows direct embedding of virtual machine instructions using the
 `@` prefix. This provides access to low-level operations not exposed by
 any high-level statement.
 
