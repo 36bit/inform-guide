@@ -558,7 +558,7 @@ program; otherwise the compiler reports
   other declaration.
 - A given routine may not be `Replace`d under two different new names
   (using the two-argument form), nor may a name already used as the
-  second argument of one `Replace` be used as the first argument of
+  first argument of one `Replace` be used as the second argument of
   another. Issuing the one-argument `Replace` for the same routine more
   than once is harmless and has no additional effect.
 - The two-argument form requires compiler 6.33 or later.
