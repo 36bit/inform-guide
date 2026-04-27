@@ -189,8 +189,10 @@ values support this syntax.
 ### 5.4.4 No Fall-Through
 
 Each case is independent. When the statements in a case complete, execution
-continues after the closing brace of the `switch`. There is no `break`
-statement needed (or supported) for this purpose, in contrast to C.
+continues after the closing brace of the `switch` — there is no fall-through
+to the next case as in C, so no `break` is needed at the end of a case. (A
+`break` inside a case is still legal and jumps past the closing brace, as
+described in 5.9; it is simply rarely needed.)
 
 ```inform6
 switch (command) {
@@ -350,7 +352,21 @@ sharing the same parent:
 ];
 ```
 
-### 5.8.4 Class Membership (`ofclass`)
+### 5.8.4 Starting Object (`from`)
+
+To iterate starting from a particular object, walking through its siblings:
+
+```inform6
+[ ListSiblings start obj;
+    objectloop (obj from start)
+        print (The) obj, "^";
+];
+```
+
+The loop variable is set to `start` and then advances through the sibling
+chain of `start`'s parent, ending when the chain runs out.
+
+### 5.8.5 Class Membership (`ofclass`)
 
 To iterate over instances of a particular class:
 
@@ -365,7 +381,7 @@ Weapon -> axe "axe" with name 'axe';
 ];
 ```
 
-### 5.8.5 Attribute Test (`has`)
+### 5.8.6 Attribute Test (`has`)
 
 To iterate over objects that possess a particular attribute:
 
@@ -378,7 +394,7 @@ To iterate over objects that possess a particular attribute:
 ];
 ```
 
-### 5.8.6 Property Test (`provides`)
+### 5.8.7 Property Test (`provides`)
 
 To iterate over objects that define a given property (whether common or
 individual):
@@ -394,7 +410,7 @@ The `provides` filter visits every object whose property table or
 inherited-class chain supplies the named property; absence of the
 property simply skips the object.
 
-### 5.8.7 General Condition Form
+### 5.8.8 General Condition Form
 
 A general boolean condition may be placed after the loop variable. The loop
 iterates over all objects and executes the body only for those where the
@@ -405,13 +421,24 @@ objectloop (obj has edible && obj in player)
     print (The) obj, " looks tasty.^";
 ```
 
-### 5.8.8 Modifying the Object Tree During `objectloop`
+### 5.8.9 Modifying the Object Tree During `objectloop`
 
-When iterating with `objectloop (x in parent)`, the compiler pre-fetches
-the "next sibling" before executing the loop body, so it is safe to `move`
-or `remove` the current object within the loop. However, moving *other*
-children of the same parent during the loop can produce unpredictable
-results.
+For an `objectloop (x in parent)`, at the end of each iteration — after
+the body has finished executing — the compiler advances the loop variable
+by taking *the sibling of the current value of `x`*. This means modifying
+the object tree during iteration needs care:
+
+- If the body `move`s `x` somewhere else, the next iteration will visit
+  whatever sibling `x` now has under its new parent — almost certainly
+  not what you wanted.
+- If the body `remove`s `x`, its sibling is `0` (nothing), so the loop
+  ends early.
+- Moving or removing *other* children of the same parent during the loop
+  can also produce unpredictable results.
+
+If you need to modify the tree while iterating, a robust pattern is to
+first collect the relevant objects into a temporary list and then process
+that list.
 
 ## 5.9 `break` and `continue`
 
@@ -450,8 +477,13 @@ The `return` statement returns an explicit value:
 ];
 ```
 
-`return` with no expression returns `true` (1) from a stand-alone routine
-and `false` (0) from an embedded routine (see Chapter 6 for the distinction).
+`return` with no expression is equivalent to `rtrue` — it always returns
+`true` (1), regardless of what kind of routine you are in. The
+"return-true-by-default" versus "return-false-by-default" distinction
+applies only when execution reaches the end of a routine *without* an
+explicit `return`: stand-alone routines implicitly return `true`, while
+embedded routines (such as those used as property values; see Chapter 6)
+implicitly return `false`.
 
 ### 5.10.2 `rtrue` and `rfalse`
 
@@ -690,12 +722,13 @@ tokenized words).
 ### 5.18.1 Version-Dependent Behavior
 
 On Z-machine Version 3, `read` also updates the status line before
-accepting input. On Version 4 and above, `read` returns the terminating
-character (e.g., the newline or a function key code):
+accepting input. The statement form of `read` does not yield a value; to
+capture the terminating character on Version 5+ (where the underlying
+`@aread` opcode stores a result), use the assembly form:
 
 ```inform6
 [ GetInput buffer parse result;
-    result = read buffer parse;
+    @aread buffer parse -> result;
     if (result == 13)
         print "(Pressed Enter.)^";
 ];
@@ -728,7 +761,7 @@ give lamp ~light;        ! clear the 'light' attribute
 ```
 
 Multiple attributes can be set or cleared in a single `give` statement,
-separated by spaces or commas:
+separated by spaces:
 
 ```inform6
 give treasure light ~concealed scored;
@@ -842,9 +875,14 @@ be referenced in printed text:
 ];
 ```
 
-The first argument is the slot number (0–31 on most Z-machine versions).
-The second is a string literal. The `@00` notation in printed strings
-expands to whatever string is currently assigned to slot 0.
+The first argument is the slot number. By default, slots `0` through `31`
+are available (this is the default value of the `$MAX_DYNAMIC_STRINGS`
+memory setting that controls the dynamic-string table size). The maximum
+number of slots can be raised — up to 96 in Z-code — by passing the
+setting on the command line, e.g. `inform '$MAX_DYNAMIC_STRINGS=64' …`,
+or as a `$MAX_DYNAMIC_STRINGS=…` ICL directive in the source.
+The second argument is a string literal. The `@00` notation in printed
+strings expands to whatever string is currently assigned to slot 0.
 
 Dynamic strings allow text to change at runtime without rebuilding the
 string. This is useful for the player's name, gender-specific pronouns, and
@@ -953,7 +991,8 @@ For Glulx:
 ```
 
 Where `Flags` includes `S` (store), `SS` (two stores), `B` (branch), `R`
-(return-style branch), and `Count` is the number of operands (0–9).
+(execution never continues after the opcode), and `Count` is the number
+of operands (0–9).
 
 ```inform6
 @ "S3:123" a b c result;      ! Glulx: 3-arg opcode 123 with store
