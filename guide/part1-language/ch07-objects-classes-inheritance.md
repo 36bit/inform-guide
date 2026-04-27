@@ -249,7 +249,7 @@ A property declared as `additive` accumulates values through inheritance rather 
 Property additive before;
 ```
 
-When a class defines `before` and a subclass also defines `before`, the values are concatenated rather than replaced. The standard library declares `before`, `after`, `life`, `orders`, `describe`, `time_out`, and `each_turn` as additive. The built-in `name` property is also additive.
+When a class defines `before` and a subclass also defines `before`, the values are concatenated rather than replaced. The standard library declares `before`, `after`, `life`, `orders`, `describe`, `time_out`, and `each_turn` as additive. The compiler also treats its built-in `name` property as additive without an explicit declaration.
 
 ### 7.4.6 Long Properties
 
