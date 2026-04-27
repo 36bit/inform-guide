@@ -213,9 +213,8 @@ operand is non-zero. This is a prefix operator.
 
 ### 4.4.4 Precedence of `~~`
 
-The DM4's operator table (§Table1B) shows `&&`, `||`, and `~~` as having
-equal precedence. In practice, the compiler has always parsed `~~` as
-binding **less tightly** than `&&` and `||`. The expression `~~X && Y` is
+Although `~~`, `&&`, and `||` all sit at precedence level 2, `~~` binds
+**less tightly** than `&&` and `||`. The expression `~~X && Y` is
 parsed as `~~(X && Y)`, not `(~~X) && Y`:
 
 ```inform6
@@ -227,12 +226,10 @@ val = ~~(X && Y);
 val = (~~X) && Y;
 ```
 
-The I6-Addendum describes this as `~~` having an effective precedence of
-"1.5"—higher than assignment but lower than the other logical operators.
-The compiler implements this by giving `~~` the same numeric precedence
-level (2) as `&&` and `||` but marking it as a prefix operator, which
-the shift-reduce parser resolves by reducing the entire right-hand
-subexpression before applying the negation.
+In effect, `~~` has a precedence between assignment and the other logical
+operators. This is achieved by treating `~~` as a prefix operator at the
+same numeric precedence level (2) as `&&` and `||`: the entire right-hand
+subexpression is reduced before the negation is applied.
 
 ## 4.5 Bitwise Operators
 
@@ -288,7 +285,7 @@ result = ~X & Y;       ! equivalent to ~(X & Y)
 
 ### 4.5.4 Distinguishing Logical and Bitwise Operators
 
-Inform 6 uses distinct symbols for logical and bitwise operations:
+The logical and bitwise operators use distinct but visually similar symbols:
 
 | Logical | Bitwise | Operation |
 | ------- | ------- | --------- |
@@ -435,9 +432,9 @@ Object rock "ordinary rock";
 ];
 ```
 
-The compiler does not provide a keyword `notofclass` for use in source
-code. The negated form is represented internally but must be expressed with
-`~~` or by inverting the logic in source.
+There is no `notofclass` keyword. The negated form is represented
+internally but must be expressed with `~~` or by inverting the logic in
+source.
 
 ### 4.7.4 `provides` and `not provides`
 
@@ -545,8 +542,8 @@ the result is 0.
 
 ## 4.9 Array Access Operators
 
-Inform 6 provides two array-access operators for reading from and writing
-to memory at computed addresses.
+Two array-access operators read from and write to memory at computed
+addresses.
 
 ### 4.9.1 Byte Access (`->`)
 
@@ -672,7 +669,7 @@ why chaining works.
 
 ### 4.11.2 Increment and Decrement (`++`, `--`)
 
-Inform 6 provides both prefix and postfix forms of increment and decrement.
+Both prefix and postfix forms of increment and decrement are available.
 All require their operand to be an **l-value** (a variable, array element,
 or property).
 
@@ -725,15 +722,14 @@ load–modify–store on the caller's behalf.
 
 ### 4.11.3 Compound Assignment Through Properties and Arrays
 
-Inform 6 does not provide C-style compound assignment operators like `+=`,
-`-=`, `*=`, etc. To achieve the equivalent effect, write the operation
-explicitly:
+There are no C-style compound assignment operators like `+=`, `-=`, `*=`,
+etc. To achieve the equivalent effect, write the operation explicitly:
 
 ```inform6
 Global score;
 
 [ AddScore points;
-    score = score + points;        ! no += operator in Inform 6
+    score = score + points;        ! no += operator
 ];
 ```
 
