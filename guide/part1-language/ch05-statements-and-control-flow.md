@@ -665,11 +665,12 @@ print "Back to normal.^";
 ```
 
 On Z-machine Versions 3 and 4, `font on`/`font off` is compiled as code
-that toggles the "force fixed-pitch font" flag (bit 1) in the header's
-*Flags 2* word; whether this produces any visible effect depends on the
-interpreter. On Version 5+, the statement maps to the `@set_font`
-opcode, selecting font 1 (`on`, normal font) or font 4 (`off`,
-fixed-pitch font).
+that clears or sets the "force fixed-pitch font" flag (bit 1) in the
+header's *Flags 2* word — `font on` clears the bit (allow proportional
+text), `font off` sets it (force fixed-pitch); whether this produces any
+visible effect depends on the interpreter. On Version 5+, the statement
+maps to the `@set_font` opcode, selecting font 1 (`on`, normal font) or
+font 4 (`off`, fixed-pitch font).
 
 ### 5.16.2 `style`
 
@@ -988,7 +989,7 @@ format. For the Z-machine:
 Where `TYPE` is the opcode class (`0OP`, `1OP`, `2OP`, `VAR`, `EXT`,
 `VAR_LONG`, `EXT_LONG`) and `CODE` is the decimal opcode number. Optional
 flags may follow: `S` (stores), `B` (branches), `T` (text), `I` (indirect
-variable reference), and `F` followed by a decimal digit (declares that
+variable reference), and `F` followed by a decimal number (declares that
 the opcode requires a particular bit of the story-file's *Flags 2*
 header word to be set when the game uses it).
 
