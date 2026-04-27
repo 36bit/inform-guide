@@ -71,9 +71,8 @@ packed address of the routine.
 
 ## 6.3 Embedded Routines
 
-An **embedded routine** is defined inline as the value of an object
-property or in any other context where a routine value is expected. It has
-no explicit name:
+An **embedded routine** is defined inline as the value of an object or
+class property. It has no explicit name in the source:
 
 ```inform6
 Object lamp "brass lamp"
@@ -86,22 +85,17 @@ Object lamp "brass lamp"
        ];
 ```
 
-The compiler assigns an internal name to each embedded routine (typically
-derived from the object and property names). Embedded routines are not
-callable by name from other parts of the program — they are invoked
-automatically by the library when the relevant property is accessed.
+The compiler assigns an internal name to each embedded routine (derived
+from the object and property names, e.g. `lamp.description`). Embedded
+routines are not callable by name from other parts of the program — they
+are invoked automatically by the library when the relevant property is
+accessed, or explicitly via `obj.prop()`.
 
-### 6.3.1 Embedded Routines in Expressions
-
-Embedded routines can also appear in non-property contexts, producing a
-routine value:
-
-```inform6
-[ Main fn;
-    fn = [; print "Anonymous!^"; ];
-    indirect(fn);
-];
-```
+Embedded routines may only appear as the value of an object or class
+property. They are not accepted as values in arbitrary expressions, in
+array initialisers, or anywhere else a routine value is needed. To use a
+routine value in those contexts, declare a stand-alone routine and
+reference it by name.
 
 ## 6.4 Parameters and Local Variables
 
@@ -253,10 +247,12 @@ to local variables inside the routine do not affect the caller's variables:
 
 ### 6.7.2 Z-Machine Argument Limit
 
-On the Z-machine, a single call instruction can pass at most **7
-arguments**. Attempting to call a routine with more than 7 arguments
-produces a compile-time error. The Z-machine also limits routines to 15
-local variables total (parameters plus non-parameter locals).
+On the Z-machine (versions 4 and later), a single call instruction can
+pass at most **7 arguments**. Attempting to call a routine with more
+than 7 arguments produces a compile-time error. Z-machine version 3 is
+more restrictive still, allowing at most 3 arguments per call. The
+Z-machine also limits routines to 15 local variables total (parameters
+plus non-parameter locals).
 
 ### 6.7.3 Glulx Argument Limit
 
@@ -557,6 +553,10 @@ program; otherwise the compiler reports
   been defined.
 - The original symbol must be a routine, not a constant, object, or
   other declaration.
-- A routine cannot be replaced more than once.
+- A given routine may not be `Replace`d under two different new names
+  (using the two-argument form), nor may a name already used as the
+  second argument of one `Replace` be used as the first argument of
+  another. Issuing the one-argument `Replace` for the same routine more
+  than once is harmless and has no additional effect.
 - The two-argument form requires compiler 6.33 or later.
 ```
