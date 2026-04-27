@@ -169,8 +169,6 @@ Constant BASE = 10;
 
 [ ShowRange n;
     switch (n) {
-        (BASE - 5) to (BASE + 5):
-            print "Near the base.^";
         (BASE * 2):
             print "Double the base.^";
         (BASE | $80):
@@ -184,7 +182,8 @@ Constant BASE = 10;
 The parentheses are required so the compiler can distinguish a case
 expression from a bare literal. Note that range endpoints specified with
 `to` cannot themselves be parenthesized expressions; only individual case
-values support this syntax.
+values support this syntax. A range still has to be written with simple
+constants (literals or named constants) on each side of `to`.
 
 ### 5.4.4 No Fall-Through
 
@@ -246,27 +245,27 @@ for (: i > 0 : i--)    ! no initializer
     ProcessItem(i);
 ```
 
-An entirely empty specification `for ()` is equivalent to `for (::)` and
-produces an infinite loop.
+The colons must always be present; an entirely empty specification `for ()`
+(no colons at all) is **not** accepted by the compiler. To write an
+infinite loop, use `for (::)`.
 
-### 5.5.3 Complex Initializers
+### 5.5.3 Multiple Expressions in Initializer or Update
 
-The initializer part may contain only a single expression statement. To
-initialize multiple variables, use a helper routine or initialize them
-before the loop:
+The initializer and the update parts may each be a comma-separated
+sequence of expressions. The condition part, by contrast, is a single
+expression evaluated as a boolean.
 
 ```inform6
 [ PairLoop i j;
-    i = 0;
-    j = 100;
-    for (: i < j : i++, j--) {
+    for (i = 0, j = 100 : i < j : i++, j--) {
         print i, " ", j, "^";
     }
 ];
 ```
 
-Note that the update part may use the comma operator to perform several
-updates.
+Both `i = 0, j = 100` (initializer) and `i++, j--` (update) are
+comma-expressions: the comma operator simply evaluates each
+sub-expression in turn for its side effects.
 
 ## 5.6 `while` Loops
 
@@ -363,8 +362,11 @@ To iterate starting from a particular object, walking through its siblings:
 ];
 ```
 
-The loop variable is set to `start` and then advances through the sibling
-chain of `start`'s parent, ending when the chain runs out.
+The loop variable is set to `start` and then advances along `start`'s
+own sibling chain (i.e. each subsequent value is the sibling of the
+previous one), ending when the chain runs out. Note that this means the
+loop visits `start` and the objects after `start` in its parent's child
+list, but **not** any earlier siblings.
 
 ### 5.8.5 Class Membership (`ofclass`)
 
@@ -640,8 +642,9 @@ becomes one line of the box:
 ```
 
 The `box` statement is a Z-machine feature and uses the upper window. On
-Version 3 the statement is ignored. The box is typically displayed briefly
-and then erased.
+Version 3 it has no visible effect, and the compiler emits a warning
+when the statement is used in a Version 3 game. The box is typically
+displayed briefly and then erased.
 
 ## 5.16 `font on/off` and `style`
 
@@ -658,8 +661,12 @@ font on;
 print "Back to normal.^";
 ```
 
-On Z-machine Version 3, `font off` has no effect. On Version 5+, it maps
-to the `@set_font` opcode.
+On Z-machine Versions 3 and 4, `font on`/`font off` is compiled as code
+that toggles the "force fixed-pitch font" flag (bit 1) in the header's
+*Flags 2* word; whether this produces any visible effect depends on the
+interpreter. On Version 5+, the statement maps to the `@set_font`
+opcode, selecting font 1 (`on`, normal font) or font 4 (`off`,
+fixed-pitch font).
 
 ### 5.16.2 `style`
 
