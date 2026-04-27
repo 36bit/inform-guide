@@ -180,10 +180,12 @@ Constant BASE = 10;
 ```
 
 The parentheses are required so the compiler can distinguish a case
-expression from a bare literal. Note that range endpoints specified with
-`to` cannot themselves be parenthesized expressions; only individual case
-values support this syntax. A range still has to be written with simple
-constants (literals or named constants) on each side of `to`.
+expression from an ordinary statement at the **start** of a case clause:
+without them, the first value of a case must be a single literal or
+named constant (optionally with a unary minus). After that first value,
+subsequent values — whether following `,` or `to` — are parsed as
+ordinary compile-time constant expressions and may use arithmetic with
+or without extra parentheses.
 
 ### 5.4.4 No Fall-Through
 
@@ -986,7 +988,9 @@ format. For the Z-machine:
 Where `TYPE` is the opcode class (`0OP`, `1OP`, `2OP`, `VAR`, `EXT`,
 `VAR_LONG`, `EXT_LONG`) and `CODE` is the decimal opcode number. Optional
 flags may follow: `S` (stores), `B` (branches), `T` (text), `I` (indirect
-variable reference).
+variable reference), and `F` followed by a decimal digit (declares that
+the opcode requires a particular bit of the story-file's *Flags 2*
+header word to be set when the game uses it).
 
 ```inform6
 @ "2OP:20" x y -> result;     ! Z-machine opcode 20 (2-operand, stores)
