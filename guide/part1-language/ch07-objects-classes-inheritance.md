@@ -672,7 +672,7 @@ Restrictions on `private`:
 | Maximum attributes | 32 (v3), 48 (v4+) | `NUM_ATTR_BYTES × 8` (default 56, max 312) |
 | Maximum data per common property | 8 bytes / 4 words (v3), 64 bytes / 32 words (v4+) | 32768 values per property |
 | Maximum data per individual property | 64 bytes / 32 words | 32768 values per property |
-| Maximum classes | 256 (including the four built-in metaclasses) | 32768 (including the four built-in metaclasses) |
+| Maximum classes | Limited only by the maximum number of objects (every class is itself an object and consumes an object-number slot, so on v3 the four built-in metaclasses plus all user classes share the 255-object cap) | Limited only by memory (every class is an object and consumes an object-number slot) |
 
 ---
 
