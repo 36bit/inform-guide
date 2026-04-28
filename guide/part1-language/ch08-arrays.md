@@ -311,6 +311,23 @@ Array lookup static -> 10;     ! legal but pointless: 10 zeroes, read-only
 > storage). Attempting to write to ROM is a memory access violation and
 > will produce a runtime error in conforming interpreters.
 
+The compiler additionally rejects, at compile time, any assignment whose
+left-hand side is a direct reference to a static array's name:
+
+```inform6
+Array sine_table static --> 0 174 342 500 643 766 866 940 985 1000;
+
+[ Main;
+    sine_table-->0 = 99;       ! compile-time error: "Cannot write to a static array"
+];
+```
+
+This static check applies whenever the compiler can recognise the array
+through its identifier. Writes that arrive indirectly (for example, via a
+variable that has been assigned the array's address) cannot be detected
+at compile time and fall under the platform-specific runtime behaviour
+described above.
+
 Static arrays are useful for lookup tables, constant data, and any array
 whose values are known at compile time and should not be altered during
 play. Using static arrays where possible reduces the amount of writable
@@ -403,26 +420,50 @@ Array counters --> 4;
 ];
 ```
 
-### 8.5.5 No Bounds Checking
+### 8.5.5 Bounds Checking
 
-Inform 6 does **not** perform bounds checking on array accesses by default.
-Reading or writing beyond the declared extent of an array accesses whatever
-bytes happen to lie at that memory address — potentially other arrays,
-global variables, or object data. The behavior is undefined and can cause
-subtle, hard-to-diagnose bugs:
+By default, Inform 6 emits **runtime bounds checks** on array accesses
+when compiling for Z-machine version 5 or later, or for Glulx. When the
+compiler can identify the array statically (the left-hand side of `->`
+or `-->` is the array's own name), it inserts an explicit comparison of
+the index against the declared size, calling the runtime error veneer
+if the index is negative or beyond the last valid entry. When the array
+reference is indirect (for example, an address held in a variable),
+the compiler instead routes the access through the veneer routines
+`RT__ChLDB`, `RT__ChLDW`, `RT__ChSTB`, and `RT__ChSTW`, which verify
+that the proposed read or write falls within the legal memory region.
+
+This behaviour is controlled by the `-S` ("Strict mode") compiler
+switch:
+
+| Setting     | Z-machine v3 / v4 | Z-machine v5+ / Glulx |
+| ----------- | ----------------- | --------------------- |
+| Default     | off               | on                    |
+| `-S`        | on                | on                    |
+| `-~S`       | off               | off                   |
+
+When strict checking is **disabled** — either explicitly with `-~S`, or
+by default in Z-machine v3/v4 — Inform 6 performs no bounds checking
+at all. Reading or writing beyond the declared extent of an array
+accesses whatever bytes happen to lie at that memory address —
+potentially other arrays, global variables, or object data. The
+behavior is undefined and can cause subtle, hard-to-diagnose bugs:
 
 ```inform6
 Array small -> 3;
 
 [ Main;
-    small->3 = 99;             ! out of bounds — undefined behaviour!
+    small->3 = 99;             ! out of bounds — undefined behaviour
+                               !   without -S; runtime error with -S
     small->100 = 1;            ! far out of bounds — may corrupt anything
 ];
 ```
 
-It is the programmer's responsibility to ensure that all array indices are
-within the valid range. Keeping the array size in a separate constant (or
-using a table/string/buffer array whose length field tracks the count) is
+Even with strict checking enabled, it is the programmer's
+responsibility to ensure that all array indices are within the valid
+range: a runtime error halts the story, which is rarely what the
+player wants. Keeping the array size in a separate constant (or using
+a table/string/buffer array whose length field tracks the count) is
 strongly recommended.
 
 ## 8.6 Array Memory Layout
