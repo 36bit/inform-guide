@@ -62,7 +62,7 @@ Object lamp "brass lamp" study
 
 ### 7.1.2 Components of an Object Declaration
 
-- **Arrow (`->`)**: If present, places the object as a child of the most recently defined object at the current or previous nesting level. Multiple arrows (`-> ->` or `->` at different levels) indicate deeper nesting.
+- **Arrow (`->`)**: A run of arrows sets the new object's nesting depth to the number of arrows. The parent is then the most recently defined object whose own depth is one less than that. So `->` (depth 1) makes the new object a child of the most recent root-level object, `-> ->` (depth 2) makes it a child of the most recent depth-1 object, and so on.
 - **Identifier**: The internal name used in source code to refer to the object. This is optional; anonymous objects can be created.
 - **Short name**: A double-quoted string used for display to the player at runtime. It is stored in the object's built-in short-name slot (in the Z-machine object header, or as the `shortname` field of a Glulx object), which is what `print (object) obj` outputs. Note that this is distinct from the standard library's `short_name` *property*, which (when defined) the library's `(name)`/`(the)` printing routines consult in preference to the built-in short name.
 - **Parent**: An identifier naming the parent object in the object tree. The object is placed as a child of this parent.
@@ -492,7 +492,7 @@ else
     print "You see nothing special.^";
 ```
 
-This is essential for individual properties, which may not exist on all objects. Accessing an individual property that an object does not provide causes a runtime error, so `provides` should be used to check first.
+This is essential for individual properties, which may not exist on all objects. Reading an individual property that an object does not provide returns 0 silently in non-strict builds, but causes a runtime error under strict-mode runtime checking (see §7.4.2), so `provides` should be used to check first.
 
 ---
 
