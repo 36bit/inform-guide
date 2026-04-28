@@ -120,7 +120,7 @@ The following system functions navigate the object tree:
 | `child(obj)` | The first child of `obj`, or `nothing` if no children |
 | `children(obj)` | The number of direct children of `obj` |
 | `sibling(obj)` | The next sibling of `obj`, or `nothing` if last |
-| `elder(obj)` | The previous sibling of `obj`, or `nothing` if `obj` is the first child |
+| `elder(obj)` | The previous sibling of `obj`, or `nothing` if `obj` has no parent or is the first child |
 | `eldest(obj)` | Same as `child(obj)` — the first child |
 | `younger(obj)` | Same as `sibling(obj)` — the next sibling |
 | `youngest(obj)` | The last child of `obj` |
