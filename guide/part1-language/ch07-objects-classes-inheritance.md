@@ -26,12 +26,17 @@ Inform 6 is fundamentally an object-oriented language. Objects are the primary b
 An object is declared with the `Object` directive. The full syntax is:
 
 ```
-Object [->] [name] ["short name"] [parent]
-    with property_list
-    has attribute_list;
+Object [->...] [name] ["short name"] [parent]
+    [with    property_list]
+    [private property_list]
+    [has     attribute_list]
+    [class   class_list];
 ```
 
 All parts except `Object` and the terminating semicolon are optional.
+The four body segments (`with`, `private`, `has`, `class`) may appear
+in any order and may be repeated. `with` is described in §7.4, `has`
+in §7.5, `class` in §7.7, and `private` in §7.14.
 
 ### 7.1.1 Basic Object Syntax
 
@@ -59,7 +64,7 @@ Object lamp "brass lamp" study
 
 - **Arrow (`->`)**: If present, places the object as a child of the most recently defined object at the current or previous nesting level. Multiple arrows (`-> ->` or `->` at different levels) indicate deeper nesting.
 - **Identifier**: The internal name used in source code to refer to the object. This is optional; anonymous objects can be created.
-- **Short name**: A double-quoted string used for display to the player at runtime. This becomes the `short_name` property.
+- **Short name**: A double-quoted string used for display to the player at runtime. It is stored in the object's built-in short-name slot (in the Z-machine object header, or as the `shortname` field of a Glulx object), which is what `print (object) obj` outputs. Note that this is distinct from the standard library's `short_name` *property*, which (when defined) the library's `(name)`/`(the)` printing routines consult in preference to the built-in short name.
 - **Parent**: An identifier naming the parent object in the object tree. The object is placed as a child of this parent.
 
 ### 7.1.3 The Arrow Notation
@@ -194,8 +199,6 @@ A default value can be set:
 ```inform6
 Property weight 0;
 ```
-
-Or with the `Default` directive for library-defined properties.
 
 ### 7.4.2 Individual Properties
 
@@ -621,15 +624,42 @@ Vehicle car "car" with speed 120;
 
 ## 7.14 Property Visibility
 
-Inform 6 does not have a notion of "private" properties: any property
-of any object is accessible from anywhere in the program through
-the property operators (§7.4.4) and the `provides` operator (§7.10),
-subject only to the runtime checks that confirm the object actually
-supplies that property.
+Inform 6 supports a single, narrow form of access control: an
+individual property may be declared in a `private` segment of an
+object or class definition instead of (or in addition to) the usual
+`with` segment.
 
-In particular, declaring a property inside a `Class` body does not
-restrict access to routines defined within the class. Compiler-level
-access control is not part of the language.
+```inform6
+Object safe "iron safe"
+    with description "A heavy iron safe.",
+    private combination 4271;
+```
+
+A property declared in a `private` segment of an object can only be
+read while the object itself is the current message recipient
+(i.e. while `self == obj`). All of the runtime helpers that
+implement individual-property access — those backing `obj.prop`,
+`obj.&prop`, `obj.#prop`, and `obj provides prop` — check whether
+`self == obj`; if not, a private property is reported as not
+provided (the `.&` and `.#` operators return 0, `provides` returns
+false, and reading the value with `.` triggers a "no such property"
+runtime error in strict mode).
+
+Restrictions on `private`:
+
+- `private` applies only to **individual** properties. A name that has
+  already been declared with the `Property` directive (i.e. a common
+  property) cannot appear in a `private` segment.
+- The check is enforced only at the runtime helpers. Code that
+  reaches into the property table directly through raw memory
+  (`->`/`-->` on a stored property address, for example) is not
+  subject to the `self == obj` test.
+- Apart from the `private` segment, there is no further notion of
+  property privacy: any non-private property of any object is
+  accessible from anywhere in the program through the property
+  operators (§7.4.4) and the `provides` operator (§7.10), subject
+  only to the runtime checks that confirm the object actually
+  supplies that property.
 
 ---
 
