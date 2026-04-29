@@ -268,8 +268,10 @@ Include ">MyExtras";       ! searches same directory as current file
 
 The `">"` prefix tells the compiler to look for the file in the same
 directory as the file containing the `Include` directive. Without it, the
-compiler searches the current directory first, then each directory
-specified by the `+include_path` command-line option.
+compiler searches each directory specified by the `+include_path`
+command-line option (or, if that option is empty, looks up the bare
+filename through the operating system, which typically resolves to the
+current working directory).
 
 Files are included textually: the effect is as if the contents of the
 included file replaced the `Include` directive.
@@ -737,10 +739,12 @@ The `fatalerror` form halts compilation immediately.
 ### 10.8.2 Trace
 
 The `Trace` directive adjusts trace and diagnostic settings during
-compilation. As of compiler 6.40, it is deprecated in favor of the
-compiler-side `$!` trace settings (see Appendix D and Appendix E for the
-full 18-option set), but it retains the unique ability to print tables
-and to change trace levels partway through compilation.
+compilation. The compiler-side `$!` trace settings (see Appendix D and
+Appendix E for the full 18-option set) are generally preferred for
+configuring the same trace levels from the command line or a header
+comment, but the directive form is not formally deprecated and emits no
+warning. It retains the unique ability to print tables and to change
+trace levels partway through compilation.
 
 The directive recognises a fixed set of trace keywords, defined in the
 compiler's `trace_keywords` group:
