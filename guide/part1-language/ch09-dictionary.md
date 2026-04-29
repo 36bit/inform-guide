@@ -109,10 +109,13 @@ before performing dictionary lookups.
 
 ### 9.2.2 Double-Quoted Dictionary Words
 
-In most contexts only single-quoted tokens create dictionary entries.
-However, the `Dictionary` directive (§9.6) also accepts double-quoted
-strings as dictionary words, treating the entire string as a single
-dictionary entry.
+In most contexts the programmer writes dictionary words with single
+quotes. However, a few directives also accept a double-quoted string
+in a position that would otherwise hold a dictionary word literal,
+and treat the entire string as a single dictionary entry. These are
+the `Dictionary` directive (§9.6), the verb synonyms and grammar-line
+prepositions of the `Verb` and `Extend` directives, and double-quoted
+values inside the built-in `name` property.
 
 ## 9.3 Word Length Limits
 
