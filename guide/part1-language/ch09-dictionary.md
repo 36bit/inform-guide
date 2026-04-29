@@ -209,8 +209,10 @@ The compiler sets flags automatically based on context:
   with `Verb meta`.
 - **`PREP_DFLAG`** — set on single-quoted words appearing within grammar
   lines (preposition tokens).
-- **`NOUN_DFLAG`** — set on words appearing in `name` properties, or
-  explicitly via the `//n` suffix.
+- **`NOUN_DFLAG`** — set on words appearing in `name` properties,
+  on any single-quoted dictionary word literal that appears as a value
+  in an expression (such as in `if (w == 'lamp')`), or explicitly via
+  the `//n` suffix.
 - **`PLURAL_DFLAG`** and **`SING_DFLAG`** — set via the `//p` and `//s`
   suffixes respectively (see §9.5).
 - **`TRUNC_DFLAG`** — set by the compiler when a word is truncated and
@@ -264,12 +266,14 @@ would otherwise be set by context.
 
 ### 9.5.2 Combining Suffixes
 
-Multiple suffixes can be chained on a single word by repeating the `//`
-separator:
+Multiple suffix flags can be chained on a single word by writing one `//`
+followed by the concatenated flag letters. The `~` character toggles the
+negation state for the *next* flag letter, so it can be repeated to mix
+set and clear operations within one suffix group:
 
 ```inform6
 Object -> sheep "sheep"
-  with name 'sheep'//p//n;
+  with name 'sheep'//pn;
   ! 'sheep' has both PLURAL_DFLAG and NOUN_DFLAG set
 ```
 
@@ -278,6 +282,10 @@ Object -> geese "flock of geese"
   with name 'geese'//p 'goose'//s 'flock';
   ! 'geese' is plural, 'goose' is singular
 ```
+
+A second `//` is *not* allowed inside a single word literal — the
+compiler reports an error if any character other than `~`, `p`, `s`, or
+`n` appears after the opening `//`.
 
 ### 9.5.3 Implicit Singular (`$DICT_IMPLICIT_SINGULAR`)
 
@@ -494,9 +502,17 @@ extensions:
 ];
 ```
 
-> **[Glulx]** On Glulx, the data fields are two bytes wide. To read the
-> full 16-bit value, use word-level access rather than the single-byte
-> `->` operator. For example: `flags = (w + #dict_par1 - 1)-->0;`
+> **[Glulx]** On Glulx, the data fields are two bytes wide. Because
+> `#dict_par1`, `#dict_par2`, and `#dict_par3` point at the *low* byte
+> of each field, a single-byte read (`w->#dict_par1`) returns the low 8
+> bits — which is sufficient for every flag described in §9.4, since
+> all standard `*_DFLAG` values fit in one byte. To read the full
+> 16-bit value (only relevant when custom values larger than 255 have
+> been stored via the `Dictionary` directive), use the Glulx assembly
+> opcode `@aloads`, which loads a 16-bit short:
+> `@aloads w (#dict_par1 - 1) flags;`. Note that the `-->` operator is
+> *not* suitable here, because on Glulx it reads a 4-byte word rather
+> than a 2-byte field.
 
 ## 9.9 The Dictionary and the Parser
 
