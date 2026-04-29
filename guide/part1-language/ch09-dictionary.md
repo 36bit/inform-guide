@@ -210,8 +210,8 @@ The compiler sets flags automatically based on context:
   verb synonyms).
 - **`META_DFLAG`** — set (together with `VERB_DFLAG`) on words defined
   with `Verb meta`.
-- **`PREP_DFLAG`** — set on single-quoted words appearing within grammar
-  lines (preposition tokens).
+- **`PREP_DFLAG`** — set on words (single- or double-quoted) appearing
+  within grammar lines as preposition tokens.
 - **`NOUN_DFLAG`** — set on words appearing in `name` properties,
   on any single-quoted dictionary word literal that appears as a value
   in an expression (such as in `if (w == 'lamp')`), or explicitly via
