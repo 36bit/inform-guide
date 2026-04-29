@@ -224,8 +224,11 @@ Array thresholds --> BASE BASE*2 BASE*3 BASE+50;
 ```
 
 For byte arrays (`->`, `string`, `buffer`), each value must fit in the
-range 0–255. If a value exceeds this range, the compiler issues a warning
-and truncates the value to its low byte.
+range 0–255. If a value of 256 or greater is given, the compiler issues
+a warning and truncates the value to its low byte. Negative values are
+also truncated to their low byte (so `-1` becomes 255), but in this case
+no warning is emitted; if you need a signed byte, supply the unsigned
+equivalent explicitly.
 
 ### 8.3.3 String Initializer
 
@@ -238,9 +241,14 @@ Array encoded string "xyzzy";
 ```
 
 Each character in the string becomes one array entry. On the Z-machine,
-characters are converted to ZSCII values. On Glulx, characters are stored
-as Unicode code points. Characters outside the representable range produce
-a compiler error.
+characters are converted to ZSCII values; characters that have no ZSCII
+representation (or that map to ZSCII 5, which is reserved) produce a
+compiler error and are replaced with `?` in the stored data. On Glulx,
+characters are stored as Unicode code points: in a **byte** array
+(`->`, `string`, `buffer`) any character with code point 256 or higher
+produces a compiler error ("Unicode characters beyond Latin-1 cannot be
+used in a byte array"); in a **word** array (`-->`, `table`) the full
+32-bit code point is stored verbatim and no range check is performed.
 
 String initialisers are valid for all five array types, though they are
 most natural with byte arrays and string arrays.
