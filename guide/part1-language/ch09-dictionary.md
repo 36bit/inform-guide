@@ -139,7 +139,8 @@ are encoded identically — the trailing `'s'` is lost:
 ! In Z-machine v5, these refer to the SAME dictionary entry:
 Object -> pineapple "pineapple"
   with name 'pineapple' 'pineapples';
-  ! The compiler may warn that 'pineapples' is truncated.
+  ! Truncation is silent; no warning is issued. The two
+  ! literals simply produce the same dictionary entry.
 ```
 
 The Z-machine word size is fixed by the virtual machine specification and
