@@ -232,9 +232,10 @@ more data fields:
   for the verb's grammar. The programmer should not modify this field
   directly.
 
-- **`#dict_par3`** — used for preposition numbers in grammar version 2.
-  In many configurations this field is unused and zero. It may be omitted
-  entirely in Z-code when the `$ZCODE_LESS_DICT_DATA` option is set.
+- **`#dict_par3`** — used for preposition (adjective) numbers in grammar
+  version 1. In grammar versions 2 and 3 this field is unused and zero.
+  It may be omitted entirely in Z-code when the `$ZCODE_LESS_DICT_DATA`
+  option is set.
 
 ## 9.5 Source Suffix Flags
 
