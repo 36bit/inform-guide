@@ -67,14 +67,15 @@ directive, separated by commas:
 Constant NORTH = 1, SOUTH = 2, EAST = 3, WEST = 4;
 ```
 
-Redefining a constant with the same value is permitted; redefining it with
-a different value produces a compiler error. This allows library files and
-game source to agree on shared values without conflict:
+A constant cannot be redefined: a second `Constant` directive for the
+same name produces a compiler error, regardless of whether the value
+matches. To make a constant defined only when not already defined
+elsewhere, use the `Default` directive (see §10.1.4):
 
 ```inform6
 Constant DEBUG;           ! first definition (value 0)
-Constant DEBUG;           ! permitted: same value
-! Constant DEBUG = 1;    ! ERROR: different value
+! Constant DEBUG;         ! ERROR: name already in use
+! Constant DEBUG = 1;     ! ERROR: name already in use
 ```
 
 Constants defined with no value are typically used as flags to be tested
@@ -238,13 +239,16 @@ default value, cannot be combined with `additive`, and cannot be combined
 with `alias` (the compiler rejects these combinations).
 
 The `long` keyword is accepted for backward compatibility but has no
-effect; all properties have been word-sized since Inform 5.
+effect on the output; all properties have been word-sized since Inform
+5. Using it produces an obsolete-usage warning.
 
 > **[Z-machine]** The Z-machine (version 4 and later) allows up to
-> **63** common properties (numbered 1–63). The compiler reserves the
-> first three slots — `1` (`name`), `2` (the class-inheritance table),
-> and `3` (the instance-variables table) — leaving 60 numbered slots
-> available for the library and the game.
+> **63** common properties (numbered 1–63). Slots `2` (the
+> class-inheritance table) and `3` (the instance-variables table) are
+> reserved by the compiler for internal use, leaving **61** common
+> properties available for declaration. Slot `1` is conventionally
+> `name`, declared by the standard library. (Z-machine version 3
+> supports only 29 common properties.)
 
 ---
 
@@ -362,7 +366,7 @@ story file header. By default, the compiler uses the current date in
 `YYMMDD` format.
 
 ```inform6
-Serial "250115";           ! must be exactly 6 characters
+Serial "250115";           ! must be exactly 6 digits in a string
 ```
 
 ### 10.4.3 Statusline
@@ -475,8 +479,8 @@ compiler-defined symbols, and arithmetic operators.
 ### 10.5.3 Ifnot
 
 `Ifnot` provides an else-branch for any conditional directive. It must
-appear between the opening `Ifdef`/`Ifndef`/`Iftrue`/`Iffalse` and the
-closing `Endif`.
+appear between the opening `Ifdef`/`Ifndef`/`Iftrue`/`Iffalse`/`IFV3`/`IFV5`
+and the closing `Endif`.
 
 ```inform6
 #Ifdef TARGET_ZCODE;
@@ -600,17 +604,35 @@ references is the `string` statement.
 ### 10.6.3 Zcharacter
 
 The `Zcharacter` directive customizes the Z-character alphabet table used
-to encode text in the story file.
+to encode text in the story file, and (in one form) configures additional
+parser-terminating characters.
 
 ```inform6
-Zcharacter 'ä';                      ! add a character to the alphabet
-Zcharacter table 'a' 'b' 'c' ...;   ! define a custom alphabet table
-Zcharacter table + '@{e9}' '@{e8}';  ! add accented characters
+Zcharacter 'ä';                         ! add a character to the alphabet
+Zcharacter "abcdefghijklmnopqrstuvwxyz" ! redefine all three alphabet rows
+           "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+           " 0123456789.,!?_#'~/\\-:()";
+Zcharacter table 'a' 'b' 'c';           ! define a custom ZSCII extension table
+Zcharacter table + '@{e9}' '@{e8}';     ! add to the existing table
+Zcharacter terminating 13 10;           ! add parser-terminating ZSCII codes
 ```
 
-By adding frequently used characters (such as accented letters) to the
-alphabet, the compiler can encode them more compactly. Characters not in
-the alphabet require multi-byte escape sequences.
+The five forms are:
+
+- **Single character** (`Zcharacter 'c'`) — adds one character to the
+  Z-character alphabet so that it encodes more compactly.
+- **Three alphabet strings** — redefines the three rows of the
+  Z-character alphabet table from scratch.
+- **`table` form** — defines a ZSCII extension table of additional
+  characters available in strings.
+- **`table +` form** — appends to the existing extension table rather
+  than replacing it.
+- **`terminating` form** — declares additional ZSCII codes that the
+  parser should treat as word terminators (in addition to the default
+  set).
+
+Characters not in the alphabet require multi-byte escape sequences when
+encoded into Z-machine text.
 
 > **[Z-machine]** `Zcharacter` applies only to Z-machine text encoding.
 
