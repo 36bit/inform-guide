@@ -99,7 +99,7 @@ accepted.
 
 > **[Z-machine]** The Z-machine provides exactly **240** global variable
 > slots. Seven are reserved by the compiler for internal use, leaving
-> approximately 233 for user-declared globals.
+> **233** for user-declared globals.
 
 > **[Glulx]** Glulx places no fixed upper bound on the number of global
 > variables; they are allocated dynamically.
@@ -209,8 +209,9 @@ Attribute locked alias lockable;   ! alias for an existing attribute
 The `alias` form creates a second name for an existing attribute. Both
 names refer to the same underlying bit.
 
-> **[Z-machine]** The Z-machine supports up to **48** attributes
-> (numbered 0–47). The compiler and library reserve some of these.
+> **[Z-machine]** The Z-machine (version 4 and later) supports up to
+> **48** attributes (numbered 0–47). Z-machine version 3 supports
+> only 32. The compiler and library reserve some of these.
 
 > **[Glulx]** The number of attributes is controlled by the
 > `$NUM_ATTR_BYTES` setting. The default is 7 bytes (56 attributes),
@@ -246,9 +247,10 @@ effect on the output; all properties have been word-sized since Inform
 > **63** common properties (numbered 1–63). Slots `2` (the
 > class-inheritance table) and `3` (the instance-variables table) are
 > reserved by the compiler for internal use, leaving **61** common
-> properties available for declaration. Slot `1` is conventionally
-> `name`, declared by the standard library. (Z-machine version 3
-> supports only 29 common properties.)
+> properties available for use. Slot `1` is `name`, which the compiler
+> predeclares as a built-in additive property; the standard library
+> does not declare it. (Z-machine version 3 supports only 29 common
+> properties.)
 
 ---
 
@@ -569,10 +571,10 @@ Abbreviate "ing ";
 Abbreviations reduce the size of encoded text in the story file. The
 compiler substitutes frequently occurring strings with compact tokens.
 
-> **[Z-machine]** Z-machine version 3 supports up to **32**
-> abbreviations; version 4 and later support up to **96**. As of
-> compiler 6.42, abbreviation strings may be of any length (earlier
-> versions limited them to 64 characters).
+> **[Z-machine]** Inform 6 enforces a hard limit of **96**
+> abbreviations for all Z-machine versions it targets (3 and later).
+> As of compiler 6.42, abbreviation strings may be of any length
+> (earlier versions limited them to 64 characters).
 
 > **[Glulx]** The `Abbreviate` directive has no effect when compiling
 > for Glulx, which uses a different text encoding.
