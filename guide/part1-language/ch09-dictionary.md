@@ -227,7 +227,7 @@ both `VERB_DFLAG` and `PREP_DFLAG` set.
 
 ### 9.4.2 The Second and Third Data Fields
 
-In addition to the flag byte (`#dict_par1`), each dictionary entry has two
+In addition to the flag field (`#dict_par1`), each dictionary entry has two
 more data fields:
 
 - **`#dict_par2`** — reserved for the verb number. When a word has
