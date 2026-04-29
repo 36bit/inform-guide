@@ -509,10 +509,18 @@ extensions:
 > all standard `*_DFLAG` values fit in one byte. To read the full
 > 16-bit value (only relevant when custom values larger than 255 have
 > been stored via the `Dictionary` directive), use the Glulx assembly
-> opcode `@aloads`, which loads a 16-bit short:
-> `@aloads w (#dict_par1 - 1) flags;`. Note that the `-->` operator is
-> *not* suitable here, because on Glulx it reads a 4-byte word rather
-> than a 2-byte field.
+> opcode `@aloads`, which loads a 16-bit short. Because `@aloads`
+> computes its source address as `array + 2 * index`, the usual idiom
+> is to point the array operand at the high byte of the field and pass
+> an index of zero:
+>
+> ```inform6
+> addr = w + #dict_par1 - 1;     ! point to high byte of par1
+> @aloads addr 0 flags;          ! load 16-bit big-endian short
+> ```
+>
+> Note that the `-->` operator is *not* suitable here, because on
+> Glulx it reads a 4-byte word rather than a 2-byte field.
 
 ## 9.9 The Dictionary and the Parser
 
