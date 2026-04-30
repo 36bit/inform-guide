@@ -602,14 +602,22 @@ story file).
 Lowstring MyText "Hello, world!";
 ```
 
-The constant `MyText` holds the byte address of the string divided by 2,
-which on Z-machine version 3 is exactly the packed string address (since
-v3 packs string addresses by dividing by 2). On Z-machine versions 4 and
-later, packed string addresses use a larger scale factor, so the value
-of `MyText` is not itself a packed address. To print the string:
+The constant `MyText` holds the byte address of the string divided by 2.
+On Z-machine version 3, packed string addresses are also computed as
+byte address divided by 2, so `MyText` is itself a packed string address
+and can be printed directly:
 
 ```inform6
-print (string) MyText;
+print (string) MyText;     ! Z-machine v3 only
+```
+
+On Z-machine versions 4 and later, packed string addresses use a larger
+scale factor (4 in v4–7, 8 in v8), so `MyText` is **not** a packed
+address. `print (string) MyText` would mis-decode the address. To print
+the string by its byte address, multiply by 2 and use `print (address)`:
+
+```inform6
+print (address) (2 * MyText);   ! Z-machine v4+
 ```
 
 `Lowstring` is rarely needed in Inform 6; it exists for backward
