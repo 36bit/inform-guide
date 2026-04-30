@@ -665,8 +665,8 @@ The five forms are:
   Z-character alphabet table from scratch. The first two strings
   (alphabets A0 and A1) must each contain exactly 26 characters; the
   third (A2) must contain exactly 23 characters and fills positions
-  3–25 of A2 (positions 0–2 are fixed by the Z-machine standard, with
-  position 1 being newline and position 2 being the tilde character).
+  3–25 of A2 (positions 0 and 1 are fixed by the Z-machine standard,
+  and position 2 is fixed by Inform to hold the tilde character).
   See §1.1.4.
 - **`table` form** — defines the ZSCII-to-Unicode mapping for
   ZSCII codes 155 onward (the extra-character range).
