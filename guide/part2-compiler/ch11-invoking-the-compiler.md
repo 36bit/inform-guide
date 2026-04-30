@@ -67,8 +67,8 @@ inform [options...] <file1> [<file2>]
 
 `<file1>` is the Inform source file to compile. `<file2>`, if given,
 specifies the output filename exactly as written — the compiler will not
-alter it or add an extension. Options may appear in any order before the
-source filename.
+alter it or add an extension. Options may appear in any order, and may
+be interleaved with the filename arguments.
 
 Options come in four styles, each identified by its leading character:
 
@@ -96,7 +96,6 @@ argument:
 | Long option | Equivalent | Description |
 | ----------- | ---------- | ----------- |
 | `--help` | `-h` | Print help information |
-| `--version` | `-V` | Print version and exit |
 | `--list` | `$LIST` | List current compiler settings |
 | `--opt SETTING=number` | `$SETTING=number` | Set a compiler setting |
 | `--define SYMBOL=number` | `$#SYMBOL=number` | Define a constant |
@@ -120,8 +119,8 @@ ICL files or `!%` header comments.
 The compiler reads a single top-level source file specified on the command
 line. By convention, Inform source files use the extension `.inf` or
 `.i6`, and included header files use `.h`, though these conventions vary
-by platform. The compiler will add the default source extension (`.inf`)
-if the file is not found as given.
+by platform. If the given filename has no extension, the compiler appends
+the default source extension (`.inf`) before opening the file.
 
 ### 11.3.2 Include Search Order
 
@@ -352,20 +351,21 @@ only plain ASCII characters.
 
 ### 11.7.1 Processing Order
 
-Options are processed in the following order:
+Options are applied to the compiler's settings in the following order:
 
 1. **Built-in defaults** — the compiler's internal default settings
    (Z-machine version 5, no debug flags, etc.).
-2. **`!%` header comments** — options embedded at the top of the source
-   file are applied next.
-3. **Command-line arguments** — processed left to right, including any
+2. **Command-line arguments** — processed left to right, including any
    ICL files loaded via `(file.icl)` or `--config`.
+3. **`!%` header comments** — options embedded at the top of the source
+   file are applied last, just before compilation begins.
 
 ### 11.7.2 Overriding Behavior
 
-Later options override earlier ones. Within the command line, arguments
-are processed strictly left to right, so a switch appearing later will
-override an earlier one:
+For ordinary single- and two-letter switches (e.g. `-v8`, `-D`, `-S`),
+later applications simply overwrite the previous value, so the last
+setting in processing order wins. Within the command line itself,
+arguments are processed strictly left to right:
 
 ```
 inform -v5 -v8 adventure.inf
@@ -373,11 +373,9 @@ inform -v5 -v8 adventure.inf
 
 This compiles to version 8, because `-v8` appears after `-v5`.
 
-In the compiler's execution order, command-line options are processed
-first, followed by `!%` options in the source file. This means `!%`
-options override command-line settings, since they are applied later.
-
-For example, if `adventure.inf` begins with `!% -v5`, and you run:
+Because `!%` header comments are applied after the command line, an
+option set in the header overrides the same switch given on the command
+line. For example, if `adventure.inf` begins with `!% -v5`, and you run:
 
 ```
 inform -v8 adventure.inf
@@ -385,6 +383,14 @@ inform -v8 adventure.inf
 
 This produces a version-5 story file because the `!% -v5` header in the
 source file is processed after the command-line `-v8`, overriding it.
+
+Compiler settings introduced with `$` (such as `$DICT_WORD_SIZE=12`)
+behave differently. Each setting carries a precedence value that records
+where it came from, and a lower-precedence source can never overwrite a
+value already set by a higher-precedence source. The command line has
+higher precedence than `!%` header comments, so for `$` settings the
+direction of override is reversed: a `$` setting given on the command
+line takes priority over the same setting in an `!%` header.
 
 ### 11.7.3 The `-i` Switch
 
