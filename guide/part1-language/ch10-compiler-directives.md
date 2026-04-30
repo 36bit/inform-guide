@@ -583,18 +583,20 @@ compiler substitutes frequently occurring strings with compact tokens.
 
 ### 10.6.2 Lowstring
 
-The `Lowstring` directive defines an encoded string placed within readable
-memory (the first 64K of the Z-machine address space).
+The `Lowstring` directive defines an encoded string placed in low memory
+(the same pool used by the abbreviations table, near the start of the
+story file).
 
 ```inform6
 Lowstring MyText "Hello, world!";
 ```
 
-The constant `MyText` holds the packed address divided by 2. To print the
-string:
+The constant `MyText` holds the byte address of the string divided by 2,
+which on Z-machine versions 3–5 is exactly the packed string address. To
+print the string:
 
 ```inform6
-print (address) (2 * MyText);
+print (string) MyText;
 ```
 
 `Lowstring` is rarely needed in Inform 6; it exists for backward
