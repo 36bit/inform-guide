@@ -67,15 +67,26 @@ directive, separated by commas:
 Constant NORTH = 1, SOUTH = 2, EAST = 3, WEST = 4;
 ```
 
-A constant cannot be redefined: a second `Constant` directive for the
-same name produces a compiler error, regardless of whether the value
-matches. To make a constant defined only when not already defined
-elsewhere, use the `Default` directive (see §10.1.4):
+A constant cannot normally be redefined: a second `Constant` directive
+for the same name produces a compiler error, regardless of whether the
+value matches.
 
 ```inform6
 Constant DEBUG;           ! first definition (value 0)
 ! Constant DEBUG;         ! ERROR: name already in use
 ! Constant DEBUG = 1;     ! ERROR: name already in use
+```
+
+To make a constant defined only when not already defined elsewhere, use
+the `Default` directive (see §10.1.4). To explicitly remove a previous
+definition so the name can be reassigned, use the `Undef` directive
+(see §10.9.1); after `Undef`, a subsequent `Constant` declaration for
+the same name is accepted:
+
+```inform6
+Constant VERSION = 1;
+Undef VERSION;
+Constant VERSION = 2;     ! now VERSION is 2
 ```
 
 Constants defined with no value are typically used as flags to be tested
@@ -592,8 +603,10 @@ Lowstring MyText "Hello, world!";
 ```
 
 The constant `MyText` holds the byte address of the string divided by 2,
-which on Z-machine versions 3–5 is exactly the packed string address. To
-print the string:
+which on Z-machine version 3 is exactly the packed string address (since
+v3 packs string addresses by dividing by 2). On Z-machine versions 4 and
+later, packed string addresses use a larger scale factor, so the value
+of `MyText` is not itself a packed address. To print the string:
 
 ```inform6
 print (string) MyText;
