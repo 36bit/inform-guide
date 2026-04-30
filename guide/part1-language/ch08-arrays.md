@@ -721,8 +721,8 @@ Array enemy_y --> MAX_ENEMIES;
 
 ### 8.8.4 Tracking Array Bounds
 
-Since Inform 6 performs no runtime bounds checking, disciplined size
-tracking is essential. The three main strategies are:
+Disciplined size tracking is essential to avoid out-of-bounds errors.
+The three main strategies are:
 
 1. **Use a constant** for byte and word arrays:
 
