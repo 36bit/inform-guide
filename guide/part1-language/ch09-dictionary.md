@@ -178,9 +178,13 @@ indicate that truncation occurred. This behavior is controlled by the
 ! Truncated dictionary entries will now have bit 6 set in their flags.
 ```
 
-When `$DICT_TRUNCATE_FLAG` is 0 (the default), bit 6 is instead used to
-mark verb words (legacy behavior). Enabling the truncation flag can be
-useful for games that want to warn players when their input was truncated.
+When `$DICT_TRUNCATE_FLAG` is 0 (the default), bit 6 is instead set on
+all verb words — a legacy behavior where `TRUNC_DFLAG` acts as an
+additional verb marker. When `$DICT_TRUNCATE_FLAG` is 1, bit 6 is used
+exclusively to mark truncated words (verbs or otherwise), and verbs no
+longer automatically receive this bit. Enabling the truncation flag can
+be useful for games that want to warn players when their input was
+truncated.
 
 ## 9.4 Dictionary Flags
 
