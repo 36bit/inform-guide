@@ -471,6 +471,19 @@ The tested symbol can be any identifier: a constant, global variable,
 routine name, object, class, or attribute. The test checks only whether
 the symbol has been defined at the point of the directive.
 
+A special pseudo-symbol of the form `VN_nnnn` is recognised by `Ifdef`
+and `Ifndef` for testing the compiler version: `VN_nnnn` is considered
+defined when the compiler version number is at least *nnnn*. Compiler
+version numbers use the form `1644` for Inform 6.44, `1640` for 6.40,
+and so on. `VN_nnnn` is not a real symbol and cannot be referenced in
+any other context.
+
+```inform6
+#Ifdef VN_1640;
+! Code requiring compiler 6.40 or later
+#Endif;
+```
+
 ### 10.5.2 Iftrue and Iffalse
 
 `Iftrue` compiles a block when a constant expression evaluates to a
@@ -649,7 +662,12 @@ The five forms are:
 - **Single character** (`Zcharacter 'c'`) — adds one character to the
   Z-character alphabet so that it encodes more compactly.
 - **Three alphabet strings** — redefines the three rows of the
-  Z-character alphabet table from scratch.
+  Z-character alphabet table from scratch. The first two strings
+  (alphabets A0 and A1) must each contain exactly 26 characters; the
+  third (A2) must contain exactly 23 characters and fills positions
+  3–25 of A2 (positions 0–2 are fixed by the Z-machine standard, with
+  position 1 being newline and position 2 being the tilde character).
+  See §1.1.4.
 - **`table` form** — defines the ZSCII-to-Unicode mapping for
   ZSCII codes 155 onward (the extra-character range).
 - **`table +` form** — appends to the existing ZSCII-to-Unicode
