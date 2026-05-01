@@ -543,7 +543,7 @@ The name is a historical artifact. `IFV3` is equivalent to:
 
 ```inform6
 #Ifdef TARGET_ZCODE;
-#Iftrue (#version_number == 3);
+#Iftrue (#version_number <= 3);
 ! ...
 #Endif;
 #Endif;

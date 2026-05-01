@@ -191,8 +191,9 @@ print "This is not a comment! It prints.^";
 ### 1.3.1 How Tokenization Works
 
 The lexer reads source text one character at a time, with three
-characters of lookahead (the current character plus three characters
-ahead, in the variables `lookahead`, `lookahead2`, and `lookahead3`).
+characters of lookahead. The character currently being processed is
+held in `current`, and the three characters ahead of it are held in
+`lookahead`, `lookahead2`, and `lookahead3`.
 It classifies each character using a precomputed 256-entry grid
 called the **tokenizer grid**, which maps each possible byte value to one
 of the following codes:

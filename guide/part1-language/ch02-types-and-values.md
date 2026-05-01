@@ -357,7 +357,10 @@ On the Z-machine, each word is 2 bytes, so `a-->n` accesses address
 >
 > Routine addresses and string addresses in the Z-machine are always packed.
 > The interpreter multiplies the packed address by the scale factor to
-> recover the true byte address before accessing memory.
+> recover the true byte address before accessing memory. In versions 6 and
+> 7 the packed-address space is further extended by routine and string
+> base offsets stored in the header, so that routines and strings can each
+> reach an additional 256 KB beyond the packed-address-only range.
 >
 > Packed addresses allow the Z-machine to reference memory locations beyond
 > the 64 KB that a raw 16-bit value can address. With a scale factor of 8
