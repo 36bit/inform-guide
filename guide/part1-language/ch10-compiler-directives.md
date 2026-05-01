@@ -471,6 +471,19 @@ The tested symbol can be any identifier: a constant, global variable,
 routine name, object, class, or attribute. The test checks only whether
 the symbol has been defined at the point of the directive.
 
+A special pseudo-symbol of the form `VN_nnnn` is recognised by `Ifdef`
+and `Ifndef` for testing the compiler version: `VN_nnnn` is considered
+defined when the compiler version number is at least *nnnn*. Compiler
+version numbers use the form `1644` for Inform 6.44, `1640` for 6.40,
+and so on. `VN_nnnn` is not a real symbol and cannot be referenced in
+any other context.
+
+```inform6
+#Ifdef VN_1640;
+! Code requiring compiler 6.40 or later
+#Endif;
+```
+
 ### 10.5.2 Iftrue and Iffalse
 
 `Iftrue` compiles a block when a constant expression evaluates to a
@@ -639,9 +652,9 @@ Zcharacter 'ä';                         ! add a character to the alphabet
 Zcharacter "abcdefghijklmnopqrstuvwxyz" ! redefine all three alphabet rows
            "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
            " 0123456789.,!?_#'~/\\-:()";
-Zcharacter table 'a' 'b' 'c';           ! define a custom ZSCII extension table
+Zcharacter table 'a' 'b' 'c';           ! define the ZSCII-to-Unicode table
 Zcharacter table + '@{e9}' '@{e8}';     ! add to the existing table
-Zcharacter terminating 13 10;           ! add parser-terminating ZSCII codes
+Zcharacter terminating 129 130;         ! add input-terminating ZSCII codes
 ```
 
 The five forms are:
@@ -649,14 +662,19 @@ The five forms are:
 - **Single character** (`Zcharacter 'c'`) — adds one character to the
   Z-character alphabet so that it encodes more compactly.
 - **Three alphabet strings** — redefines the three rows of the
-  Z-character alphabet table from scratch.
-- **`table` form** — defines a ZSCII extension table of additional
-  characters available in strings.
-- **`table +` form** — appends to the existing extension table rather
-  than replacing it.
-- **`terminating` form** — declares additional ZSCII codes that the
-  parser should treat as word terminators (in addition to the default
-  set).
+  Z-character alphabet table from scratch. The first two strings
+  (alphabets A0 and A1) must each contain exactly 26 characters; the
+  third (A2) must contain exactly 23 characters and fills positions
+  3–25 of A2 (positions 0 and 1 are fixed by the Z-machine standard,
+  and position 2 is fixed by Inform to hold the tilde character).
+  See §1.1.4.
+- **`table` form** — defines the ZSCII-to-Unicode mapping for
+  ZSCII codes 155 onward (the extra-character range).
+- **`table +` form** — appends to the existing ZSCII-to-Unicode
+  mapping rather than replacing it.
+- **`terminating` form** — declares additional ZSCII codes that
+  terminate a keyboard input read (in addition to the default
+  Enter, ZSCII 13). Up to 32 such codes may be declared. See §1.1.4.
 
 Characters not in the alphabet require multi-byte escape sequences when
 encoded into Z-machine text.
