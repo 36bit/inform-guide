@@ -190,7 +190,7 @@ current values, run `inform $LIST`.
 
 | Setting | Z-code default | Glulx default | Description |
 | ------- | -------------- | ------------- | ----------- |
-| `$GRAMMAR_VERSION` | 2 | 2 | Grammar table format. Version 2 is the standard format. |
+| `$GRAMMAR_VERSION` | 1 | 2 | Grammar table format. Version 2 is the Inform standard format; version 1 is the older Infocom-derived format. |
 | `$INDIV_PROP_START` | 64 (fixed) | 256 | First individual property number. Properties below this are common; those at or above are individual. |
 | `$NUM_ATTR_BYTES` | 6 (fixed) | 7 | Bytes used for attribute flags. Each byte provides 8 attributes (Z-code: 48; Glulx default: 56). |
 
@@ -202,7 +202,7 @@ current values, run `inform $LIST`.
 | ------- | ------- | ----------- |
 | `$MAX_STACK_SIZE` | 4096 | Interpreter stack size in bytes. Increase for deeply recursive programs. |
 | `$MEMORY_MAP_EXTENSION` | 0 | Extra zero bytes appended to the story file, available as writable memory at runtime. |
-| `$GLULX_OBJECT_EXT_BYTES` | 0 | Additional bytes per object record. Must be a multiple of 4. Available for custom use by the game or library. |
+| `$GLULX_OBJECT_EXT_BYTES` | 0 | Additional bytes per object record. Available for custom use by the game or library. |
 
 ### 15.4.4 Z-Code-Specific Settings
 
@@ -457,7 +457,7 @@ inform -G $MEMORY_MAP_EXTENSION=4096 adventure.inf
 ```
 
 Similarly, `$GLULX_OBJECT_EXT_BYTES` reserves extra bytes in each
-object record (must be a multiple of 4):
+object record:
 
 ```
 inform -G $GLULX_OBJECT_EXT_BYTES=8 adventure.inf
@@ -500,7 +500,7 @@ trade-offs:
 | Max attributes | 48 | 48 | 56+ (configurable) |
 | Max properties | 63 | 63 | No hard limit |
 | Integer size | 16-bit | 16-bit | 32-bit |
-| Local variables | 15 | 15 | 119 |
+| Local variables | 15 | 15 | 118 |
 | Dictionary resolution | 9 chars | 9 chars | Configurable |
 | Interpreter support | Excellent | Good | Good |
 | Multimedia | Limited | Limited | Full (via Glk) |

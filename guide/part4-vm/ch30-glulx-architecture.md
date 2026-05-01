@@ -84,13 +84,15 @@ is encoded as `0x00030102`. The compiler's `select_glulx_version()`
 function parses the version string provided
 by the `-v` switch in Glulx mode.
 
-If no version is explicitly requested, the compiler automatically
-selects the minimum Glulx version required by the features used in the
-source code. This is determined by a set of feature flags:
+If no version is explicitly requested, the compiler starts with a
+baseline of 2.0.0 and automatically raises it to the minimum Glulx
+version required by the features used in the source code. The bump is
+determined by a set of feature flags:
 
 | Feature Flag | Minimum Version | Trigger |
 |---|---|---|
-| `uses_unicode_features` | 3.0.0 | `streamunichar` opcode |
+| (none — baseline) | 2.0.0 | Default if no advanced features are used |
+| `uses_unicode_features` | 3.0.0 | Any Unicode character or the `streamunichar` opcode |
 | `uses_memheap_features` | 3.1.0 | `mzero`, `mcopy`, `malloc`, `mfree` opcodes |
 | `uses_acceleration_features` | 3.1.1 | `accelfunc`, `accelparam` opcodes |
 | `uses_float_features` | 3.1.2 | Any single-precision floating-point opcode |
@@ -154,8 +156,10 @@ are specified in the file header:
 
 **ROM (0x00000000 to RAMSTART):** The read-only segment contains the
 36-byte Glulx header, the Inform-specific static ROM block (24 bytes),
-the code area, and constant data. The interpreter must not allow the
-program to write to this region. ROM is always at least 256 bytes long.
+the compiled code area, the string-decoding table and compressed
+strings, and any static arrays. The interpreter must not allow the
+program to write to this region. The boundary RAMSTART is padded out
+to the next multiple of `GPAGESIZE` (256 bytes).
 
 **RAM (RAMSTART to EXTSTART):** The read/write segment contains global
 variables, object tables, property data, arrays, and other mutable
@@ -245,12 +249,16 @@ part of ROM and is written immediately after the header:
 | Offset | Size | Content |
 |--------|------|---------|
 | 0x24 | 4 | The ASCII string `Info` (Inform identifier). |
-| 0x28 | 2 | Two zero bytes. |
-| 0x2A | 2 | Two more zero bytes (padding). |
-| 0x2C | 4 | Inform compiler version as ASCII digits (e.g., `0636` for 6.36). |
-| 0x30 | 4 | Glulx back-end version (same format as compiler version). |
-| 0x34 | 2 | Game release number. |
+| 0x28 | 4 | Memory layout identifier continuation: bytes `00 01 00 00`. |
+| 0x2C | 4 | Inform compiler version as ASCII (e.g., `6.44` for release 1644). |
+| 0x30 | 4 | Glulx back-end version as ASCII (e.g., `0.38`), in the same digit/dot/digit/digit format. |
+| 0x34 | 2 | Game release number (16-bit, big-endian). |
 | 0x36 | 6 | Game serial number (6 ASCII characters, typically a date `YYMMDD`). |
+
+Together with the 36-byte header, this makes the first 60 bytes (0x3C) of
+ROM a fixed identification region. The compiled code area begins
+immediately afterward at offset `GLULX_HEADER_SIZE + GLULX_STATIC_ROM_SIZE`
+(60).
 
 ### 30.4.2 Version Compatibility
 

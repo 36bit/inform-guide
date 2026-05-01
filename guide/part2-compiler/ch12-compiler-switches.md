@@ -110,7 +110,7 @@ Controls how the compiler handles consecutive spaces in game text:
 | Level | Effect |
 | ----- | ------ |
 | `-d` or `-d1` | Contract double spaces after full stops in printed text |
-| `-d2` | Trace source line numbers during compilation |
+| `-d2` | Also contract double spaces after exclamation and question marks |
 
 The `-d1` behavior is a legacy feature from early Z-machine games where
 double spacing after periods was conventional.
@@ -235,8 +235,8 @@ Selects the character encoding used to interpret source file bytes:
 
 | Switch | Encoding |
 | ------ | -------- |
-| `-C0`  | Plain ASCII (0x20–0x7E) — default |
-| `-C1`  | ISO 8859-1 (Latin-1) |
+| `-C0`  | Plain ASCII (0x20–0x7E) |
+| `-C1`  | ISO 8859-1 (Latin-1) — default |
 | `-C2`  | ISO 8859-2 (Latin-2) |
 | `-C3`  | ISO 8859-3 (Latin-3) |
 | `-C4`  | ISO 8859-4 (Latin-4) |
@@ -264,12 +264,15 @@ Selects the format of error and warning messages:
 
 | Switch | Format style |
 | ------ | ------------ |
-| `-E0`  | Archimedes-style (default) |
+| `-E0`  | Archimedes-style |
 | `-E1`  | Microsoft-style |
 | `-E2`  | Macintosh MPW-style |
 
-This is useful for integrating the compiler with IDEs that expect errors
-in a particular format.
+The default is platform-dependent: most systems default to `-E0`, while
+the compiler defaults to `-E1` when built for PC/Windows and `-E2` when
+built for classic Macintosh. Using bare `-E` with no digit selects
+`-E1`. This switch is useful for integrating the compiler with IDEs that
+expect errors in a particular format.
 
 **`-G` — Glulx Target**
 

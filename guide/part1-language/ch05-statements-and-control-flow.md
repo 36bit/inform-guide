@@ -850,9 +850,11 @@ The `quit` statement terminates the program immediately:
 ### 5.22.2 `save` and `restore`
 
 The `save` statement saves the entire game state to a file. The `restore`
-statement loads a previously saved state. Both take a label to jump to on
-success (on Z-machine versions below 5) or return a value indicating
-success or failure (on version 5+):
+statement loads a previously saved state. The statement forms always take
+a label to branch to on success — on Z-machine versions below 5 this maps
+directly to the branching `@save`/`@restore` opcodes; on Version 5+ the
+compiler uses the result-storing forms of those opcodes and then branches
+to the label based on that result:
 
 ```inform6
 [ DoSave flag;

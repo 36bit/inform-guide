@@ -175,7 +175,7 @@ word flags (such as noun, verb, and preposition markers).
 |----------|-----|-------------|
 | `dict_par1` | Z/G | Byte offset within a dictionary entry for the first flag field. On Z-machine v3: 4; on v4+: 6. On Glulx: `DICT_ENTRY_FLAG_POS + 1` (points to the lower byte of a two-byte flag field). Resolved at compile time. |
 | `dict_par2` | Z/G | Byte offset for the second flag field. On Z-machine v3: 5; on v4+: 7. On Glulx: `DICT_ENTRY_FLAG_POS + 3`. Resolved at compile time. |
-| `dict_par3` | Z/G | Byte offset for the third flag field. On Z-machine v3: 6; on v4+: 8. On Glulx: `DICT_ENTRY_FLAG_POS + 5`. Resolved at compile time. Unavailable when `$ZCODE_LESS_DICT_DATA` is set. |
+| `dict_par3` | Z/G | Byte offset for the third flag field. On Z-machine v3: 6; on v4+: 8. On Glulx: `DICT_ENTRY_FLAG_POS + 5`. Resolved at compile time. On the Z-machine, unavailable when `$ZCODE_LESS_DICT_DATA` is set (produces a compile-time error); the restriction does not apply on Glulx. |
 
 ---
 

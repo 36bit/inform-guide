@@ -869,8 +869,8 @@ value `HASHHASH_SEP`, and the identifier text is included in the token
 text. The parser then resolves the action name to its numeric constant
 value.
 
-The identifier following `##` must begin with a letter — whitespace
-between `##` and the name is not permitted.
+The identifier following `##` must begin with a letter or underscore —
+whitespace between `##` and the name is not permitted.
 
 ### 1.10.3 System Constant Access: `#a$`, `#g$`, `#n$`, `#r$`, `#w$`
 

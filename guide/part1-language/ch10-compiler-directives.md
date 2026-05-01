@@ -602,8 +602,9 @@ compiler substitutes frequently occurring strings with compact tokens.
 > As of compiler 6.42, abbreviation strings may be of any length
 > (earlier versions limited them to 64 characters).
 
-> **[Glulx]** The `Abbreviate` directive has no effect when compiling
-> for Glulx, which uses a different text encoding.
+> **[Glulx]** Glulx imposes no count limit on abbreviations. They are
+> used as part of Glulx string compression, so they have an effect only
+> when compression is enabled (the default; disabled by `-~U`).
 
 ### 10.6.2 Lowstring
 

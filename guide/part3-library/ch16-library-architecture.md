@@ -108,13 +108,13 @@ The library defines stage constants that track compilation progress:
 
 | Constant          | Value | Set after including |
 |-------------------|-------|---------------------|
-| `BEFORE_PARSER`   | 0     | *(initial state)*   |
-| `AFTER_PARSER`    | 1     | `Parser`            |
-| `AFTER_VERBLIB`   | 2     | `VerbLib`           |
-| `AFTER_GRAMMAR`   | 3     | `Grammar`           |
+| `BEFORE_PARSER`   | 10    | *(initial state)*   |
+| `AFTER_PARSER`    | 20    | `Parser`            |
+| `AFTER_VERBLIB`   | 30    | `VerbLib`           |
+| `AFTER_GRAMMAR`   | 40    | `Grammar`           |
 
-These are primarily used internally by the library to guard conditional
-compilation blocks.
+The library exposes the current stage as `LIBRARY_STAGE`. These constants
+are primarily used internally to guard conditional compilation blocks.
 
 ## 16.3 The `Initialise` Entry Point
 
@@ -265,8 +265,8 @@ library normalizes several reversed or compound grammar forms:
 - **`##GiveR` → `##Give`** and **`##ShowR` → `##Show`**: The grammar
   "give fred biscuit" parses with reversed objects; the library swaps
   `noun` and `second` so action routines always see "give biscuit to fred".
-- **`##Tell` → `##Ask`**: "tell P about X" is converted to "ask P about X"
-  when the addressee is the player.
+- **`##Tell` → `##Ask`**: An order like "P, tell me about X" is converted
+  to the player's command "ask P about X".
 - **`##AskFor` → `##Give`**: "ask P for X" becomes an order "P, give X to
   me".
 

@@ -335,7 +335,7 @@ compiler's veneer module.
 
 | Routine | Purpose |
 | ------- | ------- |
-| `Box__Routine` | Implement the `box` statement [Z-machine only] |
+| `Box__Routine` | Implement the `box` statement (Z-machine uses the `@output_stream` window mechanism; the Glulx implementation falls back to a simpler glk-based version) |
 
 **Default library stubs:**
 
@@ -732,7 +732,8 @@ Both platforms store critical metadata in the story file header.
 | 10–11 | 2 | Object table address |
 | 12–13 | 2 | Global variables table address |
 | 14–15 | 2 | Base of static memory |
-| 24–29 | 6 | Serial number (compilation date as YYMMDD) |
+| 18–23 | 6 | Serial number (compilation date as YYMMDD) |
+| 24–25 | 2 | Abbreviations table address |
 | 26–27 | 2 | File length (divided by scale factor) |
 | 28–29 | 2 | Checksum |
 
@@ -750,8 +751,9 @@ feature is controlled by the `$OMIT_UNUSED_ROUTINES` setting.
 
 ### 13.10.1 How It Works
 
-When `$OMIT_UNUSED_ROUTINES` is enabled (set to 2 to activate), the
-compiler performs the following steps after the main pass:
+When `$OMIT_UNUSED_ROUTINES` is enabled (set to 1 to activate; the
+default is 0), the compiler performs the following steps after the main
+pass:
 
 1. **Record routine boundaries.** During code generation, the assembler
    calls `df_note_function_start()` and `df_note_function_end()` to

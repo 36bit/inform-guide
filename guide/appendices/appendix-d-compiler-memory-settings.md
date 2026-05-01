@@ -167,11 +167,12 @@ Abbreviate "you ";
 
 #### `DICT_WORD_SIZE`
 
-**Platform:** Glulx only (fixed at 6 in Z-code, 4 in Z-machine v3)
+**Platform:** Glulx only (fixed at 6 in Z-code)
 **Default:** 9
 
-The number of characters stored per dictionary word. In Z-code, this is fixed
-by the virtual machine specification (6 characters in v4+, 4 in v3). In Glulx,
+The number of characters stored per dictionary word. In Z-code this is fixed
+at 6 by the compiler (attempting to change it produces a fatal error); the
+underlying Z-machine encodes 6 characters in v4+ games and 4 in v3. In Glulx,
 this can be set to any value. Increasing this value allows the parser to
 distinguish longer words, at the cost of a larger dictionary table.
 
@@ -265,14 +266,14 @@ allows individual actions to be precisely marked as meta.
 
 #### `NUM_ATTR_BYTES`
 
-**Platform:** Glulx only (fixed at 6 in Z-code, 4 in v3)
+**Platform:** Glulx only (fixed at 6 in Z-code)
 **Default:** 7
 
 The number of bytes used to store attribute flags in each object record. Each
-byte provides 8 attribute slots, so the default of 7 provides 56 attributes
-(though only attributes 0–54 are typically usable because the value must be a
-multiple of 4, plus 3). In Z-code this is fixed at 6 (48 attributes; only 32
-used in v3).
+byte provides 8 attribute slots, so the default of 7 provides 56 attribute
+slots in Glulx. In Glulx, the value must be a multiple of four plus three;
+if it is not, the compiler rounds it up and warns. In Z-code this is fixed
+at 6 (48 attribute slots; only 32 are usable in v3).
 
 ```inform6
 !% $NUM_ATTR_BYTES=11

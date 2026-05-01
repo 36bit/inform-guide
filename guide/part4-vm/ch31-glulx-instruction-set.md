@@ -432,6 +432,9 @@ writable memory region.
 | 0x180 | `accelfunc` | L1 L2 | Register accelerated function L1 at address L2. The interpreter may replace calls to L2 with a native implementation of function L1. |
 | 0x181 | `accelparam` | L1 L2 | Set acceleration parameter L1 to value L2. |
 
+These opcodes are gated behind `GOP_Acceleration` and require
+Glulx 3.1.1+.
+
 See §30.10 for the full acceleration parameter table and function
 numbers.
 

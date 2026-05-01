@@ -157,7 +157,7 @@ format, and debugging features.
 | `-R` | 0–1 | `riscos_file_type_format` | 0 | [RISC OS only] Set the file type for output files. `-R0`: filetype 060 + version number. `-R1`: official Acorn filetype 11A. Only available when compiled with `ARCHIMEDES` defined. |
 | `-S` | on/off | `runtime_error_checking_switch` | on | Compile strict error-checking code at runtime. Enabled by default. Use `-~S` to disable. |
 | `-T` | on/off | `throwback_switch` | off | [RISC OS only] Enable throwback of errors in the Desktop Development Environment (DDE). Only available when compiled with `ARC_THROWBACK` defined. |
-| `-V` | — | — | — | Print the compiler version and date, then exit immediately. |
+| `-V` | — | — | — | Exit immediately. (The compiler always prints its version and date as a banner at startup, so this switch causes the banner to be printed and then exits before doing anything else.) |
 | `-W` | 3–99 | `ZCODE_HEADER_EXT_WORDS` | 3 | [Z-machine only] Set the minimum size of the header extension table in words. Accepts a one- or two-digit number (e.g., `-W3`, `-W16`). Also settable via `$ZCODE_HEADER_EXT_WORDS`. |
 | `-X` | on/off | `define_INFIX_switch` | off | Compile with INFIX debugging facilities present, enabling interactive debugging in supporting interpreters. |
 

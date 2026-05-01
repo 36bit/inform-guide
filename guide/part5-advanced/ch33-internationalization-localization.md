@@ -308,10 +308,10 @@ verbs so the parser can give them full scope. It is wrapped in
 Two additional functions in `english.h` assist the parser with verb
 handling:
 
-- `LanguageVerbLikesAdverb(w)` (line 320): Returns true if the verb word
+- `LanguageVerbLikesAdverb(w)` (line 324): Returns true if the verb word
   `w` is intransitive and takes a direction adverb rather than a noun
   object (e.g., "go north" rather than "take lamp").
-- `LanguageVerbMayBeName(w)` (line 336): Returns true if the verb word `w`
+- `LanguageVerbMayBeName(w)` (line 339): Returns true if the verb word `w`
   could also be an object name (e.g., "long" in "long sword" vs. "long"
   as a `VERBOSE` synonym).
 

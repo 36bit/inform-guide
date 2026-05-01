@@ -29,17 +29,20 @@ tracing facilities.
 
 ## 14.1 Overview
 
-The compiler reports three categories of diagnostic messages during
+The compiler reports four categories of diagnostic messages during
 compilation:
 
-| Category    | Severity | Compilation continues? | Output produced? |
-|-------------|----------|------------------------|------------------|
-| Fatal error | Highest  | No — immediate halt    | No               |
-| Error       | Medium   | Yes — to find more     | No               |
-| Warning     | Lowest   | Yes                    | Yes              |
+| Category       | Internal style | Compilation continues? | Output produced? |
+|----------------|----------------|------------------------|------------------|
+| Fatal error    | 0              | No — immediate halt    | No               |
+| Error          | 1              | Yes — to find more     | No               |
+| Warning        | 2              | Yes                    | Yes              |
+| Compiler error | 4              | Yes (usually)          | No               |
+
+(Style 3, "linkage error", existed historically but is no longer used.)
 
 **Fatal errors** represent unrecoverable conditions: the compiler cannot
-proceed and terminates immediately with a non-zero exit code.
+proceed and terminates immediately with exit code 1.
 
 **Errors** indicate definite problems in the source code — syntax
 violations, undefined symbols, type mismatches, and so on. When an error
@@ -50,10 +53,20 @@ no output file is produced.
 **Warnings** flag potential problems that may or may not be actual bugs.
 The source code is technically valid, and the compiler produces an output
 file, but the programmer should review the flagged constructs. Warnings
-can be suppressed with the `-w` switch.
+can be suppressed with the `-w` switch and re-enabled with `-w-`. (The
+compiler still counts suppressed warnings and reports the count at the
+end of compilation.)
 
-All three categories include the source file name and line number (when
-available) so that the programmer can locate the problem quickly.
+**Compiler errors** are an internal-only category, prefixed with
+`*** Compiler error:`, that indicate a bug in Inform itself rather than
+in the source program. They print a "sorry" message inviting the user
+to file a bug report.
+
+All three user-facing categories include the source file name and line
+number (when available) so that the programmer can locate the problem
+quickly. At the end of compilation the compiler prints a summary line
+of the form `Compiled with N error(s) and M warning(s)`, including a
+suppressed-warning count when applicable.
 
 ---
 
@@ -79,11 +92,9 @@ by build scripts and Makefiles.
 | Message | Cause |
 |---------|-------|
 | `Couldn't open source file "filename"` | The named source file does not exist or is not readable. |
-| `Out of memory` | The compiler has exhausted available memory. Increase the relevant `$MAX_*` setting (see §12.5). |
-| `Too many errors` | The error count has exceeded the configurable maximum (default 100). This prevents runaway error cascading. The limit can be changed with `$MAX_ERRORS`. |
-| `Exceeded internal limit: description` | A hard-coded compiler table has overflowed. The message names the table and its current size. Use the corresponding `$` memory setting to raise the limit. |
-| `I/O failure: couldn't write to output file` | The compiler cannot write the story file — typically a permissions or disk-space problem. |
-| `This program is a Z-machine program, not Glulx` | A source file compiled with `-G` uses a feature that requires the opposite target, or vice versa. |
+| `Run out of memory allocating N bytes for X` | The compiler has exhausted available memory while allocating an internal table. Increase the relevant `$MAX_*` setting (see §12.5). |
+| `Too many errors: giving up` | The error count has reached `MAX_ERRORS` (a compile-time constant of 100). This prevents runaway error cascading. |
+| `Too many compiler errors: giving up` | An internal compiler error has recurred 100 times. |
 
 ### 14.2.3 Example
 
@@ -108,10 +119,13 @@ multiple errors can be found in a single compilation run.
 The default error format is:
 
 ```
-"filename", line N: Error: description
+"filename", line N: Error:  description
 ```
 
-The format can be changed with the `-E` switch (see §14.5).
+(Note the two spaces after the colon.) When the error is in the main
+source file, the filename portion is omitted, leaving just
+`line N: Error:  description`. The format can be changed with the `-E`
+switch (see §14.5).
 
 ### 14.3.2 Error Recovery
 
@@ -122,80 +136,63 @@ single real mistake (such as a missing semicolon) can sometimes trigger
 a cascade of spurious follow-on errors. As a rule of thumb, fix the
 *first* reported error and recompile before tackling later ones.
 
-If the total number of errors reaches the configurable maximum (default
-100, set with `$MAX_ERRORS`), the compiler issues a fatal error and
-halts to prevent unbounded output.
+If the total number of errors reaches the built-in maximum (100,
+defined as the compile-time constant `MAX_ERRORS` in `header.h`), the
+compiler issues the fatal error `Too many errors: giving up` and halts
+to prevent unbounded output.
 
 ### 14.3.3 Common Errors
 
 #### Syntax errors
 
-```
-"game.inf", line 42: Error: Expected ';'
-```
-
-A semicolon is missing at the end of a statement or directive. This is
-by far the most common error.
+The most common errors come from the `ebf_*` family ("expected but
+found"), which produce messages of the form:
 
 ```
-"game.inf", line 18: Error: Unknown directive word "Obiect"
+"game.inf", line 42: Error:  Expected ';' but found <token>
 ```
 
-A top-level directive is misspelled — here `Object` was typed as
-`Obiect`.
+For string and character tokens the wording adjusts: `Expected X but
+found string "..."`, `Expected X but found char '...'`, or `Expected X
+but found dict word '...'`.
 
-#### Undefined symbols
+#### Symbol clashes
 
 ```
-"game.inf", line 57: Error: Undefined symbol "lantern"
+"lantern" is a name already in use and may not be used as a <kind>
+(<oldkind> "lantern" was defined at "game.inf", line 12)
 ```
 
-The identifier `lantern` has not been declared. Check spelling, and
-ensure that the file defining the symbol is `Include`d before the point
-of use.
+This is produced by `ebf_symbol_error` whenever a name is reused for
+something incompatible with its earlier definition.
 
 #### Exceeding VM limits
 
 ```
-"game.inf", line 200: Error: Too many attributes defined
+Too many local variables for a routine; max is 15
 ```
 
-The Z-machine allows a maximum of 48 attributes [Z-machine] while Glulx
-raises this to a configurable higher limit [Glulx]. If you hit this
-limit on the Z-machine, consider combining related attributes or
-switching to Glulx with the `-G` switch.
+This message comes from `syntax.c` and reflects the Z-machine cap of
+15 locals per routine [Z-machine]; Glulx allows more [Glulx].
 
 ```
-"game.inf", line 310: Error: Too many common properties defined
+The number of abbreviations has exceeded 96, the limit in Z-code
+```
+```
+The number of abbreviations has exceeded MAX_ABBREVS. Increase MAX_ABBREVS.
 ```
 
-Similarly, the Z-machine limits common properties to 63 [Z-machine].
-Glulx permits many more [Glulx].
-
-#### Type checking (Inform 6.36+)
-
-Starting with Inform 6.36, the compiler performs optional type checking
-when strict mode is enabled:
-
-```
-"game.inf", line 85: Error: Expression has wrong type
-```
-
-This indicates that a value is being used in a context that expects a
-different type — for example, using a string where a routine address is
-required.
+These come from `error_max_abbreviations` in `errors.c`.
 
 #### Other common errors
 
-| Message | Explanation |
-|---------|-------------|
-| `Expected 'something'` | The parser expected a specific token (keyword, bracket, operator) that was not found. |
-| `Duplicate definition of "name"` | A symbol with this name already exists in the same scope. |
-| `Property given twice in the same list` | An object definition provides the same property more than once. |
-| `Illegal object tree operation` | An attempt to `move` an object in a way that would create a cycle. |
-| `Routine contains too many local variables` | The Z-machine allows at most 15 locals per routine [Z-machine]; Glulx allows more [Glulx]. |
-| `String too long` | A quoted string exceeds the compiler's internal buffer size. Increase `$MAX_STATIC_STRINGS` if needed. |
-| `Include file not found` | An `Include` directive names a file that cannot be located on any search path. |
+| Message | Source | Explanation |
+|---------|--------|-------------|
+| `Expected X but found Y` | `ebf_error`, `ebf_curtoken_error` | The parser expected a specific token and found something else. |
+| `Duplicate definition of label: "name"` | `states.c` | A label with this name already exists in the routine. |
+| `Property given twice in the same declaration: "name"` | `objects.c` | An object definition provides the same property more than once. |
+| `Evaluating this has no effect: ...` | `expressc.c` | An expression statement is evaluated but its result is discarded and it has no side effects. |
+| `Only dynamic strings @(00) to @(NN) may be used ...` | `error_max_dynamic_strings` | The dynamic-string index exceeds `$MAX_DYNAMIC_STRINGS` or, in Z-code, the hard cap of 96. |
 
 ---
 
@@ -208,8 +205,11 @@ flagged code.
 ### 14.4.1 Format
 
 ```
-"filename", line N: Warning: description
+"filename", line N: Warning:  description
 ```
+
+(Note the two spaces after the colon — the same preamble as for errors,
+just with the `Warning:` keyword.)
 
 ### 14.4.2 Suppressing Warnings
 
@@ -219,78 +219,73 @@ All warnings can be suppressed with the `-w` switch:
 inform -w game.inf
 ```
 
-This is useful when compiling legacy code that triggers many harmless
-warnings, but in general it is better to fix the underlying causes.
+The switch sets the internal flag `nowarnings_switch`. Suppressed
+warnings are still counted (in `no_suppressed_warnings`) and reported in
+the final summary line. Re-enable warnings explicitly with `-w-`. The
+related switch `-w` does not affect compiler errors or fatal errors.
+
+The `Obsolete usage:` warnings (issued via `obsolete_warning`) can also
+be quieted by the `-q` (`obsolete_switch`) switch independently of `-w`.
+Inside files marked as system files (typically library headers),
+obsolete-usage warnings are suppressed unconditionally.
+
+Suppressing warnings is useful when compiling legacy code that triggers
+many harmless warnings, but in general it is better to fix the
+underlying causes.
 
 ### 14.4.3 Common Warnings
 
-#### Unreachable code
+#### Declared but not used
 
 ```
-"game.inf", line 90: Warning: Unreachable code
+Local variable "temp" declared but not used
 ```
 
-Code appears after a `return`, `rtrue`, `rfalse`, `jump`, or `quit`
-statement where it can never be executed:
-
-```inform6
-[ MyRoutine;
-    return 42;
-    print "This line is never reached.^";   ! Warning here
-];
-```
-
-#### Unused variables
-
-```
-"game.inf", line 12: Warning: Variable 'temp' not used
-```
-
-A local variable is declared but never referenced in the routine body.
-Either remove the declaration or use the variable:
-
-```inform6
-[ MyRoutine temp;
-    ! 'temp' is declared but the routine never mentions it
-    print "Hello!^";
-];
-```
+Issued by `dbnu_warning` when a local, global, attribute, property, or
+similar named entity is declared but never referenced. With
+`-u` (`OMIT_UNUSED_ROUTINES`) enabled, unreferenced routines are also
+flagged with `Routine "name" unused and omitted` (or `unused (not
+omitted)` if `-u` is off), produced by `uncalled_routine_warning`.
 
 #### Obsolete usage
 
 ```
-"game.inf", line 5: Warning: Obsolete usage: description
+Obsolete usage: description
 ```
 
-The source uses a syntax form that is deprecated and may be removed in
-future compiler versions. The warning message describes the preferred
-replacement.
+Issued by `obsolete_warning` when source uses a syntax form that has
+been superseded. Examples found in the source:
 
-#### Value overflow
+- `'#a$Act' is now superseded by '##Act'`
+- `ignoring 'print_paddr': use 'print (string)' instead`
+- `ignoring 'print_addr': use 'print (address)' instead`
+- `ignoring 'print_char': use 'print (char)' instead`
+
+These warnings are silently dropped when the offending text is inside a
+system file (such as a library header).
+
+#### Assignment in a condition
 
 ```
-"game.inf", line 77: Warning: Byte value overflow
+'=' used as condition: '==' intended?
 ```
 
-A value larger than 255 is being stored in a byte array (`->`) or
-a `byte` table, which will silently truncate to the low 8 bits:
-
-```inform6
-Array counts -> 10;
-
-[ init;
-    counts->0 = 300;   ! Warning: 300 > 255, stored as 44
-];
-```
+An `=` appears where `==` was probably intended inside an `if` test
+(`expressp.c`).
 
 #### Other common warnings
 
-| Message | Explanation |
-|---------|-------------|
-| `Value assigned but never used` | A variable is written to but never subsequently read. |
-| `Assignment in condition` | An `=` appears where `==` was probably intended inside an `if` test. |
-| `This statement has no effect` | An expression is evaluated but its result is discarded and it has no side effects. |
-| `Object "name" has no parent` | An object is defined without being placed in the object tree, which may be intentional but is often a mistake. |
+| Message | Source | Explanation |
+|---------|--------|-------------|
+| `Evaluating this has no effect: ...` | `expressc.c` | An expression statement has no observable effect. |
+| `Logical expression has no side-effects` | `expressc.c` | A `&&`/`\|\|` expression discards its result and the operands have no side effects. |
+| `The 'box' statement has no effect in a version 3 game` | `states.c` | Version 3 Z-machines lack box-quote support. |
+| `Without bracketing, the minus sign '-' is ambiguous` | `expressp.c` | Add parentheses to clarify operator precedence. |
+| `Bare property name found. "self.prop" intended?` | `expressp.c` | A property name appears as a bare identifier. |
+| `Property name in expression is not qualified by object` | `expressp.c` | Same family — a property is referenced without `obj.prop`. |
+| `Ignoring spurious leading comma` / `trailing comma` | `expressp.c` | Stray comma in an argument list. |
+| `Using '->' to access a --> or table array` | `expressc.c` | Operator/array-kind mismatch (and the converse `'-->' to access a -> or string array`). |
+| `In <context>, expected X but found Y "name"` | `symtype_warning` | Soft type mismatch; the symbol is used in a context expecting another kind. |
 
 ---
 
@@ -303,32 +298,41 @@ error output to jump to the relevant source line.
 ### 14.5.1 `-E0` — Archimedes / RISC OS Format
 
 ```
-"game.inf", line 42: Error: Expected ';'
+"game.inf", line 42: Error:  Expected ';' but found ...
 ```
 
 The original error format. Includes the filename in double
 quotes followed by the line number. For errors in the main source file
-the filename is omitted (showing only `line 42: Error: …`); filenames
+the filename is omitted (showing only `line 42: Error:  …`); filenames
 are always shown for errors in included files. This is the default
 format on Unix/Linux and most other platforms.
+
+When an error originates inside an included file, the preamble appends
+a secondary location of the form `("includer", N:C)` showing the file,
+line, and column of the surrounding context.
 
 ### 14.5.2 `-E1` — Microsoft Format
 
 ```
-game.inf(42): Error: Expected ';'
+game.inf(42): Error:  Expected ';' but found ...
 ```
 
 Uses the `file(line)` format recognized by Microsoft Visual Studio and
-many Windows-based editors. This is the default format on Windows.
+many Windows-based editors. The filename always appears (even for the
+main source file), and the source-extension is appended automatically
+when the input filename has no extension. Secondary include locations
+are appended after a `|` separator. This is the default format on
+Windows.
 
 ### 14.5.3 `-E2` — Macintosh MPW Format
 
 ```
-File "game.inf"; Line 42	# Error: Expected ';'
+File "game.inf"; Line 42	# Error:  Expected ';' but found ...
 ```
 
-Uses the Macintosh Programmer's Workshop format. This is the default
-format on classic Mac OS.
+Uses the Macintosh Programmer's Workshop format. The separator before
+`Error:` is a literal tab. This is the default format on classic Mac
+OS.
 
 > **Note:** The default error format is platform-dependent: `-E0` on
 > Unix/Linux, `-E1` on Windows, `-E2` on Mac OS. It can always be

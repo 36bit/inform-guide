@@ -94,6 +94,13 @@ The version may also be set with `!% -v5` at the top of a source file
 
 ## 28.2 Memory Map: Dynamic, Static, and High Memory
 
+The Z-machine is a big-endian 16-bit virtual machine: its native word
+size is 16 bits (2 bytes), and multi-byte values in the story file are
+stored most-significant byte first. Addresses come in three flavours
+— byte addresses, word addresses (used only for the abbreviations
+table), and packed addresses (used for routines and strings). The
+compiler defines `WORDSIZE` as 2 when building for the Z-machine.
+
 A Z-machine story file is divided into three regions, each with
 different access rules at runtime:
 
@@ -261,8 +268,10 @@ not explicitly define):
 - **Version 4+:** 63 entries (properties 1–63), each a 2-byte word.
   Total size: 126 bytes.
 
-Property 1 is unused (the first entry in the table is always zero). The
-table must be word-aligned in the story file.
+Property 1 (the `name` property) always has a default value of zero, so
+the first word of the table is always written as zero; the remaining
+entries hold the defaults declared by `Property` directives. The table
+must be word-aligned in the story file.
 
 ### 28.4.2 Object Entries
 
@@ -316,11 +325,10 @@ The internal compiler structure for a Z-code object is:
 
 ```c
 typedef struct objecttz {
-    uchar atts[6];       /* attribute bytes */
-    int parent;          /* parent object number */
-    int next;            /* sibling object number */
-    int child;           /* child object number */
+    uchar atts[6];       /* attribute bytes (6 in v4+, first 4 used in v3) */
+    int parent, next, child;
     int propsize;        /* size of property table */
+    int32 symbol;        /* the object's symbol number, or 0 */
 } objecttz;
 ```
 
@@ -594,11 +602,15 @@ to switch between alphabets:
 
 - Z-char 0: space
 - Z-char 1: abbreviation (table 0)
-- Z-char 2: abbreviation (table 1)  [v3: shift to A1]
-- Z-char 3: abbreviation (table 2)  [v3: shift to A2]
-- Z-char 4: shift to A1  [v3: shift-lock to A1]
-- Z-char 5: shift to A2  [v3: shift-lock to A2]
+- Z-char 2: abbreviation (table 1)
+- Z-char 3: abbreviation (table 2)
+- Z-char 4: shift to A1 (next character only)
+- Z-char 5: shift to A2 (next character only)
 - Z-chars 6–31: the 26 letters of the current alphabet
+
+(In Z-machine versions 1 and 2, Z-chars 4 and 5 acted as shift-locks
+and abbreviations were not all available; the compiler does not target
+those older versions, so this chapter describes the v3+ behaviour only.)
 
 In alphabet A2, position 0 (Z-char 6) is special: it introduces a
 two-Z-char literal ZSCII code (used for characters not in any alphabet).

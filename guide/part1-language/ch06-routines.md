@@ -134,8 +134,10 @@ locals, the unmatched locals are initialized to zero:
 ```
 
 If the caller supplies **more** arguments than the routine has locals, the
-excess arguments are silently ignored on the Z-machine. They are evaluated
-(so side effects occur) but their values are discarded.
+excess arguments are silently ignored. They are evaluated (so side effects
+occur) but their values are discarded by the virtual machine when the
+callee's stack frame is built. (See §6.7 for the per-call argument
+limits, which are checked at compile time.)
 
 ### 6.4.2 Local Variable Limits
 

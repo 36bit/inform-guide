@@ -117,21 +117,26 @@ ICL files or `!%` header comments.
 ### 11.3.1 Source File Conventions
 
 The compiler reads a single top-level source file specified on the command
-line. By convention, source files use the extension `.inf` or
-`.i6`, and included header files use `.h`, though these conventions vary
-by platform. If the given filename has no extension, the compiler appends
-the default source extension (`.inf`) before opening the file.
+line. By convention, source files use the extension `.inf` and included
+header files use `.h`, though the exact extensions vary by platform build.
+If the given filename has no extension, the compiler appends the default
+source extension (`.inf`) before opening the file. If the filename ends in
+a bare `.` (a single trailing dot), the compiler treats this as "no
+extension at all" and removes the dot before opening.
 
-### 11.3.2 Include Search Order
+### 11.3.2 Include Search Rules
 
 Additional source files are brought in with the `Include` directive
-(§10.9). When the compiler encounters an `Include` directive, it searches
-for the file in the following order:
+(§10.9). The location searched depends on the form of the directive:
 
-1. The directory containing the file that issued the `Include` (for
-   `Include ">filename"` form).
-2. The directories listed in the **include path**, searched left to right.
-3. The current working directory (if no include path is set).
+- `Include ">filename"`: the file is looked for **only** in the directory
+  of the file containing the `Include` directive. The include path is not
+  consulted.
+- `Include "filename"`: the file is looked for in the directories listed
+  in the **include path**, searched left to right. If the include path is
+  unset (empty), the current working directory is used instead.
+- A name containing a directory separator (such as `lib/parser.h`) is used
+  verbatim as a relative or absolute path; no path prefix is added.
 
 ### 11.3.3 The `>` Prefix
 
@@ -483,8 +488,11 @@ deprecated usage) are silenced.
 
 ### 11.8.8 Version Information (`-V`)
 
-The `-V` switch (or `--version`) prints the compiler version and exits
-immediately without compiling anything.
+The `-V` switch causes the compiler to exit immediately after printing
+its banner line, which already contains the version number, the platform
+identifier, and the release date. There is no `--version` long option;
+use `-V` (or simply run the compiler with no arguments, which prints the
+banner along with the help summary).
 
 ---
 
