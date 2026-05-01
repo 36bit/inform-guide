@@ -585,7 +585,7 @@ input against the grammar patterns, recognizing prepositions by their
 ### 9.9.4 Unrecognized Words
 
 When a word typed by the player does not appear in the dictionary, the
-parser assigns it a dictionary address of 0. The standard Inform library
+parser assigns it a dictionary address of 0. The standard library
 handles this with messages like "I don't understand that word."
 
 ## 9.10 Practical Considerations

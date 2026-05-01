@@ -26,7 +26,7 @@ operates, and how programs configure and initialize the library.
 ## 16.1 Overview
 
 The standard library provides the complete runtime framework for interactive
-fiction written in Inform 6. It supplies:
+fiction. It supplies:
 
 - **Parsing** — reading and interpreting player commands.
 - **The world model** — rooms, objects, containment, light, and scope.

@@ -550,7 +550,7 @@ the Glulx format.
 
 ## 32.5 Extending Classes
 
-Inform 6 supports single and multiple inheritance through its class
+The language supports single and multiple inheritance through its class
 system. Games can define new classes, inherit from library classes, and
 combine behaviors from multiple parent classes.
 

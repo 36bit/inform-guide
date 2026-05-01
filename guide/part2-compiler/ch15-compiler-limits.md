@@ -50,7 +50,7 @@ those with semantic significance — they affect the format of the
 compiled output, not just how much workspace the compiler reserves
 during compilation.
 
-The practical consequence is that modern Inform projects rarely need to
+The practical consequence is that modern projects rarely need to
 adjust compiler settings at all. When limits are encountered, they are
 almost always VM-imposed constraints that require either choosing a
 different Z-machine version or switching to Glulx.
@@ -190,7 +190,7 @@ current values, run `inform $LIST`.
 
 | Setting | Z-code default | Glulx default | Description |
 | ------- | -------------- | ------------- | ----------- |
-| `$GRAMMAR_VERSION` | 2 | 2 | Grammar table format. Version 2 is the standard Inform format. |
+| `$GRAMMAR_VERSION` | 2 | 2 | Grammar table format. Version 2 is the standard format. |
 | `$INDIV_PROP_START` | 64 (fixed) | 256 | First individual property number. Properties below this are common; those at or above are individual. |
 | `$NUM_ATTR_BYTES` | 6 (fixed) | 7 | Bytes used for attribute flags. Each byte provides 8 attributes (Z-code: 48; Glulx default: 56). |
 

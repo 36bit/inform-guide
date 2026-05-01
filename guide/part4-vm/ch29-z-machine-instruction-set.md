@@ -528,9 +528,9 @@ In versions 3–5, `pull` takes a variable reference as its operand
 (the variable to receive the popped value). In version 6, it stores
 the result using the standard store mechanism.
 
-## 29.4 The `@` Assembly Notation in Inform 6
+## 29.4 The `@` Assembly Notation
 
-Inform 6 allows Z-machine instructions to be embedded directly in
+Z-machine instructions can be embedded directly in
 source code using the `@` prefix. The assembly statement begins with
 `@`, followed by the opcode name and its operands, and terminates with
 a semicolon.
@@ -595,7 +595,7 @@ efficiently as special values in the branch offset.
 
 ### 29.4.4 Labels
 
-Assembly labels are defined using the standard Inform label syntax (a
+Assembly labels are defined using the standard label syntax (a
 dot followed by the label name) and referenced in branch operands:
 
 ```inform6
@@ -663,7 +663,7 @@ values:
 
 ## 29.5 Custom Opcode Syntax
 
-The Inform compiler allows emission of arbitrary Z-machine opcodes
+The compiler allows emission of arbitrary Z-machine opcodes
 that may not be in the compiler's built-in opcode table. This is done
 using a double-quoted opcode specification string after `@`.
 
@@ -720,8 +720,8 @@ have built-in support for, or for testing custom interpreter extensions.
 
 ## 29.6 Inline Byte and Word Assembly
 
-Beyond structured opcode assembly, Inform 6 allows raw bytes or words
-to be emitted directly into the code stream using `@->` and `@-->`.
+Beyond structured opcode assembly, raw bytes or words
+can be emitted directly into the code stream using `@->` and `@-->`.
 
 ### 29.6.1 Byte Assembly (`@->`)
 
@@ -777,9 +777,9 @@ These features should be used only when no alternative exists.
 ## 29.7 Common Assembly Patterns
 
 This section illustrates common patterns for using Z-machine assembly
-in Inform 6 code. Assembly is useful for performance-critical code,
+in source code. Assembly is useful for performance-critical code,
 direct hardware access, or operations that cannot be expressed in
-high-level Inform 6.
+high-level source.
 
 ### 29.7.1 Stack Manipulation
 

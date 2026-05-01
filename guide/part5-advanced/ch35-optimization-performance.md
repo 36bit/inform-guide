@@ -438,7 +438,7 @@ On the command line:
 inform6 $MAX_DYNAMIC_STRINGS=200 $MAX_STACK_SIZE=8192 game.inf
 ```
 
-In source file headers (must appear before any Inform 6 directives):
+In source file headers (must appear before any directives):
 
 ```inform6
 !% $MAX_DYNAMIC_STRINGS=200

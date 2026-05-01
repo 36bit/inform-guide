@@ -597,7 +597,7 @@ Abbreviate "ing ";
 Abbreviations reduce the size of encoded text in the story file. The
 compiler substitutes frequently occurring strings with compact tokens.
 
-> **[Z-machine]** Inform 6 enforces a hard limit of **96**
+> **[Z-machine]** The compiler enforces a hard limit of **96**
 > abbreviations for all Z-machine versions it targets (3 and later).
 > As of compiler 6.42, abbreviation strings may be of any length
 > (earlier versions limited them to 64 characters).
@@ -633,7 +633,7 @@ the string by its byte address, multiply by 2 and use `print (address)`:
 print (address) (2 * MyText);   ! Z-machine v4+
 ```
 
-`Lowstring` is rarely needed in Inform 6; it exists for backward
+`Lowstring` is rarely needed; it exists for backward
 compatibility with Inform 5. The more common approach for dynamic string
 references is the `string` statement.
 
@@ -666,7 +666,7 @@ The five forms are:
   (alphabets A0 and A1) must each contain exactly 26 characters; the
   third (A2) must contain exactly 23 characters and fills positions
   3–25 of A2 (positions 0 and 1 are fixed by the Z-machine standard,
-  and position 2 is fixed by Inform to hold the tilde character).
+  and position 2 is fixed by the compiler to hold the tilde character).
   See §1.1.4.
 - **`table` form** — defines the ZSCII-to-Unicode mapping for
   ZSCII codes 155 onward (the extra-character range).
@@ -834,7 +834,7 @@ the directive form cannot reach. New code should generally prefer the
 
 The `Origsource` directive marks the following source lines as having
 originated from a different file, primarily for tools that generate
-Inform 6 code from other languages (such as Inform 7). Added in compiler
+code from other languages (such as Inform 7). Added in compiler
 6.34.
 
 ```inform6

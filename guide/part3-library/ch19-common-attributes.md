@@ -27,7 +27,7 @@ attribute.
 
 ## 19.1 Overview
 
-Attributes are single-bit flags stored on each object. The Inform 6
+Attributes are single-bit flags stored on each object. The
 language provides two operations for working with them:
 
 - **`give`** — sets or clears an attribute on an object.

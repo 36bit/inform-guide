@@ -539,7 +539,7 @@ Array preload_pics --> 1 2 3 0;
 ```
 
 V6 games are uncommon because few interpreters fully support the V6
-graphical model. Most modern Inform 6 games targeting graphical output
+graphical model. Most modern games targeting graphical output
 use Glulx instead.
 
 ### 34.3.2 Glulx Sound and Graphics
@@ -847,7 +847,7 @@ Array read_buffer -> 256;
 ### 34.4.5 The Glk Wrapper and Output Streams
 
 The veneer includes `Glk__Wrap`,
-a wrapper routine that mediates between Inform's `print` statement and
+a wrapper routine that mediates between the `print` statement and
 the Glk I/O system. When the compiler targets Glulx, all `print`
 output is routed through the current Glk stream. The `@glk` opcode
 provides direct access to the Glk API; the veneer function translates
@@ -1026,7 +1026,7 @@ through the standard library message interception mechanism
 | 12 | "Can't ~undo~ twice in succession. Sorry!" | `just_undone` is set — consecutive undo attempt. |
 | 13 | "Previous turn undone." | Successful undo restoration. |
 
-The tilde characters (`~`) in these messages are Inform's escape
+The tilde characters (`~`) in these messages are the language's escape
 sequence for double-quote characters in strings (see §1.4).
 
 ### 34.5.6 Dictionary Words for UNDO

@@ -35,7 +35,7 @@ extends the Z-Machine Standard document, those differences are noted.
 
 The Z-machine exists in several versions, numbered 3 through 8. Each
 version extends the previous one with additional capabilities, larger
-address spaces, or new instructions. The Inform compiler supports all six
+address spaces, or new instructions. The compiler supports all six
 versions and assigns each an internal name.
 
 The compiler's `select_version()` function configures
@@ -368,7 +368,7 @@ computes the final sort order and writes entries in that order.
 ## 28.6 Grammar Table Layout
 
 The grammar table defines the verb grammar that the parser uses to
-interpret player input. The Inform compiler supports three grammar
+interpret player input. The compiler supports three grammar
 table formats: GV1 (grammar version 1), GV2, and GV3. The format is
 selected at compile time and affects the structure of the grammar lines.
 
