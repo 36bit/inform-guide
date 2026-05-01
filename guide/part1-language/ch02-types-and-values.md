@@ -51,7 +51,8 @@ values — depends on the target virtual machine.
 ### 2.2.1 Z-Machine (16-Bit Words)
 
 > **[Z-machine]** On the Z-machine, each word is 16 bits (2 bytes). The
-> compiler sets `WORDSIZE` to 2 and `MAXINTWORD` to `$7FFF`.
+> compiler predefines the constant `WORDSIZE` as 2, and the largest
+> positive signed value that fits in a word is `$7FFF`.
 
 - **Signed range:** −32768 to 32767 (−2<sup>15</sup> to 2<sup>15</sup>−1)
 - **Unsigned range:** 0 to 65535 (0 to 2<sup>16</sup>−1)
@@ -61,8 +62,9 @@ must fit within this 16-bit range.
 
 ### 2.2.2 Glulx (32-Bit Words)
 
-> **[Glulx]** On Glulx, each word is 32 bits (4 bytes). The compiler sets
-> `WORDSIZE` to 4 and `MAXINTWORD` to `$7FFFFFFF`.
+> **[Glulx]** On Glulx, each word is 32 bits (4 bytes). The compiler
+> predefines the constant `WORDSIZE` as 4, and the largest positive
+> signed value that fits in a word is `$7FFFFFFF`.
 
 - **Signed range:** −2147483648 to 2147483647 (−2<sup>31</sup> to
   2<sup>31</sup>−1)
@@ -726,8 +728,8 @@ The key floating-point opcodes include:
 | `@fmul` | Multiplication |
 | `@fdiv` | Division |
 | `@fmod` | Remainder |
-| `@floor` | Floor (float to int) |
-| `@ceil` | Ceiling (float to int) |
+| `@floor` | Floor (largest whole-number float ≤ value) |
+| `@ceil` | Ceiling (smallest whole-number float ≥ value) |
 | `@sqrt` | Square root |
 | `@exp` | Exponential |
 | `@log` | Natural logarithm |

@@ -72,8 +72,9 @@ The compiler targets the Z-machine by default. To compile for Glulx,
 pass the `-G` switch on the command line or include `!% -G` in the
 source file header. In the compiler source, this sets the global
 variable `glulx_mode` to `TRUE`. When Glulx mode
-is active, `WORDSIZE` is set to 4 and `MAXINTWORD` to `0x7FFFFFFF`,
-reflecting the 32-bit word size.
+is active, the compiler-predefined constant `WORDSIZE` becomes 4 and the
+largest positive signed integer is `0x7FFFFFFF`, reflecting the 32-bit
+word size.
 
 ### 30.1.2 Version Numbering and Auto-Selection
 
@@ -202,10 +203,10 @@ consequences:
 - **Simpler address arithmetic.** All pointer arithmetic operates
   directly on byte addresses without scaling.
 
-The compiler sets `WORDSIZE` to 4 in Glulx mode, reflecting the fact
-that each machine word occupies 4 bytes. The maximum signed integer
-value is `0x7FFFFFFF` (`MAXINTWORD`), and the maximum number of local
-variables per routine is 119 (including `sp`).
+The compiler predefines the constant `WORDSIZE` as 4 in Glulx mode,
+reflecting the fact that each machine word occupies 4 bytes. The
+maximum signed integer value is `0x7FFFFFFF`, and the maximum number of
+local variables per routine is 119 (including `sp`).
 
 ## 30.4 The Header (36 Bytes)
 

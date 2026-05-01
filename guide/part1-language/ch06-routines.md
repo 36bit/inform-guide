@@ -497,11 +497,12 @@ included.
 Replace RoutineName;
 ```
 
-This form discards any later definition's identification with the
-original symbol: when `RoutineName` is subsequently defined in the
-included source, that new definition replaces the original. The original
-body is silently dropped from the compiled output, although references
-elsewhere in the program are routed to the replacement.
+This form tells the compiler to drop the definition of `RoutineName`
+provided by an included library file, so that a subsequent definition
+of `RoutineName` in the user's own source becomes the symbol's value.
+The original (included) body is silently dropped from the compiled
+output, and references elsewhere in the program are routed to the
+replacement.
 
 ```inform6
 Replace InScope;       ! discard the library's InScope
