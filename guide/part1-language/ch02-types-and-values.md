@@ -726,8 +726,8 @@ The key floating-point opcodes include:
 | `@fmul` | Multiplication |
 | `@fdiv` | Division |
 | `@fmod` | Remainder |
-| `@floor` | Floor (float to int) |
-| `@ceil` | Ceiling (float to int) |
+| `@floor` | Floor (largest whole-number float ≤ value) |
+| `@ceil` | Ceiling (smallest whole-number float ≥ value) |
 | `@sqrt` | Square root |
 | `@exp` | Exponential |
 | `@log` | Natural logarithm |
