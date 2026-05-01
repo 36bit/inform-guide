@@ -81,3 +81,25 @@ Citations refer to files in `Inform6-6.44/`.
   - **Source:** `chars.c:85-88` (`accents` string contains the pairs
     `oa`, `oA`, `/o`, `/O`, matching the 69 accent escape codes
     documented in Appendix J).
+
+## Chapter 1 — Lexical Structure (2026-05-01, pass 3)
+
+- **§1.3.1 (Lookahead phrasing)** — The text said the lookahead window
+  consists of "the current character plus three characters ahead, in
+  the variables `lookahead`, `lookahead2`, and `lookahead3`", which
+  conflates the four-position window with its three lookahead slots.
+  - **After:** "The character currently being processed is held in
+    `current`, and the three characters ahead of it are held in
+    `lookahead`, `lookahead2`, and `lookahead3`."
+  - **Source:** `lexer.c:284-285` (`current` is "The latest character
+    read"; `lookahead`, `lookahead2`, `lookahead3` are "the three
+    characters following it").
+
+## Chapter 10 — Compiler Directives (2026-05-01)
+
+- **§10.5.4 (`IFV3` equivalent expression)** — The chapter expanded
+  `IFV3` to `#Iftrue (#version_number == 3)`, but the directive's
+  predicate in the compiler is `version_number <= 3`.
+  - **After:** `#Iftrue (#version_number <= 3);`
+  - **Source:** `directs.c:448-451` (`IFV3_CODE`: `if (!glulx_mode &&
+    version_number <= 3) flag = TRUE;`).
