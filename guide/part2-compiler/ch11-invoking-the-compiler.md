@@ -19,7 +19,7 @@
 
 # Chapter 11: Invoking the Compiler
 
-The compiler translates source files written in the Inform language into
+The compiler translates source files into
 story files for either the Z-machine or Glulx virtual machine. This
 chapter describes how to invoke the compiler from the command line, how it
 locates source and output files, and how to control its behavior through
@@ -65,7 +65,7 @@ The general form of the command line is:
 inform [options...] <file1> [<file2>]
 ```
 
-`<file1>` is the Inform source file to compile. `<file2>`, if given,
+`<file1>` is the source file to compile. `<file2>`, if given,
 specifies the output filename exactly as written — the compiler will not
 alter it or add an extension. Options may appear in any order, and may
 be interleaved with the filename arguments.
@@ -117,7 +117,7 @@ ICL files or `!%` header comments.
 ### 11.3.1 Source File Conventions
 
 The compiler reads a single top-level source file specified on the command
-line. By convention, Inform source files use the extension `.inf` or
+line. By convention, source files use the extension `.inf` or
 `.i6`, and included header files use `.h`, though these conventions vary
 by platform. If the given filename has no extension, the compiler appends
 the default source extension (`.inf`) before opening the file.

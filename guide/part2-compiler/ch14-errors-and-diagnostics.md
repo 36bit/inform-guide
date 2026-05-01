@@ -135,7 +135,7 @@ halts to prevent unbounded output.
 ```
 
 A semicolon is missing at the end of a statement or directive. This is
-by far the most common Inform error.
+by far the most common error.
 
 ```
 "game.inf", line 18: Error: Unknown directive word "Obiect"
@@ -306,7 +306,7 @@ error output to jump to the relevant source line.
 "game.inf", line 42: Error: Expected ';'
 ```
 
-The original Inform error format. Includes the filename in double
+The original error format. Includes the filename in double
 quotes followed by the line number. For errors in the main source file
 the filename is omitted (showing only `line 42: Error: …`); filenames
 are always shown for errors in included files. This is the default
@@ -468,7 +468,7 @@ At runtime, Infix commands are entered at the game prompt prefixed with
 
 | Command | Description |
 |---------|-------------|
-| `; expression` | Evaluate an Inform expression and print the result. |
+| `; expression` | Evaluate an expression and print the result. |
 | `; showobj obj` | Display all properties and attributes of *obj*. |
 | `; showverb "verb"` | Show the grammar table for *verb*. |
 | `; watch obj` | Monitor changes to *obj* — report when properties or attributes change. |

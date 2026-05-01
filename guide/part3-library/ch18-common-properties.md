@@ -314,7 +314,7 @@ and a silver coin)" rather than listing them separately.
 ## 18.3 Action-Handling Properties
 
 These properties intercept actions before and after the library processes
-them. They form the core of Inform 6's event-handling system. The full
+them. They form the core of the event-handling system. The full
 details of action processing are covered in Chapter 20; this section
 describes the properties themselves.
 

@@ -432,7 +432,7 @@ game can use to intercept and replace individual messages.
 
 ## 33.2 Writing a New Language Definition File
 
-To translate the Inform library into a new natural language, one creates a
+To translate the standard library into a new natural language, one creates a
 replacement for `english.h` that implements the same interface. The parser
 (`parser.h`) and verb library (`verblib.h`) call Language\* functions and
 reference Language\* arrays and constants by name. This section documents

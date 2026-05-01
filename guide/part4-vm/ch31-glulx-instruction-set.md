@@ -293,7 +293,7 @@ exception to the normal rule that all memory accesses are 32-bit.
 | 0x4E | `astoreb` | L1 L2 L3 | Store 8-bit value L3 at address L1 + L2. |
 | 0x4F | `astorebit` | L1 L2 L3 | Set or clear bit (L2 mod 8) of byte at address L1 + (L2 / 8). If L3 is 0, clear; if non-zero, set. |
 
-These opcodes implement Inform's `-->` (word array) and `->` (byte
+These opcodes implement the `-->` (word array) and `->` (byte
 array) access patterns. The `aload`/`astore` pair corresponds to `-->`,
 while `aloadb`/`astoreb` corresponds to `->`. The `aloads`/`astores`
 pair accesses 16-bit (short) values, useful for Unicode string tables
@@ -593,7 +593,7 @@ beginning of the function's code in memory.
 ### 31.4.1 Function Types
 
 **Type C1 (0xC1) — Local-argument functions.** This is the standard
-function type used by the Inform compiler for most routines. Arguments
+function type used by the compiler for most routines. Arguments
 passed by the caller are copied into the function's local variables.
 If more arguments are passed than the function declares, the extras are
 discarded. If fewer arguments are passed, the remaining locals are
@@ -602,7 +602,7 @@ initialized to zero.
 **Type C0 (0xC0) — Stack-argument functions.** Arguments remain on the
 stack rather than being copied into locals. The function accesses its
 arguments by popping them from the stack or using `stkpeek`. This type
-is used for Inform functions whose first local is named
+is used for functions whose first local is named
 `_vararg_count`. In the compiled output,
 the compiler emits a `@copy sp _vararg_count;` instruction at the start
 of the function body to move the argument count from the stack into the
@@ -687,7 +687,7 @@ memory. The computed address formula depends on the element size:
 | `aloadb` / `astoreb` | 8-bit (1 byte) | base + index |
 | `aloadbit` / `astorebit` | 1 bit | byte (base + index/8), bit (index mod 8) |
 
-In Inform source code, the `-->` operator compiles to `aload`/`astore`
+In source code, the `-->` operator compiles to `aload`/`astore`
 and the `->` operator compiles to `aloadb`/`astoreb`.
 
 ### 31.5.2 Block Memory Operations
@@ -915,10 +915,10 @@ complete set of selectors is documented in the Glk specification.
 
 ### 31.7.3 The Glk__Wrap Veneer Routine
 
-When Inform source code calls `glk()` as a system function, the
+When source code calls `glk()` as a system function, the
 compiler emits a call to the `Glk__Wrap` veneer routine rather than
 an inline `@glk` instruction. This is because the high-level `glk()`
-call uses Inform's standard calling convention (push all arguments
+call uses the standard calling convention (push all arguments
 including the selector onto the stack), while the `@glk` opcode
 requires the selector as an inline operand.
 
@@ -960,13 +960,13 @@ string formats are supported, identified by the first byte:
 | 0xE1 | Huffman | Compressed string decoded using the string decoding table. |
 | 0xE2 | Unicode | Three bytes of padding, then null-terminated 32-bit characters. |
 
-The Inform compiler typically generates E1 (compressed) strings to
+The compiler typically generates E1 (compressed) strings to
 reduce game file size, using the Huffman table whose address is stored
 in the header at offset 0x1C.
 
-## 31.8 The `@` Assembly Notation in Inform 6
+## 31.8 The `@` Assembly Notation
 
-Inform 6 allows programmers to embed Glulx assembly instructions
+Glulx assembly instructions can be embedded
 directly in source code using the `@` prefix. This section describes
 the syntax and conventions.
 

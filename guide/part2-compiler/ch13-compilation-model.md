@@ -30,7 +30,7 @@ layout — that make up the final output.
 
 ## 13.1 Overview of the Compilation Process
 
-Inform 6 is a **single-pass compiler with backpatching**. The compiler
+The compiler is **single-pass with backpatching**. It
 reads source files sequentially, parsing directives and routine bodies,
 generating code and building tables as it goes. Because only one pass
 over the source is made, forward references — a routine calling another
@@ -42,7 +42,7 @@ pass completes, a backpatching phase walks all generated code and data,
 replacing placeholders with final addresses.
 
 This design keeps the compiler fast (each source line is read exactly
-once) while still allowing the flexible definition order that Inform
+once) while still allowing the flexible definition order that
 programmers expect. The cost is a modest amount of bookkeeping in the
 form of backpatch tables, which are discarded once the story file is
 assembled.
@@ -120,7 +120,7 @@ run_pass()
 Step 4 deserves special attention: before any user code is parsed, the
 compiler creates the `Main__` wrapper routine (which calls the user's
 `Main` and then quits) and the four built-in metaclass objects — `Class`,
-`Object`, `Routine`, and `String` — that underpin Inform's object
+`Object`, `Routine`, and `String` — that underpin the object
 system. These are always objects 1–4 in every story file.
 
 Step 5 (`parse_program`) is where the compiler spends most of its time.
@@ -154,7 +154,7 @@ property, action, etc.) and a value that depends on the type.
 
 ### Permitted Forward References
 
-Because Inform is single-pass, a symbol may be *referenced* before it is
+Because the compiler is single-pass, a symbol may be *referenced* before it is
 *defined*. The compiler handles this by inserting a backpatch marker at
 the point of use:
 
@@ -276,12 +276,12 @@ needed.
 The compiler injects a set of **veneer routines** — small, compiler-
 generated functions that provide runtime support for language features
 that are too complex to expand inline. These routines are defined in
-the compiler's veneer source module as Inform source text, compiled by
+the compiler's veneer source module as source text, compiled by
 the compiler itself during the finalization phase.
 
 ### 13.5.1 Why Veneer Routines Exist
 
-Many Inform language features translate to routine calls rather than
+Many language features translate to routine calls rather than
 inline instruction sequences. For example, the expression `obj.prop`
 (reading an object property) may require searching common property
 tables, checking individual properties, consulting class inheritance,
@@ -483,7 +483,7 @@ or 4-byte characters depending on the `DICT_CHAR_SIZE` setting.
 
 ## 13.7 Object Tree Construction
 
-Objects are the central data structure of most Inform programs. The
+Objects are the central data structure of most programs. The
 compiler builds the object tree — the hierarchy of parent, child, and
 sibling pointers — as objects are defined during the main pass.
 
@@ -744,7 +744,7 @@ address, and the string-decoding table address.
 
 ## 13.10 Dead Code Elimination
 
-Starting with compiler version 6.40, Inform supports optional **dead
+Starting with compiler version 6.40, the compiler supports optional **dead
 code elimination**: the removal of routines that are never called. This
 feature is controlled by the `$OMIT_UNUSED_ROUTINES` setting.
 
@@ -834,7 +834,7 @@ Source Code (.inf)
       Story File (.z5 / .ulx)
 ```
 
-The single-pass design with backpatching gives Inform 6 its
+The single-pass design with backpatching gives the compiler its
 characteristic speed — even large games compile in under a second on
 modern hardware — while the veneer system and flexible table
 construction allow the compiler to support a rich object-oriented

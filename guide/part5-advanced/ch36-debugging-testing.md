@@ -887,7 +887,7 @@ investigation using the debug verbs (§36.3).
 
 ### 36.5.1 Syntax Errors
 
-**Missing semicolons.** The single most common Inform 6 syntax error.
+**Missing semicolons.** The single most common syntax error.
 Because the compiler uses semicolons as statement terminators, a missing
 semicolon causes the compiler to attempt to parse the next statement as
 a continuation of the current one. The error is therefore reported at
@@ -911,7 +911,7 @@ number of errors after a point in the file, look for a missing closing
 bracket near the first error.
 
 **Assignment in conditions.** Using `=` (assignment) instead of `==`
-(equality test) in a condition is a common mistake. In Inform 6, `=`
+(equality test) in a condition is a common mistake. Here, `=`
 in a condition is syntactically valid but performs an assignment:
 
 ```inform6
@@ -1105,7 +1105,7 @@ Trace assembly 4;     ! Maximum detail
 
 When assembly tracing is active, the compiler prints the generated
 Z-machine or Glulx instructions for each statement. This is useful for
-understanding how high-level Inform 6 constructs map to virtual machine
+understanding how high-level constructs map to virtual machine
 instructions, and for diagnosing code generation issues.
 
 **Expression tracing:**
@@ -1221,7 +1221,7 @@ the command line. The switch accepts an optional numeric level:
 
 Assembly tracing is useful for:
 
-- Understanding how Inform 6 code maps to Z-machine or Glulx
+- Understanding how source code maps to Z-machine or Glulx
   instructions (see §29 and §30 for the instruction sets)
 - Diagnosing unexpected behavior caused by code generation issues
 - Verifying that compiler optimizations are working correctly

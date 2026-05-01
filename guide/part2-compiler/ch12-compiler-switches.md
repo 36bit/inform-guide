@@ -255,7 +255,7 @@ constants.
 
 Automatically defines the `DEBUG` constant at the start of compilation.
 This is equivalent to placing `Constant DEBUG;` at the top of the source
-file. When `DEBUG` is defined, the Inform library enables its built-in
+file. When `DEBUG` is defined, the standard library enables its built-in
 debugging verbs (PURLOIN, TREE, SHOWOBJ, etc.).
 
 **`-E` — Error Format**
@@ -788,7 +788,7 @@ The Z-machine exists in several versions. The compiler supports versions
 | ------- | -------- | ------------ | ---------------- |
 | **V3**  | 128 KB   | 2 | Original Infocom format. Status line. No bold/italic. 32 attributes. 1-byte property numbers. Score or time display. |
 | **V4**  | 256 KB   | 4 | 64 KB of dynamic memory. Bold/italic text. Timed keyboard input. 48 attributes. |
-| **V5**  | 256 KB   | 4 | The standard version for modern Inform games. Full instruction set. Undo support. Unicode extensions. Recommended unless you have a reason to choose otherwise. |
+| **V5**  | 256 KB   | 4 | The standard version for modern games. Full instruction set. Undo support. Unicode extensions. Recommended unless you have a reason to choose otherwise. |
 | **V6**  | 512 KB   | 4 | Graphical version. Proportional fonts, pictures, sound, mouse input. Extended memory map. Rarely used; limited interpreter support. |
 | **V7**  | 512 KB   | 4 | Extended memory map (like V6) with the V5 instruction set. No graphics. Rarely used. |
 | **V8**  | 512 KB   | 8 | Largest Z-machine format. Same instruction set as V5 but with a higher scale factor that doubles the address space for routines and strings. Suitable for large text-heavy games that exceed V5 limits. |

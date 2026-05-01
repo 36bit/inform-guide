@@ -55,7 +55,7 @@ principles are:
 
 - **No built-in object structure.** Unlike the Z-machine, which defines
   a fixed object table format in the VM specification, Glulx provides
-  only a flat memory model. The Inform compiler synthesizes its own
+  only a flat memory model. The compiler synthesizes its own
   object table layout in memory (see §30.5).
 
 - **Big-endian byte order.** All multi-byte values in memory are stored
@@ -263,7 +263,7 @@ Unicode extensions were introduced.
 
 Unlike the Z-machine, which defines a fixed object table format as
 part of the VM specification, Glulx provides no built-in object
-structure. The Inform compiler synthesizes its own object table in the
+structure. The compiler synthesizes its own object table in the
 RAM segment. Understanding this layout is important for advanced
 debugging and for writing assembly code that manipulates objects
 directly.
@@ -413,7 +413,7 @@ the called function:
 
 DestType values 10–14 are used internally by the interpreter during
 string-printing operations and are not generated directly by compiled
-Inform code.
+code.
 
 ### 30.6.4 Stack Manipulation Opcodes
 
@@ -555,7 +555,7 @@ to obtain named constants for all Glk functions.
 ### 30.8.3 The Glk__Wrap Veneer Routine
 
 The compiler generates a veneer routine called `Glk__Wrap` that provides
-a high-level calling interface for Glk functions. When Inform source
+a high-level calling interface for Glk functions. When source
 code calls `glk()` as a system function, the compiler emits a call to
 `Glk__Wrap`.
 
@@ -746,7 +746,7 @@ have more operands than their single-precision counterparts (e.g.,
 Glulx interpreters typically execute bytecode by interpreting each
 instruction one at a time. For performance-critical routines that are
 called very frequently — particularly the veneer routines that
-implement the Inform object system — this interpretation overhead can
+implement the object system — this interpretation overhead can
 become significant. The acceleration mechanism allows an interpreter
 to replace specific bytecode functions with native implementations.
 

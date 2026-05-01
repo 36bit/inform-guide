@@ -66,7 +66,7 @@ defined.
 
 ## 8.2 Array Types
 
-Inform 6 provides five array types, differing in entry size and whether
+There are five array types, differing in entry size and whether
 an automatic length field is stored at the front of the array.
 
 ### 8.2.1 Byte Arrays (`->`)
@@ -430,7 +430,7 @@ Array counters --> 4;
 
 ### 8.5.5 Bounds Checking
 
-By default, Inform 6 emits **runtime bounds checks** on array accesses
+By default, the compiler emits **runtime bounds checks** on array accesses
 when compiling for Z-machine version 5 or later, or for Glulx. When the
 compiler can identify the array statically (the left-hand side of `->`
 or `-->` is the array's own name), it inserts an explicit comparison of
@@ -451,7 +451,7 @@ switch:
 | `-~S`       | off               | off                   |
 
 When strict checking is **disabled** — either explicitly with `-~S`, or
-by default in Z-machine v3/v4 — Inform 6 performs no bounds checking
+by default in Z-machine v3/v4 — the compiler performs no bounds checking
 at all. Reading or writing beyond the declared extent of an array
 accesses whatever bytes happen to lie at that memory address —
 potentially other arrays, global variables, or object data. The
@@ -567,7 +567,7 @@ Total size: `WORDSIZE + N` bytes.
 
 ## 8.7 Multi-Dimensional Arrays
 
-Inform 6 has no built-in syntax for multi-dimensional arrays. All arrays
+There is no built-in syntax for multi-dimensional arrays. All arrays
 are one-dimensional sequences of bytes or words. However, two-dimensional
 (and higher) arrays can be simulated with index arithmetic.
 
@@ -793,7 +793,7 @@ Array vowels static string "aeiou";
 
 ### 8.8.7 Copying Arrays
 
-Inform 6 has no built-in array copy operation. Copying must be done
+There is no built-in array copy operation. Copying must be done
 element by element:
 
 ```inform6

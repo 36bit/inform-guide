@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with this document. If not, see <https://www.gnu.org/licenses/>.
 -->
 
-Inform 6 is fundamentally an object-oriented language. Objects are the primary building blocks of any Inform program, representing everything from rooms and items to abstract concepts and the player character. This chapter defines the object system, including object declarations, the object tree, properties, attributes, classes, and inheritance.
+The language is fundamentally object-oriented. Objects are the primary building blocks of any program, representing everything from rooms and items to abstract concepts and the player character. This chapter defines the object system, including object declarations, the object tree, properties, attributes, classes, and inheritance.
 
 ---
 
@@ -108,7 +108,7 @@ of nested arrows.
 
 ## 7.3 The Object Tree
 
-All objects in an Inform program exist within a single tree structure. Every object (except root-level objects) has exactly one parent. Each object may have zero or more children. Siblings are children of the same parent, linked in a chain.
+All objects in a program exist within a single tree structure. Every object (except root-level objects) has exactly one parent. Each object may have zero or more children. Siblings are children of the same parent, linked in a chain.
 
 ### 7.3.1 Tree Navigation Functions
 
@@ -472,7 +472,7 @@ An object is considered `ofclass` a class if:
 - It was directly created from that class, or
 - It inherits from that class through any chain of class inheritance.
 
-The negated form uses standard Inform negation:
+The negated form uses standard negation:
 
 ```inform6
 if (obj ofclass Treasure) ...  ! positive test
@@ -624,7 +624,7 @@ Vehicle car "car" with speed 120;
 
 ## 7.14 Property Visibility
 
-Inform 6 supports a single, narrow form of access control: an
+There is a single, narrow form of access control: an
 individual property may be declared in a `private` segment of an
 object or class definition instead of (or in addition to) the usual
 `with` segment.

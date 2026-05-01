@@ -47,7 +47,7 @@ whitespace. A semicolon ends the header and begins the body. The closing
 ```
 
 Local variable names are untyped — each is a single machine word, just like
-all Inform 6 values (see Chapter 2).
+all values (see Chapter 2).
 
 ## 6.2 Stand-Alone Routines
 
@@ -154,7 +154,7 @@ calls each get independent copies (see §6.10).
 
 ## 6.5 Return Values
 
-Every routine returns a single value to its caller. Inform 6 provides
+Every routine returns a single value to its caller. There are
 several ways to specify the return value.
 
 ### 6.5.1 Explicit `return`
@@ -353,7 +353,7 @@ time by the routine's local variable list.
 
 ## 6.10 Recursion
 
-Inform 6 supports full recursion. A routine may call itself directly or
+Routines may recurse fully. A routine may call itself directly or
 indirectly, and each call receives its own set of local variables on the
 virtual machine's stack:
 
@@ -431,7 +431,7 @@ routine:
 ```
 
 The four metaclasses — `Routine`, `Object`, `Class`, and `String` — cover
-all non-integer values in Inform 6. An integer (including zero) returns
+all non-integer values. An integer (including zero) returns
 `nothing` (0) from `metaclass()`.
 
 ### 6.11.2 Routine References in Properties
