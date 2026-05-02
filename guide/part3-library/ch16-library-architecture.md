@@ -108,10 +108,10 @@ The library defines stage constants that track compilation progress:
 
 | Constant          | Value | Set after including |
 |-------------------|-------|---------------------|
-| `BEFORE_PARSER`   | 0     | *(initial state)*   |
-| `AFTER_PARSER`    | 1     | `Parser`            |
-| `AFTER_VERBLIB`   | 2     | `VerbLib`           |
-| `AFTER_GRAMMAR`   | 3     | `Grammar`           |
+| `BEFORE_PARSER`   | 10    | *(initial state)*   |
+| `AFTER_PARSER`    | 20    | `Parser`            |
+| `AFTER_VERBLIB`   | 30    | `VerbLib`           |
+| `AFTER_GRAMMAR`   | 40    | `Grammar`           |
 
 These are primarily used internally by the library to guard conditional
 compilation blocks.
@@ -447,7 +447,7 @@ than in source code.
 
 | Constant              | Effect                                          |
 |-----------------------|-------------------------------------------------|
-| `AMUSING_PROVIDED`    | If defined, offer "AMUSING" option at victory   |
+| `AMUSING_PROVIDED`    | Offer "AMUSING" option at victory; defaults to 1 (enabled). Set to 0 to disable. |
 | `NO_PLACES`           | If defined, disables the `PLACES` and `OBJECTS` meta-verbs |
 | `MANUAL_PRONOUNS`     | If defined, prevents the library from automatically updating pronoun references (`it`, `him`, `her`) |
 | `NOINITIAL_LOOK`      | If defined, suppresses the initial room description at game start |

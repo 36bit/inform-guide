@@ -585,23 +585,24 @@ a length prefix). The `parse` table holds up to 15 words, each recorded
 as a 4-byte entry:
 
 ```inform6
-! buffer-->0 : maximum characters allowed
+! buffer->0  : maximum characters allowed
 ! buffer->1  : number of characters typed (filled by VM)
 ! buffer->2+ : the typed characters
 !
-! parse-->0  : maximum words allowed (15)
+! parse->0   : maximum words allowed (15)
 ! parse->1   : number of words found
-! For each word (4 bytes):
-!   parse-->n   : dictionary address (0 if not found)
-!   parse->(n+2): length of word
-!   parse->(n+3): position in buffer
+! For word k (1-based), the 4 bytes starting at offset 4k-2 hold:
+!   parse-->(2k-1) : dictionary address (0 if not found)
+!   parse->(4k)    : length of word
+!   parse->(4k+1)  : position in buffer
 ```
 
 ### Glulx Layout
 
-On Glulx, `buffer` is 260 bytes and the parse table holds up to 15
-words in a different format, with each entry occupying multiple bytes to
-accommodate 32-bit dictionary addresses.
+On Glulx, `buffer` is 260 bytes and the parse table holds up to 20
+words. Each parse entry occupies three machine words (12 bytes): the
+32-bit dictionary address, the word length, and the buffer position.
+`parse-->0` holds the number of words found.
 
 ### Key Variables
 
