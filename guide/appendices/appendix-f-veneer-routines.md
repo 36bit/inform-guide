@@ -1498,7 +1498,7 @@ dependency graph for each veneer routine, separated by target platform.
 
 | Routine | Depends On |
 |---------|-----------|
-| `PrintShortName` | `Metaclass` |
+| `PrintShortName` | `Meta__class` |
 | `Print__PName` | `PrintShortName` |
 | `WV__Pr` | `RA__Pr`, `RT__TrPS`, `RT__Err` |
 | `RV__Pr` | `RA__Pr`, `RT__Err` |
