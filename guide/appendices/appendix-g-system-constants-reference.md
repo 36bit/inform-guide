@@ -222,7 +222,7 @@ error when `$OMIT_SYMBOL_TABLE` is set.
 | `lowest_array_number` | Z/G | Always 0. Arrays are numbered from 0. |
 | `highest_array_number` | Z | The index of the last array, equal to (total arrays) − 1. |
 | `arrays_array` | Z | Address of the arrays table. Contains the starting addresses of all arrays. |
-| `array_names_array` † | Z | Address of the array-names table. |
+| `array_names_array` | Z | Address of the array-names table. |
 | `array_names_offset` † | Z/G | Address of the array-names offset within the identifiers table. On Glulx, the address is in RAM. |
 | `array_flags_array` | Z | Address of the array-flags table. |
 
@@ -255,7 +255,8 @@ targeting Glulx, and vice versa.
 `routine_names_array`, `routine_flags_array`,
 `highest_global_number`, `global_names_array`,
 `global_flags_array`, `highest_array_number`, `arrays_array`,
-`array_flags_array`, `highest_constant_number`, `constants_array`,
+`array_names_array`, `array_flags_array`,
+`highest_constant_number`, `constants_array`,
 `constant_names_array`, `oddeven_packing`.
 
 **Glulx only**:

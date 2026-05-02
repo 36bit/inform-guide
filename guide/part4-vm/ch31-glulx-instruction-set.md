@@ -1110,12 +1110,24 @@ allows programs to use opcodes that the compiler does not have built-in
 support for:
 
 ```inform6
-@"1:130" selector argcount result;
+@"S3:304" L1 L2 result;   ! Equivalent to @glk L1 L2 result; (304 = 0x130)
 ```
 
-The format is `@"S:NNNN"` where `S` is the operand count category and
-`NNNN` is the opcode number in hexadecimal. This is primarily useful
-for experimenting with new or interpreter-specific opcodes.
+The format is `@"FlagsCount:Code"` where:
+
+- `Flags` is an optional sequence of letter flags: `S` marks the last
+  operand as a store, `SS` marks the last two operands as stores
+  (equivalent to setting both `St` and `St2`), `B` marks the last
+  operand as a branch target, and `R` indicates that execution never
+  continues past this instruction.
+- `Count` is a single decimal digit (0–9) giving the number of
+  operands.
+- `Code` is the opcode number written as a **decimal** integer.
+
+For example, `@"S3:123"` is a three-operand opcode (load, load, store)
+whose opcode number is 123 in decimal, and `@"2:234"` is a two-operand
+opcode (both loads) whose number is 234. This facility is primarily
+useful for experimenting with new or interpreter-specific opcodes.
 
 ### 31.8.5 Differences from Z-Machine Assembly
 

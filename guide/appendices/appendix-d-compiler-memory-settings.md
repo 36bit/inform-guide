@@ -270,9 +270,9 @@ allows individual actions to be precisely marked as meta.
 
 The number of bytes used to store attribute flags in each object record. Each
 byte provides 8 attribute slots, so the default of 7 provides 56 attributes
-(though only attributes 0–54 are typically usable because the value must be a
-multiple of 4, plus 3). In Z-code this is fixed at 6 (48 attributes; only 32
-used in v3).
+(numbered 0–55). In Glulx the value must be a multiple of 4, plus 3, so the
+allowed values are 3, 7, 11, 15, and so on. In Z-code this is fixed at 6
+(48 attribute slots, numbered 0–47; only attributes 0–31 are usable in v3).
 
 ```inform6
 !% $NUM_ATTR_BYTES=11
