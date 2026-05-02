@@ -358,13 +358,15 @@ Class Weapon(10)
     with damage 1;
 ```
 
-The `(10)` causes the compiler to manufacture 10 anonymous instances
-of `Weapon` at compile time. Each duplicate is initially placed as a
-child of the `Weapon` class object and serves as a ready-to-use
-instance that `Weapon.create()` can hand out and `Weapon.destroy(obj)`
-can return to the pool. The number of duplicates must be in the range
-0 to 10000; if `(N)` is omitted, no duplicates are pre-created and the
-class has no pool.
+The `(10)` causes the compiler to manufacture a pool of 10 anonymous
+duplicate instances of `Weapon` at compile time (internally one
+additional duplicate is also created and kept as an untouched
+prototype used by `recreate`, `destroy`, and `copy`). Each duplicate
+is initially placed as a child of the `Weapon` class object; the 10
+pooled duplicates are ready-to-use instances that `Weapon.create()`
+can hand out and `Weapon.destroy(obj)` can return to the pool. The
+number of duplicates must be in the range 0 to 10000; if `(N)` is
+omitted, no duplicates are pre-created and the class has no pool.
 
 The `(N)` notation does **not** impose a global limit on how many
 instances of the class may exist: ordinary instance declarations

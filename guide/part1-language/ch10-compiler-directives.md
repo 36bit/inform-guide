@@ -674,7 +674,10 @@ The five forms are:
   mapping rather than replacing it.
 - **`terminating` form** — declares additional ZSCII codes that
   terminate a keyboard input read (in addition to the default
-  Enter, ZSCII 13). Up to 32 such codes may be declared. See §1.1.4.
+  Enter, ZSCII 13). Up to 32 such codes may be declared. The
+  terminating-characters table is only emitted into the story file
+  when targeting Z-machine version 5 or later; on versions 3 and 4
+  the directive is silently ignored. See §1.1.4.
 
 Characters not in the alphabet require multi-byte escape sequences when
 encoded into Z-machine text.
