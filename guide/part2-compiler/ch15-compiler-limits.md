@@ -183,7 +183,7 @@ current values, run `inform $LIST`.
 | ------- | -------------- | ------------- | ----------- |
 | `$DICT_WORD_SIZE` | 6 (fixed) | 9 | Characters stored per dictionary word. Longer words are truncated during parsing. |
 | `$DICT_CHAR_SIZE` | 1 (fixed) | 1 | Bytes per character in dictionary words. Set to 4 in Glulx for Unicode dictionary entries. |
-| `$MAX_ABBREVS` | 64 | 64 | Maximum number of `Abbreviate` directives. Z-code hard limit is 96. |
+| `$MAX_ABBREVS` | 64 | N/A | Maximum number of `Abbreviate` directives. Z-code hard limit is 96. Not meaningful in Glulx (no abbreviation limit). |
 | `$MAX_DYNAMIC_STRINGS` | 32 | 100 | Maximum number of string substitution variables (`@00`, `@(0)`, etc.). Z-code hard limit is 96. |
 
 ### 15.4.2 Grammar and Object Settings
