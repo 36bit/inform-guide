@@ -759,8 +759,8 @@ predefined constants:
 | Constant | Type | Example Value | Meaning |
 |----------|------|--------------|---------|
 | `LIBRARY_VERSION` | Numeric | 612 | Library version number (6.12 = 612) |
-| `LibRelease` | String | `"6/12"` | Human-readable version string |
-| `LibSerial` | String | `"080126"` | Serial number (date-based: YYMMDD) |
+| `LibRelease` | String | `"6.12.8"` | Human-readable version string |
+| `LibSerial` | String | `"251226"` | Serial number (date-based: YYMMDD) |
 
 ```inform6
 #Ifdef LIBRARY_VERSION;

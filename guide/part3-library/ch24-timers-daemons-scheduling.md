@@ -492,9 +492,11 @@ details on the light-propagation algorithm.
 
 ### 24.6.6 Step 6: `NoteObjectAcquisitions()`
 
-Sets the `moved` attribute on any objects that the player has picked up
-during this turn, and records the object's original location for
-scoring purposes.
+Sets the `moved` attribute on any objects in the player's possession
+that have not yet been marked as moved. For each such object that
+also carries the `scored` attribute, `OBJECT_SCORE` is added to both
+`score` and `things_score` — this is how the library awards points
+the first time a treasure is picked up.
 
 ### 24.6.7 `deadflag` Checks
 

@@ -455,13 +455,13 @@ The following table lists the most commonly tuned memory settings:
 
 | Setting | Default (Z-code) | Default (Glulx) | Description |
 |---------|------------------|-----------------|-------------|
-| `MAX_ABBREVS` | 64 | 64 | Maximum number of text abbreviations |
+| `MAX_ABBREVS` | 64 | n/a | Maximum number of text abbreviations (Z-code only) |
 | `HASH_TAB_SIZE` | 512 | 512 | Size of the symbol hash table |
 | `MAX_DYNAMIC_STRINGS` | 32 | 100 | Maximum number of `@NN` dynamic strings |
 | `MAX_STACK_SIZE` | N/A | 4096 | Glulx interpreter stack size (in bytes) |
-| `MAX_LOCAL_VARIABLES` | 16 | 118 | Maximum local variables per routine (obsolete in 6.44; compiled-in limit) |
+| `MAX_LOCAL_VARIABLES` | 16 | 119 | Maximum local variables per routine |
 | `MEMORY_MAP_EXTENSION` | N/A | 0 | Extra zero-bytes appended to Glulx story file |
-| `DICT_WORD_SIZE` | 6 (V3) / 9 (V5+) | varies | Dictionary word resolution length |
+| `DICT_WORD_SIZE` | 6 | 9 | Dictionary word resolution length (in characters) |
 
 ### 35.4.3 Local Variable Limits
 

@@ -156,13 +156,18 @@ Infix interactive debugger.
 The Infix debugger is a substantially more powerful debugging facility
 than the standard debug verbs; it is described in detail in §36.2.
 
-The `-X` switch implies `-D` — enabling Infix automatically enables
-`DEBUG` as well, since the Infix debugger depends on the debug verb
-infrastructure.
+The `-X` switch is independent of `-D`: enabling Infix does not
+automatically define `DEBUG`. To get the standard debug verbs
+(§36.3) alongside the Infix debugger, pass both switches.
 
 ```
-inform6 -X game.inf    ! Enable Infix debugger (implies -D)
+inform6 -D -X game.inf    ! Enable Infix debugger and standard debug verbs
 ```
+
+> **[Glulx]** The Infix debugger is not available when targeting Glulx.
+> If `-X` is passed in Glulx mode the compiler prints a warning and
+> silently disables the switch. Use the standard debug verbs (§36.3)
+> instead.
 
 
 ## 36.2 The Infix Debugger
@@ -194,9 +199,10 @@ unavailable for normal use.
 > **[Z-machine]** With `infix__watching` occupying slot 0, only 47
 > attributes remain available for the program (down from the normal 48).
 
-> **[Glulx]** On Glulx, the attribute space is much larger (4096
-> slots), so reserving slot 0 for `infix__watching` leaves 4095
-> attributes for normal use — rarely a practical constraint.
+> **[Glulx]** Infix is not supported on Glulx; the compiler disables
+> `-X` automatically when targeting Glulx (see §36.1.3). The
+> compiler-side effects described in this section therefore apply
+> only to Z-machine builds.
 
 **Property modification tracing.** When Infix is enabled, the compiler
 modifies the veneer routines to include property-change tracing. The
@@ -1302,13 +1308,20 @@ generate the `gameinfo.dbg` file (§36.4), which can be loaded by
 external debugger tools for source-level debugging with breakpoints and
 variable inspection.
 
-**Game transcript recording.** Use the `-r` switch to record all game
-text to `gametext.txt`. This file captures both player input and game
-output and can be used for:
+**Source text dump.** Use the `-r` switch to write all the static
+in-game text from the source code to `gametext.txt` at compile time.
+This file is a dump of the strings the compiler embedded in the
+story file (it is not a recording of a play session). It is useful
+for:
 
-- Reviewing test sessions after the fact
-- Comparing output between compiler or library versions
-- Documenting bugs with full reproduction context
+- Reviewing the prose of the game without playing through it
+- Comparing string output between compiler or library versions
+- Generating word counts and proofreading copy
+
+(For runtime transcripts of an actual play session, use the
+interpreter's own scripting facility — typically the `script` /
+`unscript` verbs provided by the library, which drive the
+Z-machine `@output_stream` opcode.)
 
 **Automated test scripts.** Write a text file containing a sequence of
 game commands (one per line) and pipe it to the interpreter for
