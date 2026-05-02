@@ -212,7 +212,7 @@ treats each character in source input.
 **[Z-machine]**
 
 The Z-machine encodes text using three alphabets of 26 characters each. The
-The default alphabets are:
+default alphabets are:
 
 ```inform6
 ! Default Z-machine alphabets (internal compiler data)
@@ -294,14 +294,16 @@ The `Zcharacter` directive can replace the default alphabets:
 ```inform6
 Zcharacter "abcdefghijklmnopqrstuvwxyz"
            "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-           "0123456789.,!?_#'~/@\-:()>";
+           "123456789.,!?_#'/@\-:()>";
 ```
 
 Constraints:
 
 - A0 and A1 strings must each contain exactly **26** characters.
-- The A2 string must contain exactly **23** characters (positions 3–25);
-  positions 0–2 are fixed (padding, newline, ZSCII escape).
+- The A2 string must contain exactly **23** characters (positions 3–25).
+  Positions 0–2 are fixed: position 0 is the ZSCII escape (Z-char 6),
+  position 1 is newline, and position 2 is forced to `~` (which is written
+  out as `"`).
 - This directive is an error in Glulx mode.
 
 ---
@@ -357,8 +359,6 @@ Returns `?` otherwise.
 ## §J.5 Default ZSCII-to-Unicode Translation Table (Latin-1/ASCII)
 
 This is the standard Z-Machine Standard 1.0 default table used when `-C0` or
-`-C1` is active. It contains 69 entries mapping ZSCII 155–223 to Unicode code
-points. This is the standard Z-Machine Standard 1.0 default table used when `-C0` or
 `-C1` is active. It contains 69 entries mapping ZSCII 155–223 to Unicode code
 points.
 
@@ -1223,12 +1223,13 @@ forms.
 ```inform6
 Zcharacter "abcdefghijklmnopqrstuvwxyz"
            "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-           "0123456789.,!?_#'~/@\-:()>";
+           "123456789.,!?_#'/@\-:()>";
 ```
 
 - A0 and A1 must have exactly **26** characters each.
-- A2 must have exactly **23** characters (positions 3–25; positions 0–2 are
-  fixed: padding, newline, ZSCII escape).
+- A2 must have exactly **23** characters (positions 3–25). Positions 0–2 are
+  fixed: position 0 is the ZSCII escape (Z-char 6), position 1 is newline,
+  and position 2 is forced to `~` (written out as `"` in the story file).
 
 ### Form 2: Add a single character to the alphabet
 

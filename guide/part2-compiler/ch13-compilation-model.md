@@ -682,18 +682,23 @@ than 64 KB of code and strings.
 ┌──────────────────────────────────────┐  Byte 0
 │          Header (36 bytes)           │
 ├──────────────────────────────────────┤
+│  Memory layout identifier            │
 │  Compiled routine bytecode           │
-│  Compressed string data              │  ← ROM (read-only)
+│  String decoding table               │
+│  Compressed string data              │
+│  Static arrays                       │  ← ROM (read-only)
 ├──────────────────────────────────────┤  RAMSTART
 │  Global variables (N × 4 bytes)      │
 │  Dynamic arrays                      │
-│  String-reference table              │
+│  Dynamic strings (printing variables)│
 │  Object table                        │
 │  Property values                     │
-│  Individual property table           │
+│  Property defaults                   │
 │  Class number table                  │
 │  Identifier names (optional)         │
-│  Static arrays                       │  ← RAM (read-write)
+│  Grammar table                       │
+│  Action routines table               │
+│  Dictionary                          │  ← RAM (read-write)
 ├──────────────────────────────────────┤  EXTSTART
 │  (extensible memory)                 │  ← Available for runtime use
 └──────────────────────────────────────┘
@@ -701,9 +706,9 @@ than 64 KB of code and strings.
 
 In Glulx, all addresses are full 32-bit byte offsets — there is no
 packing. The ROM/RAM boundary is recorded in the header, allowing the
-interpreter to enforce read-only protection on code and strings. The
-`EXTSTART` value marks the end of the initial data; memory beyond this
-point can be allocated at runtime.
+interpreter to enforce read-only protection on code, strings, and
+static arrays. The `EXTSTART` value marks the end of the initial data;
+memory beyond this point can be allocated at runtime.
 
 ### 13.9.3 String Compression
 
@@ -732,7 +737,8 @@ Both platforms store critical metadata in the story file header.
 | 10–11 | 2 | Object table address |
 | 12–13 | 2 | Global variables table address |
 | 14–15 | 2 | Base of static memory |
-| 24–29 | 6 | Serial number (compilation date as YYMMDD) |
+| 18–23 | 6 | Serial number (compilation date as YYMMDD) |
+| 24–25 | 2 | Abbreviations table address |
 | 26–27 | 2 | File length (divided by scale factor) |
 | 28–29 | 2 | Checksum |
 
@@ -750,7 +756,7 @@ feature is controlled by the `$OMIT_UNUSED_ROUTINES` setting.
 
 ### 13.10.1 How It Works
 
-When `$OMIT_UNUSED_ROUTINES` is enabled (set to 2 to activate), the
+When `$OMIT_UNUSED_ROUTINES` is enabled (set to 1 to activate), the
 compiler performs the following steps after the main pass:
 
 1. **Record routine boundaries.** During code generation, the assembler

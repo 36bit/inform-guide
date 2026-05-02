@@ -483,8 +483,10 @@ deprecated usage) are silenced.
 
 ### 11.8.8 Version Information (`-V`)
 
-The `-V` switch (or `--version`) prints the compiler version and exits
-immediately without compiling anything.
+The `-V` switch causes the compiler to exit immediately after the banner
+has been printed, without compiling anything. Since the banner already
+includes the version number, platform, and release date (see §11.8.1),
+this serves as a "print version and quit" command.
 
 ---
 
@@ -586,14 +588,22 @@ Then compile with just:
 inform adventure.inf
 ```
 
-**Override an in-file `!%` setting from the command line:**
+**Override an in-file `!%` `$` setting from the command line:**
 
-If the source file contains `!% -v5`, you can still produce a version 8
-file:
+Because `$` compiler settings on the command line have higher precedence
+than those in `!%` header comments (§11.7.2), a command-line `$` setting
+overrides the same setting embedded in the source. For example, if the
+source contains `!% $DICT_WORD_SIZE=9`, you can still build with a
+12-character dictionary by writing:
 
 ```
-inform -v8 adventure.inf
+inform $DICT_WORD_SIZE=12 adventure.inf
 ```
+
+Note that this reversal applies *only* to `$` settings. For ordinary
+switches such as `-v8`, the `!%` header is applied last and so always
+wins over the command line; switches embedded in `!%` cannot be
+overridden from the command line.
 
 **Use long options (6.35+):**
 

@@ -130,7 +130,7 @@ The `-v` switch selects the Z-machine version:
 | `-v4` | 4 | "Plus" / "EZIP" | 6-character dictionary words |
 | `-v5` | 5 | "Advanced" / "XZIP" | **Default.** 9-character dictionary words; full feature set |
 | `-v6` | 6 | Graphical / "YZIP" | Graphical support; extended memory map |
-| `-v7` | 7 | Expanded "Advanced" | Extended memory map; 8× packed address scale factor |
+| `-v7` | 7 | Expanded "Advanced" | Extended memory map; same 4× packed address scale factor as v5 |
 | `-v8` | 8 | Expanded "Advanced" | Like v5 but with 8× packed address scale factor for larger files |
 
 When `-v` is used with a version below 5, the compiler automatically disables

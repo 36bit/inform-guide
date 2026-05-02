@@ -79,10 +79,10 @@ with `Verb meta`.
 ### Per-Line Meta (6.43+)
 
 Compiler version 6.43 introduces the `$GRAMMAR_META_FLAG` setting. When
-enabled (set to 1 on the command line or by defining
-`Grammar_Meta__Value` before the first grammar declaration), individual
-grammar lines can be marked `meta` independently, allowing a single verb
-to mix meta and non-meta actions:
+enabled (e.g. by passing `$GRAMMAR_META_FLAG=1` on the command line, or
+by writing `$GRAMMAR_META_FLAG=1;` in source before the first grammar
+declaration), individual grammar lines can be marked `meta`
+independently, allowing a single verb to mix meta and non-meta actions:
 
 ```inform6
 ! Compile with $GRAMMAR_META_FLAG=1
@@ -104,7 +104,8 @@ if (action <= #highest_meta_action_number) {
 ```
 
 To test whether the feature is available at compile time, use
-`#ifdef GRAMMAR_META_FLAG` (note: no dollar sign in the `#ifdef` test).
+`#ifdef GRAMMAR_META_FLAG` (the `$` is part of the *setting* name on the
+command line, not part of the constant the compiler defines).
 
 ## 22.2 The Extend Directive
 

@@ -79,11 +79,9 @@ by build scripts and Makefiles.
 | Message | Cause |
 |---------|-------|
 | `Couldn't open source file "filename"` | The named source file does not exist or is not readable. |
-| `Out of memory` | The compiler has exhausted available memory. Increase the relevant `$MAX_*` setting (see §12.5). |
-| `Too many errors` | The error count has exceeded the configurable maximum (default 100). This prevents runaway error cascading. The limit can be changed with `$MAX_ERRORS`. |
-| `Exceeded internal limit: description` | A hard-coded compiler table has overflowed. The message names the table and its current size. Use the corresponding `$` memory setting to raise the limit. |
-| `I/O failure: couldn't write to output file` | The compiler cannot write the story file — typically a permissions or disk-space problem. |
-| `This program is a Z-machine program, not Glulx` | A source file compiled with `-G` uses a feature that requires the opposite target, or vice versa. |
+| `Run out of memory allocating ... bytes for ...` | The compiler has exhausted available memory while allocating an internal table. Increase the relevant `$MAX_*` setting (see §12.5). |
+| `Too many errors: giving up` | The error count has reached the hard-coded maximum of 100. This prevents runaway error cascading. |
+| `I/O failure: couldn't write to story file` | The compiler cannot write the story file — typically a permissions or disk-space problem. |
 
 ### 14.2.3 Example
 
@@ -122,8 +120,8 @@ single real mistake (such as a missing semicolon) can sometimes trigger
 a cascade of spurious follow-on errors. As a rule of thumb, fix the
 *first* reported error and recompile before tackling later ones.
 
-If the total number of errors reaches the configurable maximum (default
-100, set with `$MAX_ERRORS`), the compiler issues a fatal error and
+If the total number of errors reaches the hard-coded maximum of 100,
+the compiler issues the fatal error `Too many errors: giving up` and
 halts to prevent unbounded output.
 
 ### 14.3.3 Common Errors
@@ -131,14 +129,14 @@ halts to prevent unbounded output.
 #### Syntax errors
 
 ```
-"game.inf", line 42: Error: Expected ';'
+"game.inf", line 42: Error:  Expected ';' but found x
 ```
 
 A semicolon is missing at the end of a statement or directive. This is
 by far the most common error.
 
 ```
-"game.inf", line 18: Error: Unknown directive word "Obiect"
+"game.inf", line 18: Error:  Expected directive but found Obiect
 ```
 
 A top-level directive is misspelled — here `Object` was typed as
@@ -147,7 +145,7 @@ A top-level directive is misspelled — here `Object` was typed as
 #### Undefined symbols
 
 ```
-"game.inf", line 57: Error: Undefined symbol "lantern"
+"game.inf", line 57: Error:  No such constant as "lantern"
 ```
 
 The identifier `lantern` has not been declared. Check spelling, and
@@ -157,28 +155,29 @@ of use.
 #### Exceeding VM limits
 
 ```
-"game.inf", line 200: Error: Too many attributes defined
+"game.inf", line 200: Error:  All 48 attributes already declared
 ```
 
-The Z-machine allows a maximum of 48 attributes [Z-machine] while Glulx
-raises this to a configurable higher limit [Glulx]. If you hit this
-limit on the Z-machine, consider combining related attributes or
-switching to Glulx with the `-G` switch.
+The Z-machine allows a maximum of 48 attributes in version 5+ (32 in
+v3) [Z-machine] while Glulx raises this to a configurable higher limit
+[Glulx]. If you hit this limit on the Z-machine, consider combining
+related attributes or switching to Glulx with the `-G` switch.
 
 ```
-"game.inf", line 310: Error: Too many common properties defined
+"game.inf", line 310: Error:  All 61 properties already declared
 ```
 
-Similarly, the Z-machine limits common properties to 63 [Z-machine].
-Glulx permits many more [Glulx].
+Similarly, the Z-machine limits user-declarable common properties to
+61 in v5+ (29 in v3) [Z-machine]. Glulx permits many more [Glulx].
 
 #### Type checking (Inform 6.36+)
 
-Starting with Inform 6.36, the compiler performs optional type checking
-when strict mode is enabled:
+Starting with Inform 6.36, the compiler performs additional type
+checking when strict mode is enabled. A type mismatch is reported via
+a warning of the form:
 
 ```
-"game.inf", line 85: Error: Expression has wrong type
+"game.inf", line 85: Warning:  In <context>, expected <type> but found <type> "name"
 ```
 
 This indicates that a value is being used in a context that expects a
@@ -189,13 +188,10 @@ required.
 
 | Message | Explanation |
 |---------|-------------|
-| `Expected 'something'` | The parser expected a specific token (keyword, bracket, operator) that was not found. |
-| `Duplicate definition of "name"` | A symbol with this name already exists in the same scope. |
-| `Property given twice in the same list` | An object definition provides the same property more than once. |
-| `Illegal object tree operation` | An attempt to `move` an object in a way that would create a cycle. |
-| `Routine contains too many local variables` | The Z-machine allows at most 15 locals per routine [Z-machine]; Glulx allows more [Glulx]. |
-| `String too long` | A quoted string exceeds the compiler's internal buffer size. Increase `$MAX_STATIC_STRINGS` if needed. |
-| `Include file not found` | An `Include` directive names a file that cannot be located on any search path. |
+| `Expected <thing> but found <thing>` | The parser expected a specific token (keyword, bracket, operator) that was not found. |
+| `Property given twice in the same declaration: "name"` | An object definition provides the same property more than once. |
+| `Too many local variables for a routine; max is N` | The Z-machine allows at most 15 locals per routine [Z-machine]; Glulx allows more [Glulx]. |
+| `"name" is a name already in use ...` | A symbol with this name already exists. |
 
 ---
 
@@ -227,7 +223,7 @@ warnings, but in general it is better to fix the underlying causes.
 #### Unreachable code
 
 ```
-"game.inf", line 90: Warning: Unreachable code
+"game.inf", line 90: Warning:  This statement can never be reached
 ```
 
 Code appears after a `return`, `rtrue`, `rfalse`, `jump`, or `quit`
@@ -243,7 +239,7 @@ statement where it can never be executed:
 #### Unused variables
 
 ```
-"game.inf", line 12: Warning: Variable 'temp' not used
+"game.inf", line 12: Warning:  Local variable "temp" declared but not used
 ```
 
 A local variable is declared but never referenced in the routine body.
@@ -259,7 +255,7 @@ Either remove the declaration or use the variable:
 #### Obsolete usage
 
 ```
-"game.inf", line 5: Warning: Obsolete usage: description
+"game.inf", line 5: Warning:  Obsolete usage: description
 ```
 
 The source uses a syntax form that is deprecated and may be removed in
@@ -269,17 +265,17 @@ replacement.
 #### Value overflow
 
 ```
-"game.inf", line 77: Warning: Byte value overflow
+"game.inf", line 77: Warning:  Entry in '->', 'string' or 'buffer' array not in range 0 to 255
 ```
 
 A value larger than 255 is being stored in a byte array (`->`) or
-a `byte` table, which will silently truncate to the low 8 bits:
+a `string`/`buffer` array, where each entry is a single byte:
 
 ```inform6
 Array counts -> 10;
 
 [ init;
-    counts->0 = 300;   ! Warning: 300 > 255, stored as 44
+    counts->0 = 300;   ! Warning: 300 > 255
 ];
 ```
 
@@ -287,10 +283,10 @@ Array counts -> 10;
 
 | Message | Explanation |
 |---------|-------------|
-| `Value assigned but never used` | A variable is written to but never subsequently read. |
-| `Assignment in condition` | An `=` appears where `==` was probably intended inside an `if` test. |
-| `This statement has no effect` | An expression is evaluated but its result is discarded and it has no side effects. |
-| `Object "name" has no parent` | An object is defined without being placed in the object tree, which may be intentional but is often a mistake. |
+| `'=' used as condition: '==' intended?` | An `=` appears where `==` was probably intended inside an `if` test. |
+| `Logical expression has no side-effects` | An expression statement evaluates a logical operator whose result is discarded. |
+| `Using '->' to access a --> or table array` | A byte-array operator is being used on a word-array, or vice versa. |
+| `Bare property name found. "self.prop" intended?` | A property name appears in an expression without an object qualifier. |
 
 ---
 
@@ -303,7 +299,7 @@ error output to jump to the relevant source line.
 ### 14.5.1 `-E0` — Archimedes / RISC OS Format
 
 ```
-"game.inf", line 42: Error: Expected ';'
+"game.inf", line 42: Error:  Expected ';' but found x
 ```
 
 The original error format. Includes the filename in double
@@ -315,7 +311,7 @@ format on Unix/Linux and most other platforms.
 ### 14.5.2 `-E1` — Microsoft Format
 
 ```
-game.inf(42): Error: Expected ';'
+game.inf(42): Error:  Expected ';' but found x
 ```
 
 Uses the `file(line)` format recognized by Microsoft Visual Studio and
@@ -324,7 +320,7 @@ many Windows-based editors. This is the default format on Windows.
 ### 14.5.3 `-E2` — Macintosh MPW Format
 
 ```
-File "game.inf"; Line 42	# Error: Expected ';'
+File "game.inf"; Line 42	# Error:  Expected ';' but found x
 ```
 
 Uses the Macintosh Programmer's Workshop format. This is the default
@@ -348,19 +344,17 @@ diagnosing obscure compilation problems.
 Trace N;
 ```
 
-where *N* is an integer trace level:
-
-| Level | Output |
-|-------|--------|
-| 0     | Tracing off (default) |
-| 1     | Basic trace: tokens, statements |
-| 2     | Detailed trace: expression trees, code generation |
-| 3+    | Verbose: internal data structures, memory allocation |
+where *N* is an integer trace level. `Trace N;` (with no keyword) is
+equivalent to `Trace assembly N;`: it sets the assembly trace level.
+Higher numbers produce more detailed output. `Trace 0;` (or `Trace
+assembly off;`) turns assembly tracing off.
 
 ### 14.6.2 Trace Aspects
 
 Specific aspects of compilation can be traced independently using the
-`Trace` directive with a keyword:
+`Trace` directive with a keyword. The recognised trace keywords are
+`assembly`, `expressions`, `tokens`, `dictionary`, `symbols`,
+`objects`, and `verbs`:
 
 ```inform6
 Trace assembly on;
@@ -369,8 +363,14 @@ Trace tokens on;
 Trace symbols on;
 ```
 
-Each aspect can be turned `on` or `off`, or given a numeric level. For
-the full list of trace options and their corresponding command-line
+The `assembly`, `expressions`, and `tokens` aspects each have an
+independent integer level and accept `on` (level 1), `off` (level 0),
+or a numeric level. The `dictionary`, `symbols`, `objects`, and
+`verbs` keywords instead cause the corresponding table to be displayed
+at the current point in compilation. The keywords `lines` and `linker`
+are reserved but not implemented (they produce a warning).
+
+For the full list of trace options and their corresponding command-line
 switches, see §12.6.
 
 ### 14.6.3 Example
@@ -385,7 +385,8 @@ Trace expressions off;
 
 The compiler will print the expression tree it builds for the
 assignment, showing operator precedence and operand types. This output
-goes to `stderr` and does not appear in the compiled game.
+is interleaved with the normal compiler output on `stdout` and does
+not appear in the compiled game.
 
 ---
 
@@ -397,8 +398,10 @@ output back to source-code locations, enabling source-level debugging.
 
 ### 14.7.1 File Format
 
-The debug file is named `gameinfo.dbg` (where `gameinfo` matches the
-story file's base name) and uses an XML-based format. It contains:
+The debug file is written to `gameinfo.dbg` by default (the name is a
+fixed default, not derived from the story-file name; it can be
+overridden by setting the `debugging_name` path with `+`). The file
+uses an XML-based format and contains:
 
 - **Source file table** — paths to all source files included during
   compilation, with checksums for change detection.
@@ -417,8 +420,9 @@ story file's base name) and uses an XML-based format. It contains:
 inform -k game.inf
 ```
 
-This produces both `game.z5` (or `game.ulx`) and `game.dbg`. The debug
-file can then be loaded by a debugger tool alongside the story file.
+This produces both the story file (e.g. `game.z5` or `game.ulx`) and a
+debug file at `gameinfo.dbg`. The debug file can then be loaded by a
+debugger tool alongside the story file.
 
 ### 14.7.3 Consumers
 
@@ -456,10 +460,10 @@ or in source:
 Constant INFIX;
 ```
 
-When `INFIX` is defined, the compiler automatically sets `DEBUG` as
-well. The Infix support code is drawn from `infix.h` in the standard
-library and adds approximately 1200 lines of library code to the
-compiled game.
+When `INFIX` is defined, the standard library's `parser.h` automatically
+defines `DEBUG` as well (so debugging-only library code is compiled in).
+The Infix support code is drawn from `infix.h` in the standard library
+and adds approximately 1200 lines of library code to the compiled game.
 
 ### 14.8.2 Infix Commands
 
@@ -503,8 +507,9 @@ Object "white house" (23) in "West of House"
 
 - Infix significantly increases the size of the compiled game. It is
   intended for development only, not for released games.
-- Infix is primarily designed for Z-machine games [Z-machine]. Glulx
-  support is partial [Glulx].
+- Infix is only available for Z-machine targets. If `-X` is given when
+  compiling for Glulx [Glulx], the compiler prints a notice and
+  silently disables the `-X` switch.
 - Because Infix compiles symbol-table information into the story file,
   it may push small games over Z-machine size limits.
 
@@ -613,15 +618,15 @@ The following code triggers a runtime error:
 
 ```inform6
 [ TestBug x;
-    x = nothing;
-    print (the) x;    ! Runtime error: printing nothing as object
+    x = 0;
+    print 10 / x;    ! Runtime error: division by zero
 ];
 ```
 
 At runtime:
 
 ```
-[** Programming error: tried to print (the) of nothing **]
+[** Programming error: divide by zero **]
 ```
 
 ### 14.9.6 Disabling Individual Checks

@@ -620,15 +620,18 @@ sets the original source filename and optionally line and character number.
 
 ```
 property-directive
-    ::= 'Property' [ 'long' ] [ 'additive' ] IDENTIFIER
+    ::= 'Property' { 'long' | 'additive' | 'individual' } IDENTIFIER
         [ 'alias' IDENTIFIER
-        | 'individual'
         | constant-expression ] ";"
 ```
 
-The `long` keyword is accepted for compatibility but is deprecated — all
-properties are now automatically long. The `individual` keyword explicitly
-creates an individual property.
+The keywords `long`, `additive`, and `individual` may appear in any order
+(and any number) before the property name. The `long` keyword is accepted
+for compatibility but is deprecated — all properties are now automatically
+long. The `individual` keyword explicitly creates an individual property
+(in which case no `alias` clause or default value is permitted, and
+`individual` is incompatible with `additive`). The `alias` clause is
+incompatible with `additive`.
 
 ### §K.3.23 Release
 
@@ -1010,7 +1013,7 @@ additive-expression
     ::= multiplicative-expression { ( "+" | "-" ) multiplicative-expression }
 
 multiplicative-expression
-    ::= array-expression { ( "*" | "/" | "%" | "&" | "|" ) array-expression }
+    ::= unary-expression { ( "*" | "/" | "%" | "&" | "|" ) unary-expression }
 
 unary-expression
     ::= [ "~" ] array-expression
@@ -1281,6 +1284,9 @@ while the condition is *false*).
 for-statement
     ::= 'for' "(" [ for-init ] ":" [ expression ] ":" [ expression ] ")"
         statement-or-block
+
+for-init
+    ::= expression
 ```
 
 **Important:** Inform uses `:` (colon) to separate the three parts of a

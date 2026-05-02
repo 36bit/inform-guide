@@ -245,12 +245,16 @@ part of ROM and is written immediately after the header:
 | Offset | Size | Content |
 |--------|------|---------|
 | 0x24 | 4 | The ASCII string `Info` (Inform identifier). |
-| 0x28 | 2 | Two zero bytes. |
-| 0x2A | 2 | Two more zero bytes (padding). |
-| 0x2C | 4 | Inform compiler version as ASCII digits (e.g., `0636` for 6.36). |
-| 0x30 | 4 | Glulx back-end version (same format as compiler version). |
+| 0x28 | 4 | Memory-layout identifier continuation: the four bytes `00 01 00 00`. |
+| 0x2C | 4 | Inform compiler version as four ASCII characters in the form `M.NN` (e.g., `6.44`). |
+| 0x30 | 4 | Glulx back-end version, same `M.NN` ASCII format as the compiler version. |
 | 0x34 | 2 | Game release number. |
 | 0x36 | 6 | Game serial number (6 ASCII characters, typically a date `YYMMDD`). |
+
+Together with the 36-byte Glulx header, the leading eight bytes of the
+static ROM block (`Info` followed by `00 01 00 00`) form a conventional
+memory-layout identifier that interpreters can use to recognise an
+Inform-compiled Glulx file.
 
 ### 30.4.2 Version Compatibility
 
@@ -273,19 +277,25 @@ directly.
 
 Each Glulx object is represented by the `objecttg` structure.
 In the compiled output, each object
-occupies a contiguous block of memory with the following layout:
+occupies a contiguous block of memory with the following byte layout:
 
-| Offset (words) | Field | Size | Description |
+| Byte offset | Size | Field | Description |
 |---|---|---|---|
-| 0 | Attributes | `NUM_ATTR_BYTES` bytes | Bit array of attributes. |
-| `NUM_ATTR_BYTES/4` | Type/chain | 4 bytes | Internal type byte and chain pointer. |
-| 1 + `NUM_ATTR_BYTES/4` | Short name | 4 bytes | Address of the object's short name string. |
-| 2 + `NUM_ATTR_BYTES/4` | Property table | 4 bytes | Address of the object's property table. |
-| 3 + `NUM_ATTR_BYTES/4` | Parent | 4 bytes | Object number of the parent, or 0. |
-| 4 + `NUM_ATTR_BYTES/4` | Sibling | 4 bytes | Object number of the next sibling, or 0. |
-| 5 + `NUM_ATTR_BYTES/4` | Child | 4 bytes | Object number of the first child, or 0. |
+| 0 | 1 byte | Type byte | Always `0x70` (the metaclass tag for "object"). |
+| 1 | `NUM_ATTR_BYTES` bytes | Attributes | Bit array of attributes. |
+| 1 + `NUM_ATTR_BYTES` | 4 bytes | Chain (next) | Address of the next object in the linked list, or 0 at the end. |
+| 5 + `NUM_ATTR_BYTES` | 4 bytes | Short name | Address of the object's short name string. |
+| 9 + `NUM_ATTR_BYTES` | 4 bytes | Property table | Address of the object's property table. |
+| 13 + `NUM_ATTR_BYTES` | 4 bytes | Parent | Address of the parent object record, or 0. |
+| 17 + `NUM_ATTR_BYTES` | 4 bytes | Sibling | Address of the next sibling object record, or 0. |
+| 21 + `NUM_ATTR_BYTES` | 4 bytes | Child | Address of the first child object record, or 0. |
+| 25 + `NUM_ATTR_BYTES` | `GLULX_OBJECT_EXT_BYTES` | Extension | Reserved padding (zero by default). |
 
-The word offsets of these fields are defined by the `GOBJFIELD_*` macros:
+The interpreter accesses the chain, name, property-table and tree-pointer
+fields by *word* offset rather than byte offset. The word offsets are
+defined by the `GOBJFIELD_*` macros (`NUM_ATTR_BYTES` must be congruent
+to 3 modulo 4, or `GLULX_OBJECT_EXT_BYTES` must be set to compensate, so
+that the fields fall on 4-byte boundaries):
 
 ```c
 #define GOBJFIELD_CHAIN()    (1+((NUM_ATTR_BYTES)/4))
@@ -296,9 +306,8 @@ The word offsets of these fields are defined by the `GOBJFIELD_*` macros:
 #define GOBJFIELD_CHILD()    (6+((NUM_ATTR_BYTES)/4))
 ```
 
-The total size of each object in bytes is `OBJECT_BYTE_LENGTH`, which
-the compiler calculates based on `NUM_ATTR_BYTES` and the number of
-word-sized fields.
+The total size of each object in bytes is `OBJECT_BYTE_LENGTH`, computed
+as `1 + NUM_ATTR_BYTES + 6*4 + GLULX_OBJECT_EXT_BYTES`.
 
 ### 30.5.2 Attributes
 

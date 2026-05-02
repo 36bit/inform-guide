@@ -375,11 +375,13 @@ Requirements and limitations:
 - Lines should be kept short — the box cannot exceed the screen width.
 - An empty string `""` produces a blank line within the box.
 
-**[Glulx]** The `box` statement is accepted by the compiler but may not
-produce visible output. Glulx has no direct equivalent of the Z-machine
-upper window model. Interpreter support varies; some Glk libraries
-render the box in a separate window, others ignore it. Portable code
-should not rely on `box` under Glulx.
+**[Glulx]** The `box` statement compiles successfully under Glulx. The
+compiler-supplied `Box__Routine` veneer simply switches to the Glk
+preformatted style, prints the lines in order, and switches back; there
+is no centered, bordered upper-window rendering as on the Z-machine.
+Visual presentation depends entirely on how the interpreter's style
+configuration treats preformatted text, so the appearance is much less
+predictable than under the Z-machine model.
 
 ## 23.7 Text Styles
 
@@ -471,9 +473,15 @@ player.narrative_tense = PAST_TENSE;
 
 ### The `nameless` Property
 
-When `player.nameless` is set to `true`, the library uses alternative
-phrasing for self-references, avoiding the player character's name in
-favor of more impersonal constructions. The default is `false`.
+The `nameless` property on the player object controls how the library
+refers to a former player body after the player switches into a new
+body. It has effect only in first- and second-person narrative voices;
+in third person it is ignored. The default value (set by the library on
+`selfobj`) is `true`: when the player moves into a new object, the
+former body's short name is replaced by phrasing such as "your former
+self" (or "my former self" in first person). Set
+`player.nameless = false` and assign your own `name` and `short_name`
+properties to keep a custom identity for the abandoned body.
 
 ### How Library Messages Adapt
 

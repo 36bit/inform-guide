@@ -597,7 +597,7 @@ print "This is also a long \
 
 If `\` appears in a string but is not followed by whitespace and a
 newline, the compiler reports an error: "empty rest of line after '\\'
-in string."
+in string".
 
 ### 1.6.4 String Length Limits
 
@@ -624,7 +624,7 @@ quotes is a character constant (producing a number), while multiple
 characters form a dictionary word (see §1.8).
 
 Empty single quotes (`''`) are an error: "No text between quotation
-marks."
+marks ''".
 
 ## 1.8 Dictionary Word Literals
 
@@ -869,8 +869,8 @@ value `HASHHASH_SEP`, and the identifier text is included in the token
 text. The parser then resolves the action name to its numeric constant
 value.
 
-The identifier following `##` must begin with a letter — whitespace
-between `##` and the name is not permitted.
+The identifier following `##` must begin with a letter or underscore —
+whitespace between `##` and the name is not permitted.
 
 ### 1.10.3 System Constant Access: `#a$`, `#g$`, `#n$`, `#r$`, `#w$`
 
