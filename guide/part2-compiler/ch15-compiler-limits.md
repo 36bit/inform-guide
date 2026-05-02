@@ -68,7 +68,7 @@ Standards Document and cannot be overridden by compiler settings.
 | Version | Max file size | Max objects | Max attributes | Max properties | Max globals |
 | ------- | ------------- | ----------- | -------------- | -------------- | ----------- |
 | **V3**  | 128 KB        | 255         | 32             | 31             | 240         |
-| **V4**  | 256 KB        | 255         | 48             | 63             | 240         |
+| **V4**  | 256 KB        | 65,535      | 48             | 63             | 240         |
 | **V5**  | 256 KB        | 65,535      | 48             | 63             | 240         |
 | **V6**  | 512 KB        | 65,535      | 48             | 63             | 240         |
 | **V7**  | 512 KB        | 65,535      | 48             | 63             | 240         |
@@ -190,7 +190,7 @@ current values, run `inform $LIST`.
 
 | Setting | Z-code default | Glulx default | Description |
 | ------- | -------------- | ------------- | ----------- |
-| `$GRAMMAR_VERSION` | 2 | 2 | Grammar table format. Version 2 is the standard format. |
+| `$GRAMMAR_VERSION` | 1 | 2 | Grammar table format. Version 2 is the standard format used by modern libraries; version 1 is the older Infocom-style format. |
 | `$INDIV_PROP_START` | 64 (fixed) | 256 | First individual property number. Properties below this are common; those at or above are individual. |
 | `$NUM_ATTR_BYTES` | 6 (fixed) | 7 | Bytes used for attribute flags. Each byte provides 8 attributes (Z-code: 48; Glulx default: 56). |
 
