@@ -212,7 +212,7 @@ treats each character in source input.
 **[Z-machine]**
 
 The Z-machine encodes text using three alphabets of 26 characters each. The
-The default alphabets are:
+default alphabets are:
 
 ```inform6
 ! Default Z-machine alphabets (internal compiler data)

@@ -349,35 +349,49 @@ diagnosing obscure compilation problems.
 ### 14.6.1 Basic Usage
 
 ```inform6
-Trace N;
+Trace;        ! same as: Trace assembly 1
+Trace N;      ! Trace assembly N
 ```
 
-where *N* is an integer trace level:
-
-| Level | Output |
-|-------|--------|
-| 0     | Tracing off (default) |
-| 1     | Basic trace: tokens, statements |
-| 2     | Detailed trace: expression trees, code generation |
-| 3+    | Verbose: internal data structures, memory allocation |
+A bare `Trace` (or `Trace N` with a number) sets the assembly trace
+level. Otherwise the directive takes a keyword naming the aspect to
+trace.
 
 ### 14.6.2 Trace Aspects
 
-Specific aspects of compilation can be traced independently using the
-`Trace` directive with a keyword:
+The keywords accepted by `Trace` are:
 
-```inform6
-Trace assembly on;
-Trace expressions on;
-Trace tokens on;
-Trace symbols on;
-```
+| Keyword       | Behavior |
+|---------------|----------|
+| `assembly`    | Set ongoing trace level for assembly output (`on`/`off`/N). Equivalent to the `-a` command-line switch. |
+| `expressions` | Set ongoing trace level for expression-tree output (`on`/`off`/N). |
+| `tokens`      | Set ongoing trace level for lexer-token output (`on`/`off`/N). |
+| `dictionary`  | Immediately display the current dictionary table. |
+| `symbols`     | Immediately display the current symbol table. |
+| `objects`     | Immediately display the current object table. |
+| `verbs`       | Immediately display the current verb/grammar table. |
+| `lines`       | Reserved keyword; not implemented. |
+| `linker`      | Reserved keyword; no longer implemented. |
 
-Each aspect can be turned `on` or `off`, or given a numeric level. For
-the full list of trace options and their corresponding command-line
-switches, see §12.6.
+The first four "table" keywords (`dictionary`, `symbols`, `objects`,
+`verbs`) print a one-shot dump at the point of the directive; they do
+not affect ongoing tracing. The three "level" keywords (`assembly`,
+`expressions`, `tokens`) take an optional `on`, `off`, or numeric level
+following the keyword (default 1).
 
-### 14.6.3 Example
+### 14.6.3 Command-Line Equivalents
+
+Ongoing trace settings can also be selected at the command line:
+
+| Switch | Variable | Effect |
+|--------|----------|--------|
+| `-a`, `-a1`..`-a4` | `asm_trace_setting` | Initial value of `asm_trace_level`. |
+
+Token and expression initial settings are configurable through the
+`$!TOKENS` and `$!EXPR` ICL settings rather than dedicated short
+switches.
+
+### 14.6.4 Example
 
 To diagnose how the compiler parses a particular expression:
 
@@ -389,7 +403,7 @@ Trace expressions off;
 
 The compiler will print the expression tree it builds for the
 assignment, showing operator precedence and operand types. This output
-goes to `stderr` and does not appear in the compiled game.
+goes to `stdout` and does not appear in the compiled game.
 
 ---
 
