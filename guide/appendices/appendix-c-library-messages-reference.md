@@ -459,7 +459,7 @@ label.
 
 | # | Default Text | Parameters | Called From | Notes |
 |--:|-------------|-----------|------------|-------|
-| 1 | "[Actor] need[s] to be holding [x1] before putting it into something." | `x1` = noun | — | Tense-aware |
+| 1 | "[Actor] need[s] to be holding [x1] before [actor] can put it into something else." | `x1` = noun | — | Tense-aware |
 | 2 | "[x1] can't contain things." | `x1` = second (or noun in parser) | — | |
 | 3 | "[x1] is closed." | `x1` = second | — | |
 | 4 | "[Actor] will need to take [x1] off first." | `x1` = noun | — | For worn items; tense-aware |
@@ -843,7 +843,7 @@ case label.
 
 | # | Default Text | Parameters | Called From | Notes |
 |--:|-------------|-----------|------------|-------|
-| 1 | "[Actor] need[s] to be holding [x1] before putting it on something." | `x1` = noun | — | Tense-aware |
+| 1 | "[Actor] need[s] to be holding [x1] before [actor] can put it on top of something else." | `x1` = noun | — | Tense-aware |
 | 2 | "[Actor] can't put something on top of itself." | — | — | Tense-aware |
 | 3 | "Putting things on [x1] would achieve nothing." | `x1` = second | — | Not a supporter; tense-aware |
 | 4 | "[Actor] lack[s] the dexterity." | — | — | When noun is actor; tense-aware |
