@@ -82,30 +82,38 @@ debugging support:
 
 | Number | Name                | Condition         | Description                                       |
 |-------:|---------------------|-------------------|----------------------------------------------------|
-|     31 | `infix__watching`   | `#Ifdef INFIX`    | Marks an object as being watched by the Infix debugger |
+|      0 | `infix__watching`   | `#Ifdef INFIX`    | Marks an object as being watched by the Infix debugger |
 
-When `INFIX` is not defined, attribute 31 is available for user-defined
-attributes. When `INFIX` is defined, the compiler pre-creates the
-`infix__watching` symbol as attribute 0 before processing any source files,
-and the library conditionally declares it to
-avoid a duplicate definition.
+When `INFIX` is not defined, the library attributes occupy numbers 0–30 and
+attribute 31 is the first one available for user-defined attributes. When
+`INFIX` is defined, the compiler pre-creates the `infix__watching` symbol
+as attribute 0 before processing any source files; the library's standard
+attributes are then assigned numbers 1–31, and user-defined attributes
+begin at 32.
 
 > **Note:** The compiler pre-creates `infix__watching` at number 0,
-> but since `no_attributes` starts at 1 when `INFIX` is set,
-> the library's `Attribute` declarations begin
-> numbering from 1. The library's conditional `Attribute infix__watching`
-> block in `linklpa.h` is guarded by `#Ifndef infix__watching` to avoid
-> re-declaring a symbol the compiler already created.
+> and `no_attributes` is initialized to 1 when `INFIX` is set, so
+> the library's `Attribute` declarations begin numbering from 1
+> (`animate` at 1, `pluralname` at 31). The library's conditional
+> `Attribute infix__watching` block in `linklpa.h` is guarded by
+> `#Ifndef infix__watching` to avoid re-declaring a symbol the
+> compiler already created.
 
 ### §B.1.3 VM Attribute Capacity
 
 The number of attributes an object can hold is determined by the target
 virtual machine:
 
-**[Z-machine]** Each object has 6 attribute bytes, supporting 48 attributes
-(numbered 0–47). The library uses attributes 0–30 (or 0–31 with Infix),
-leaving 17–18 attributes available for game-specific use. The value 6 is
-fixed and cannot be changed.
+**[Z-machine v3]** Each object has 4 attribute bytes, supporting 32
+attributes (numbered 0–31). The library's 31 attributes (`animate` …
+`pluralname`) already occupy 0–30, leaving only attribute 31 available
+for game-specific use; with Infix enabled there is no headroom at all.
+
+**[Z-machine v4+]** Each object has 6 attribute bytes, supporting 48
+attributes (numbered 0–47). The library uses attributes 0–30 (or 1–31
+with Infix, with `infix__watching` at 0), leaving 16–17 attributes
+available for game-specific use. The 6-byte size is fixed and cannot be
+changed.
 
 **[Glulx]** Each object has `NUM_ATTR_BYTES` attribute bytes, defaulting to
 7 (56 attributes, numbered 0–55). This can be increased via the compiler
