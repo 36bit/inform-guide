@@ -158,7 +158,7 @@ of use.
 "game.inf", line 200: Error:  All 48 attributes already declared
 ```
 
-The Z-machine allows a maximum of 48 attributes in version 5+ (32 in
+The Z-machine allows a maximum of 48 attributes in v4 and later (32 in
 v3) [Z-machine] while Glulx raises this to a configurable higher limit
 [Glulx]. If you hit this limit on the Z-machine, consider combining
 related attributes or switching to Glulx with the `-G` switch.
@@ -168,7 +168,7 @@ related attributes or switching to Glulx with the `-G` switch.
 ```
 
 Similarly, the Z-machine limits user-declarable common properties to
-61 in v5+ (29 in v3) [Z-machine]. Glulx permits many more [Glulx].
+61 in v4 and later (29 in v3) [Z-machine]. Glulx permits many more [Glulx].
 
 #### Type checking (Inform 6.36+)
 
