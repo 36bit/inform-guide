@@ -32,7 +32,7 @@ tense system introduced in library 6.12.
 ## 33.1 The english.h Language Definition File
 
 The file `english.h` (1583 lines in library 6.12.8) is automatically
-included by `parserm.h` and provides every piece of English-specific
+included by `parser.h` and provides every piece of English-specific
 behavior that the library requires. It is organised into several parts:
 pronoun and descriptor tables, printing routines, text constants, pronoun
 helper functions, narrative voice conjugation helpers, and the main library
@@ -667,7 +667,7 @@ Zcharacter '@{00E9}';
 This attempts to place
 the given Unicode character into an unused position in alphabet A2. The
 compiler scans A2 positions left to right, skipping positions 12, 13, and
-19 (which correspond to `.`, `"`, and `~` — characters considered
+19 (which correspond to `.`, `,`, and `~` — characters considered
 essential). It replaces the first position whose character has not yet been
 used in any compiled text. If no positions are available, the operation
 fails silently.

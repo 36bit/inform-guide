@@ -1016,7 +1016,7 @@ This routine handles all the validation and error reporting:
 The undo system communicates with the player through the `Miscellany`
 library message set. These can be customized
 through the standard library message interception mechanism
-(see §32.4):
+(see §32.7):
 
 | Message Number | Default Text | When Used |
 |----------------|-------------|-----------|
