@@ -229,8 +229,8 @@ object tree is illuminated. Starting from `obj`, it checks:
    containment relationship:
    - If `obj` is a **container**, light passes through only if `obj`
      is `open` or `transparent`.
-   - Otherwise (including supporters, enterable objects, and
-     transparent objects), light passes through.
+   - Otherwise (`obj` is not a container), light passes through only
+     if `obj` is `enterable`, `transparent`, or a `supporter`.
 4. If light can pass through, recurse to `parent(obj)`.
 
 ```inform6

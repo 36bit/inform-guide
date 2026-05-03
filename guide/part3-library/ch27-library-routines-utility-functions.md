@@ -711,9 +711,82 @@ otherwise, they hold hours and minutes.
 
 **Defined in:** `parser.h`
 
-## 27.10 Action Invocation
+### 27.9.3 `ScoreArrival()`
 
-### 27.10.1 Calling Actions from Code
+Awards points the first time the player visits a room. Called
+automatically by `PlayerTo` (with `flag = 1`) and by the standard
+movement-handling code.
+
+**Defined in:** `verblib.h`
+
+**Implementation:**
+
+```inform6
+[ ScoreArrival;
+    if (location hasnt visited) {
+        give location visited;
+        if (location has scored) {
+            score = score + ROOM_SCORE;
+            places_score = places_score + ROOM_SCORE;
+        }
+    }
+];
+```
+
+**Notes:**
+- The `visited` attribute is set on the room the first time it is
+  scored, so subsequent visits do not re-award points.
+- Rooms with the `scored` attribute add `ROOM_SCORE` to both `score`
+  and `places_score`. Rooms without `scored` are still marked as
+  `visited` but do not award points.
+
+## 27.10 Player Identity
+
+### 27.10.1 `ChangePlayer(obj, flag)`
+
+Switches the active player to a different object. After the call,
+`player` refers to `obj`, and the parser, scope, and display logic
+treat `obj` as the protagonist.
+
+**Defined in:** `parser.h`
+
+**Arguments:**
+
+- `obj` — the object to make the player. If `obj` is `nothing`, the
+  default `selfobj` is used.
+- `flag` — stored in the global `print_player_flag`, used by the
+  library to control whether the new player's name is announced.
+
+**Effects:**
+
+1. The previous player loses the temporarily-set `transparent` and
+   `concealed` attributes that flagged it as the current player.
+2. The new player gains `transparent`, `concealed`, and `animate`.
+3. `location` and `real_location` are recomputed from the new player's
+   position by walking up the object tree to the outermost room.
+4. `MoveFloatingObjects()` is called to reposition floating objects
+   for the new player's location.
+5. Lighting is recalculated; `location` is set to `thedark` if the new
+   position offers no light.
+6. If the previous `actor` was the previous player, `actor` is updated
+   to the new player.
+7. If `parent(obj) == 0` after the switch, runtime error 10 is raised.
+
+**Usage:**
+
+```inform6
+ChangePlayer(robot, 0);
+```
+
+**Notes:**
+- The new player object must be inside a room (somewhere with a
+  non-zero parent chain ending at a room) before the call.
+- `ChangePlayer` is the standard way to support multi-character games
+  or temporary possession effects.
+
+## 27.11 Action Invocation
+
+### 27.11.1 Calling Actions from Code
 
 The `<Action>` and `<<Action>>` syntax allows game code to invoke
 actions programmatically (see §20 for a complete discussion):
@@ -727,9 +800,9 @@ actions programmatically (see §20 for a complete discussion):
 These are compile-time constructs handled by the compiler, not library
 routines.
 
-## 27.11 Miscellaneous Utilities
+## 27.12 Miscellaneous Utilities
 
-### 27.11.1 `Random(n)` / `random(a, b, c, ...)`
+### 27.12.1 `Random(n)` / `random(a, b, c, ...)`
 
 Though not a library routine (it is a language built-in), `random` is
 used extensively:
@@ -737,12 +810,12 @@ used extensively:
 - `random(n)` returns a random integer from 1 to `n`.
 - `random(a, b, c)` returns one of the listed values at random.
 
-### 27.11.2 `metaclass(obj)`
+### 27.12.2 `metaclass(obj)`
 
 Returns the metaclass of a value — `Object`, `Class`, `Routine`,
 `String`, or `nothing`. See §7.9 for details.
 
-## 27.12 Summary Table
+## 27.13 Summary Table
 
 | Routine                            | Purpose                         | §     |
 |----------------------------------- |-------------------------------- |------ |
@@ -773,3 +846,5 @@ Returns the metaclass of a value — `Object`, `Class`, `Routine`,
 | `DrawStatusLine()`                 | Redraw status line              | 27.8  |
 | `SetTime(time, rate)`              | Initialise game clock           | 27.9  |
 | `DisplayStatus()`                  | Update status variables         | 27.9  |
+| `ScoreArrival()`                   | Award room-visit points         | 27.9  |
+| `ChangePlayer(obj, flag)`          | Switch the active player        | 27.10 |
