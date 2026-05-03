@@ -74,6 +74,14 @@ Standards Document and cannot be overridden by compiler settings.
 | **V7**  | 512 KB        | 65,535      | 48             | 63             | 240         |
 | **V8**  | 512 KB        | 65,535      | 48             | 63             | 240         |
 
+The "max properties" column reflects the Z-Machine architectural limit
+(property numbers 1–31 in V3, 1–63 in V4+). The compiler reserves a
+small number of property slots for internal use (`name`, class
+inheritance, individual property table), so the practical limit on
+user-declarable common properties is **29** in V3 and **61** in V4+.
+Exceeding this limit produces the error `All 29 properties already
+declared` (or `All 61 …`).
+
 **V3** is the original Infocom format. Its 128 KB file size limit, 255
 maximum objects, and 32 attributes make it unsuitable for large modern
 games. **V5** is the default target and the best choice for most
@@ -116,6 +124,10 @@ Several additional limits apply across all Z-machine versions:
 
 - **Dynamic strings:** Z-code supports a maximum of 96 dynamic string
   variables (`@00` through `@95`).
+
+- **Property values per property:** A single property may hold at most
+  32,768 values (entries) on either platform. This is a compiler-imposed
+  limit; in practice it is never reached in normal use.
 
 ---
 

@@ -220,9 +220,9 @@ The following library routines are frequently replaced by games:
 
 | Routine | Defined In | Purpose |
 |---------|-----------|---------|
-| `Banner` | `verblibm.h` | Prints the game banner at startup |
-| `DrawStatusLine` | `verblibm.h` | Draws the status line (Z-machine) |
-| `PrintRank` | `verblibm.h` | Prints the player's rank based on score |
+| `Banner` | `verblib.h` | Prints the game banner at startup |
+| `DrawStatusLine` | `parser.h` | Draws the status line (Z-machine) |
+| `PrintRank` | `parser.h` | Prints the player's rank based on score |
 | `BeforeParsing` | Stub in `grammar.h` | Hook called before each input is parsed |
 | `Initialise` | Game-defined (not in library) | Game setup (typically defined by the game) |
 

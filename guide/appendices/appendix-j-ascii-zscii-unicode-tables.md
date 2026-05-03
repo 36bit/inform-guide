@@ -1309,10 +1309,10 @@ Written when `alphabet_modified` is true:
 **[Z-machine]**
 
 The standard library provides `UpperCase` and `LowerCase` routines
-(`english.h` lines 764–786) for ZSCII case conversion matching the default
+(in `english.h`) for ZSCII case conversion matching the default
 Latin-1 table.
 
-**`UpperCase` mapping** (from `english.h` lines 776–784):
+**`UpperCase` mapping** (from `english.h`):
 
 | Input ZSCII | Offset | Output ZSCII | Characters |
 |-------------|--------|--------------|------------|
@@ -1341,7 +1341,7 @@ On Glulx, case conversion delegates to the Glk API:
 - `glk_char_to_lower(c)` — convert to lowercase
 - `glk_char_to_upper(c)` — convert to uppercase
 
-See `english.h` lines 790–791.
+See `english.h` for the implementation.
 
 ---
 

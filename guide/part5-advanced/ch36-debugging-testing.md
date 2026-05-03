@@ -403,12 +403,14 @@ action processing pipeline.
 Verb meta 'routines' 'messages'
     *                               -> RoutinesOn
     * 'on'                          -> RoutinesOn
+    * 'verbose'                     -> RoutinesVerbose
     * 'off'                         -> RoutinesOff;
 ```
 
 **Implementation:** `RoutinesOnSub` sets the
 `DEBUG_MESSAGES` bit (`$0001`) in `debug_flag`; `RoutinesOffSub` clears
-it.
+it. `RoutinesVerboseSub` additionally sets `DEBUG_VERBOSE` (`$0080`)
+to produce more detailed output.
 
 **Effect:** When active, the library prints the name of every routine
 as it is entered and exited:

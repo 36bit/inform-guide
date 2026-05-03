@@ -94,9 +94,10 @@ that previously needed to pack data into arrays to conserve global slots.
 ### 3.1.4 Global Variable Storage
 
 Internally, the compiler indexes every variable—local and global—with a
-single numbering scheme. Local variables occupy indices 0 through
-`MAX_LOCAL_VARIABLES − 1`, and globals occupy indices starting at
-`MAX_LOCAL_VARIABLES`. On the Z-machine, `MAX_LOCAL_VARIABLES` is 16, and
+single numbering scheme. The stack pointer (`sp`) occupies index 0, local
+variables occupy indices 1 through `MAX_LOCAL_VARIABLES − 1`, and globals
+occupy indices starting at `MAX_LOCAL_VARIABLES`. On the Z-machine,
+`MAX_LOCAL_VARIABLES` is 16, and
 because the seven compiler-reserved globals sit at the top of the global
 area in the traditional layout, the first user global is index 16. On
 Glulx, `MAX_LOCAL_VARIABLES` is 119 and the compiler reserves eleven

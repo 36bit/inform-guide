@@ -459,23 +459,22 @@ The following table lists the most commonly tuned memory settings:
 | `HASH_TAB_SIZE` | 512 | 512 | Size of the symbol hash table |
 | `MAX_DYNAMIC_STRINGS` | 32 | 100 | Maximum number of `@NN` dynamic strings |
 | `MAX_STACK_SIZE` | N/A | 4096 | Glulx interpreter stack size (in bytes) |
-| `MAX_LOCAL_VARIABLES` | 16 | 119 | Maximum local variables per routine |
 | `MEMORY_MAP_EXTENSION` | N/A | 0 | Extra zero-bytes appended to Glulx story file |
 | `DICT_WORD_SIZE` | 6 | 9 | Dictionary word resolution length (in characters) |
 
 ### 35.4.3 Local Variable Limits
 
-**[Z-machine]** The Z-machine architecture imposes a hard limit of 16
+**[Z-machine]** The Z-machine architecture imposes a hard limit of 15
 local variables per routine. This is encoded in the routine header as a
-4-bit field, allowing values 0–15. In practice, one local is reserved for
-the implicit result of certain operations, leaving 15 usable locals. The
-`$MAX_LOCAL_VARIABLES` setting cannot exceed 16 for Z-code targets.
+single byte whose value must lie in the range 0–15. This limit is
+fixed by the Z-machine specification and cannot be raised by any
+compiler setting.
 
 **[Glulx]** Glulx supports a much larger number of local variables per
-routine. The `$MAX_LOCAL_VARIABLES` setting defaults to 119 and can be
-increased further. Each local variable occupies 4 bytes in the routine's
-stack frame, so very large numbers of locals increase stack consumption.
-The `$MAX_STACK_SIZE` setting may need to be increased correspondingly.
+routine — the compiler currently caps this at 118. Each local variable
+occupies 4 bytes in the routine's stack frame, so routines with many
+locals increase stack consumption. The `$MAX_STACK_SIZE` setting may
+need to be increased correspondingly.
 
 ### 35.4.4 When to Adjust Settings
 
@@ -489,7 +488,7 @@ for the game being compiled. Common situations include:
 - **"Stack size exceeded"**: **[Glulx]** increase `$MAX_STACK_SIZE` for
   games with deep recursion or many simultaneous local variables.
 - **"Too many local variables"**: refactor the routine to use fewer
-  locals, or (on Glulx) increase `$MAX_LOCAL_VARIABLES`.
+  locals. The Z-machine limit (15) is fixed by the specification.
 
 In general, the defaults are adequate for most games. Large or complex
 projects — particularly those with extensive use of library extensions,

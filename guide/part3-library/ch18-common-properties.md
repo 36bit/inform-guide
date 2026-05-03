@@ -538,8 +538,10 @@ Object  iron_chest "iron chest" cellar
   has   container openable lockable locked;
 ```
 
-If `with_key` is `nothing` (or not provided), the `Unlock` action will
-accept any object as a key.
+If `with_key` is `nothing` (the default when not provided), the `Lock`
+and `Unlock` actions always fail — the library treats a missing `with_key`
+as "no key fits", so the player cannot lock or unlock the object at all
+without a custom `before` rule.
 
 ## 18.6 Scope and Parsing Properties
 

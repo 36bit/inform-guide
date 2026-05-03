@@ -850,13 +850,28 @@ The `quit` statement terminates the program immediately:
 ### 5.22.2 `save` and `restore`
 
 The `save` statement saves the entire game state to a file. The `restore`
-statement loads a previously saved state. Both take a label to jump to on
-success (on Z-machine versions below 5) or return a value indicating
-success or failure (on version 5+):
+statement loads a previously saved state. The statement form of each
+takes a label to jump to on success — branching semantics inherited from
+the early Z-machine versions:
+
+```inform6
+[ TrySave;
+    save Saved;
+    print "Save failed.^";
+    rfalse;
+    .Saved;
+    print "Saved (or just restored).^";
+    rtrue;
+];
+```
+
+This statement form works on every Z-machine version. On Version 5+ the
+underlying opcodes also produce a result value, but to capture it you
+must drop down to the assembly form (`@save`, `@restore`):
 
 ```inform6
 [ DoSave flag;
-    @save -> flag;       ! Z-machine V5+: result in flag
+    @save -> flag;       ! Z-machine V5+: result stored in flag
     if (flag == 0) {
         print "Save failed.^";
         rfalse;
@@ -866,10 +881,8 @@ success or failure (on version 5+):
 ];
 ```
 
-On Z-machine Version 5+, `save` and `restore` are typically used via their
-assembly-language forms (`@save`, `@restore`) to capture the return value.
-The statement forms (`save label;`, `restore label;`) use branching
-semantics from earlier Z-machine versions.
+For most game code the high-level `save label;` / `restore label;` form is
+sufficient.
 
 ## 5.23 `string`
 

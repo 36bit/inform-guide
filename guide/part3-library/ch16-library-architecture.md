@@ -56,14 +56,16 @@ Each `Include` directive pulls in one of the library's main header files:
 - **Parser** (`parser.h`) — the parser engine, the main game loop, scope
   handling, and the `InformLibrary` and `InformParser` objects. This is the
   largest library file (over 7,000 lines) and forms the backbone of the
-  runtime.
+  runtime. It also pulls in `linklpa.h` (the common-property and -attribute
+  declarations) and the active language definition file (such as
+  `english.h`).
 - **VerbLib** (`verblib.h`) — all standard action routines (such as
   `TakeSub`, `DropSub`, `LookSub`), as well as utility routines like
   `PlayerTo`, `WriteListFrom`, and `YesOrNo`.
 - **Grammar** (`grammar.h`) — all `Verb` and `Extend` directives that
-  define the player's vocabulary. This file also includes `english.h` (or
-  the appropriate language definition file) for language-specific grammar
-  and messages.
+  define the player's vocabulary. When the game is compiled with Infix
+  debugging support, `grammar.h` also includes `infix.h` to add the Infix
+  debugger commands.
 
 The game's own source code is placed **between** these includes:
 
@@ -265,8 +267,10 @@ library normalizes several reversed or compound grammar forms:
 - **`##GiveR` → `##Give`** and **`##ShowR` → `##Show`**: The grammar
   "give fred biscuit" parses with reversed objects; the library swaps
   `noun` and `second` so action routines always see "give biscuit to fred".
-- **`##Tell` → `##Ask`**: "tell P about X" is converted to "ask P about X"
-  when the addressee is the player.
+- **`##Tell` → `##Ask`** (with role swap): when an NPC is addressed with
+  "P, tell me about X" — that is, the actor is an NPC and the noun is the
+  player — the library swaps roles and rewrites it as the player asking
+  the NPC: "ask P about X".
 - **`##AskFor` → `##Give`**: "ask P for X" becomes an order "P, give X to
   me".
 
@@ -447,7 +451,7 @@ than in source code.
 
 | Constant              | Effect                                          |
 |-----------------------|-------------------------------------------------|
-| `AMUSING_PROVIDED`    | Offer "AMUSING" option at victory; defaults to 1 (enabled). Set to 0 to disable. |
+| `AMUSING_PROVIDED`    | If defined (typically as `Constant AMUSING_PROVIDED;`, giving it the value 0), offers the "AMUSING" option at victory and calls the game's `Amusing` routine. The library's default value is 1, which **disables** the option; defining the constant (value 0) enables it. |
 | `NO_PLACES`           | If defined, disables the `PLACES` and `OBJECTS` meta-verbs |
 | `MANUAL_PRONOUNS`     | If defined, prevents the library from automatically updating pronoun references (`it`, `him`, `her`) |
 | `NOINITIAL_LOOK`      | If defined, suppresses the initial room description at game start |
@@ -498,7 +502,7 @@ Object  InformLibrary "(Inform Library)"
 The parser engine. Its `parse_input` method reads a line of player input,
 tokenizes it, matches it against the grammar, resolves ambiguity, and
 writes the results into the `inputobjs` array. The parser is covered in
-detail in Chapter 19.
+detail in Chapter 21.
 
 ### 16.8.3 `Compass`
 

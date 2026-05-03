@@ -204,16 +204,16 @@ be successfully parsed.
 | Constant               | Value | Meaning                              |
 |----------------------- |------ |------------------------------------- |
 | `STUCK_PE`             | 1     | Input not recognized at all          |
-| `UPTS_PE`              | 2     | Verb recognized, but rest is gibberish |
-| `ONLY_PE`              | 3     | Too few nouns matched                |
-| `ANIMA_PE`             | 4     | Can only do that to something animate |
-| `CANTSEE_PE`           | 5     | "You can't see any such thing"       |
-| `TOOLIT_PE`            | 6     | That noun can only mean one object   |
-| `NOTHELD_PE`           | 7     | "You aren't holding that"            |
-| `MULTI_PE`             | 8     | Can't use multiple objects here      |
-| `MMULTI_PE`            | 9     | Can only use multiple objects once   |
-| `VAGUE_PE`             | 10    | "I'm not sure what you are referring to" |
-| `EXCEPT_PE`            | 11    | "You excepted something not included" |
+| `UPTO_PE`              | 2     | Verb recognized, but rest is gibberish |
+| `NUMBER_PE`            | 3     | Number out of range                  |
+| `CANTSEE_PE`           | 4     | "You can't see any such thing"       |
+| `TOOLIT_PE`            | 5     | That noun can only mean one object   |
+| `NOTHELD_PE`           | 6     | "You aren't holding that"            |
+| `MULTI_PE`             | 7     | Can't use multiple objects here      |
+| `MMULTI_PE`            | 8     | Can only use multiple objects once   |
+| `VAGUE_PE`             | 9     | "I'm not sure what you are referring to" |
+| `EXCEPT_PE`            | 10    | "You excepted something not included" |
+| `ANIMA_PE`             | 11    | Can only do that to something animate |
 | `VERB_PE`              | 12    | "I don't know that verb"             |
 | `SCENERY_PE`           | 13    | "That's not something you need to refer to" |
 | `ITGONE_PE`            | 14    | "I can no longer see that"           |
@@ -641,8 +641,10 @@ already holds `capacity` items.
 Called to parse a word as a number when the standard digit parser does
 not recognize it.
 
-**When called:** During `TryNumber()` (see §27.6), after the standard
-digit parser fails.
+**When called:** During `TryNumber()` (see §27.6), after `NumberWord()`
+has been tried but *before* the standard digit parser. If `ParseNumber`
+returns a non-zero value, that value is used and digit parsing is
+skipped.
 
 **Arguments:**
 - `buffer` — byte address of the word text.

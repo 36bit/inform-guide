@@ -748,7 +748,6 @@ inform --helptrace adventure.inf
 | `$!SYMBOLS`  | 1–2 | Display the symbol table. Level 2 also shows compiler-defined symbols. |
 | `$!SYMDEF`   | 1 | Show each symbol as it is noticed and defined. Useful for debugging name conflicts. |
 | `$!TOKENS`   | 1–3 | Show token lexing. Level 2 adds token types. Level 3 adds lexical context. |
-| `$!UNICODE`  | 1 | Show the Z-machine Unicode translation table, if defined. Z-code only. |
 | `$!VERBS`    | 1 | Display the verb grammar table. |
 
 ### 12.6.3 Relationship to Dash Switches
@@ -939,5 +938,4 @@ See §12.6.2 for full details including trace levels.
 | `$!SYMBOLS` | Display the symbol table |
 | `$!SYMDEF` | Show each symbol as it is noticed and defined |
 | `$!TOKENS` | Show token lexing |
-| `$!UNICODE` | Show the Z-machine Unicode translation table |
 | `$!VERBS` | Display the verb grammar table |
