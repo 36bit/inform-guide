@@ -224,7 +224,7 @@ Two special offset values have predefined meanings:
 | 0x2B | `jgeu` | L1 L2 Br1 | Branch if L1 ≥ L2 (unsigned). |
 | 0x2C | `jgtu` | L1 L2 Br1 | Branch if L1 > L2 (unsigned). |
 | 0x2D | `jleu` | L1 L2 Br1 | Branch if L1 ≤ L2 (unsigned). |
-| 0x104 | `jumpabs` | L1 | Jump to absolute address L1 (not an offset). |
+| 0x0104 | `jumpabs` | L1 | Jump to absolute address L1 (not an offset). |
 
 The `jump` opcode has both the `Br` and `Rf` flags set: it is a branch
 instruction (the operand is a branch offset), and execution never
@@ -245,10 +245,10 @@ variables or the stack.
 | 0x32 | `catch` | S1 Br1 | Generate a catch token, store it in S1, and branch to Br1. |
 | 0x33 | `throw` | L1 L2 | Throw value L1 using catch token L2. Unwinds the stack to the catch point and stores L1 as the return value. |
 | 0x34 | `tailcall` | L1 L2 | Tail-call function at L1 with L2 arguments. The current frame is discarded and replaced by the new call. |
-| 0x160 | `callf` | L1 S1 | Call function at L1 with 0 arguments. Store return value in S1. |
-| 0x161 | `callfi` | L1 L2 S1 | Call function at L1 with 1 argument (L2). Store return value in S1. |
-| 0x162 | `callfii` | L1 L2 L3 S1 | Call function at L1 with 2 arguments (L2, L3). Store return value in S1. |
-| 0x163 | `callfiii` | L1 L2 L3 L4 S1 | Call function at L1 with 3 arguments (L2, L3, L4). Store return value in S1. |
+| 0x0160 | `callf` | L1 S1 | Call function at L1 with 0 arguments. Store return value in S1. |
+| 0x0161 | `callfi` | L1 L2 S1 | Call function at L1 with 1 argument (L2). Store return value in S1. |
+| 0x0162 | `callfii` | L1 L2 L3 S1 | Call function at L1 with 2 arguments (L2, L3). Store return value in S1. |
+| 0x0163 | `callfiii` | L1 L2 L3 L4 S1 | Call function at L1 with 3 arguments (L2, L3, L4). Store return value in S1. |
 
 The `call` opcode is the general-purpose calling mechanism: arguments
 are pushed onto the stack (last argument first, so the first argument
@@ -328,10 +328,10 @@ or frame metadata.
 | 0x71 | `streamnum` | L1 | Output L1 as a signed decimal integer via the current I/O system. |
 | 0x72 | `streamstr` | L1 | Output the string at address L1. Decodes E0, E1, or E2 format strings. |
 | 0x73 | `streamunichar` | L1 | Output L1 as a single 32-bit Unicode character. Requires Glulx 3.0+. |
-| 0x140 | `getstringtbl` | S1 | Store the current string decoding table address into S1. |
-| 0x141 | `setstringtbl` | L1 | Set the string decoding table to address L1. Set to 0 to disable E1 decoding. |
-| 0x148 | `getiosys` | S1 S2 | Store the current I/O system mode in S1 and its "rock" value in S2. |
-| 0x149 | `setiosys` | L1 L2 | Set the I/O system to mode L1 with rock value L2. For filter mode (1), L2 is the function address. |
+| 0x0140 | `getstringtbl` | S1 | Store the current string decoding table address into S1. |
+| 0x0141 | `setstringtbl` | L1 | Set the string decoding table to address L1. Set to 0 to disable E1 decoding. |
+| 0x0148 | `getiosys` | S1 S2 | Store the current I/O system mode in S1 and its "rock" value in S2. |
+| 0x0149 | `setiosys` | L1 L2 | Set the I/O system to mode L1 with rock value L2. For filter mode (1), L2 is the function address. |
 
 The `getiosys` opcode has both `St` and `St2` flags set, indicating
 that both operands are store destinations.
@@ -341,12 +341,12 @@ that both operands are store destinations.
 | Code | Name | Operands | Semantics |
 |---|---|---|---|
 | 0x00 | `nop` | (none) | No operation. |
-| 0x100 | `gestalt` | L1 L2 S1 | Query VM capability. L1 is the selector, L2 is an argument. Result stored in S1. |
-| 0x101 | `debugtrap` | L1 | Trigger interpreter-specific debugging. Behavior is implementation-defined. |
-| 0x102 | `getmemsize` | S1 | Store the current total memory size (ENDMEM) into S1. |
-| 0x103 | `setmemsize` | L1 S1 | Request memory resize to L1 bytes. S1 receives 0 on success, 1 on failure. L1 must be a multiple of 256 and ≥ ENDMEM. |
-| 0x110 | `random` | L1 S1 | Generate a random number. If L1 > 0, result is in 0..(L1−1). If L1 < 0, result is in (L1+1)..0. If L1 = 0, result is any 32-bit value. |
-| 0x111 | `setrandom` | L1 | Seed the random number generator. L1 = 0 selects a non-deterministic seed. |
+| 0x0100 | `gestalt` | L1 L2 S1 | Query VM capability. L1 is the selector, L2 is an argument. Result stored in S1. |
+| 0x0101 | `debugtrap` | L1 | Trigger interpreter-specific debugging. Behavior is implementation-defined. |
+| 0x0102 | `getmemsize` | S1 | Store the current total memory size (ENDMEM) into S1. |
+| 0x0103 | `setmemsize` | L1 S1 | Request memory resize to L1 bytes. S1 receives 0 on success, 1 on failure. L1 must be a multiple of 256 and ≥ ENDMEM. |
+| 0x0110 | `random` | L1 S1 | Generate a random number. If L1 > 0, result is in 0..(L1−1). If L1 < 0, result is in (L1+1)..0. If L1 = 0, result is any 32-bit value. |
+| 0x0111 | `setrandom` | L1 | Seed the random number generator. L1 = 0 selects a non-deterministic seed. |
 
 The **gestalt** opcode is the primary mechanism for capability
 detection. Important selectors include:
@@ -372,22 +372,22 @@ detection. Important selectors include:
 
 | Code | Name | Operands | Semantics |
 |---|---|---|---|
-| 0x120 | `quit` | (none) | Terminate the interpreter. |
-| 0x121 | `verify` | S1 | Verify the game file integrity. S1 receives 0 if valid. |
-| 0x122 | `restart` | (none) | Reset the VM to its initial state. |
-| 0x123 | `save` | L1 S1 | Save the game state to Glk stream L1. S1 receives 0 on success, 1 on failure. On restore, S1 receives −1. |
-| 0x124 | `restore` | L1 S1 | Restore game state from Glk stream L1. On success, execution resumes at the save point. S1 receives 1 on failure (success does not return here). |
-| 0x125 | `saveundo` | S1 | Save the game state for undo. S1 receives 0 on success, 1 on failure. On undo-restore, S1 receives −1. |
-| 0x126 | `restoreundo` | S1 | Restore the most recent undo state. S1 receives 1 on failure (success does not return here). |
-| 0x127 | `protect` | L1 L2 | Protect the memory range [L1, L1+L2) from being affected by save/restore. Only one range can be protected at a time. |
-| 0x128 | `hasundo` | S1 | Test whether an undo state is available. S1 receives 1 if yes, 0 if no. Requires Glulx 3.1.3+. |
-| 0x129 | `discardundo` | (none) | Discard the most recent undo state. Requires Glulx 3.1.3+. |
+| 0x0120 | `quit` | (none) | Terminate the interpreter. |
+| 0x0121 | `verify` | S1 | Verify the game file integrity. S1 receives 0 if valid. |
+| 0x0122 | `restart` | (none) | Reset the VM to its initial state. |
+| 0x0123 | `save` | L1 S1 | Save the game state to Glk stream L1. S1 receives 0 on success, 1 on failure. On restore, S1 receives −1. |
+| 0x0124 | `restore` | L1 S1 | Restore game state from Glk stream L1. On success, execution resumes at the save point. S1 receives 1 on failure (success does not return here). |
+| 0x0125 | `saveundo` | S1 | Save the game state for undo. S1 receives 0 on success, 1 on failure. On undo-restore, S1 receives −1. |
+| 0x0126 | `restoreundo` | S1 | Restore the most recent undo state. S1 receives 1 on failure (success does not return here). |
+| 0x0127 | `protect` | L1 L2 | Protect the memory range [L1, L1+L2) from being affected by save/restore. Only one range can be protected at a time. |
+| 0x0128 | `hasundo` | S1 | Test whether an undo state is available. S1 receives 1 if yes, 0 if no. Requires Glulx 3.1.3+. |
+| 0x0129 | `discardundo` | (none) | Discard the most recent undo state. Requires Glulx 3.1.3+. |
 
 ### 31.3.10 Glk Interface (0x0130)
 
 | Code | Name | Operands | Semantics |
 |---|---|---|---|
-| 0x130 | `glk` | L1 L2 S1 | Call Glk function L1 with L2 arguments (taken from the stack). Store the return value in S1. |
+| 0x0130 | `glk` | L1 L2 S1 | Call Glk function L1 with L2 arguments (taken from the stack). Store the return value in S1. |
 
 This is the sole gateway between the Glulx program and the Glk I/O
 library. Arguments must be pushed onto the stack before the instruction
@@ -404,9 +404,9 @@ for property table lookups.
 
 | Code | Name | Operands | Semantics |
 |---|---|---|---|
-| 0x150 | `linearsearch` | L1 L2 L3 L4 L5 L6 L7 S1 | Linear (sequential) search. |
-| 0x151 | `binarysearch` | L1 L2 L3 L4 L5 L6 L7 S1 | Binary search on a sorted array. |
-| 0x152 | `linkedsearch` | L1 L2 L3 L4 L5 L6 S1 | Linked list search. |
+| 0x0150 | `linearsearch` | L1 L2 L3 L4 L5 L6 L7 S1 | Linear (sequential) search. |
+| 0x0151 | `binarysearch` | L1 L2 L3 L4 L5 L6 L7 S1 | Binary search on a sorted array. |
+| 0x0152 | `linkedsearch` | L1 L2 L3 L4 L5 L6 S1 | Linked list search. |
 
 See §31.6 for the detailed parameter descriptions and semantics of
 each search opcode.
@@ -415,10 +415,10 @@ each search opcode.
 
 | Code | Name | Operands | Semantics |
 |---|---|---|---|
-| 0x170 | `mzero` | L1 L2 | Zero L1 bytes of memory starting at address L2. |
-| 0x171 | `mcopy` | L1 L2 L3 | Copy L1 bytes from address L2 to address L3. Handles overlapping regions correctly. |
-| 0x178 | `malloc` | L1 S1 | Allocate L1 bytes of heap memory. S1 receives the address of the allocated block, or 0 on failure. |
-| 0x179 | `mfree` | L1 | Free the heap block at address L1 (must be the exact address returned by `malloc`). |
+| 0x0170 | `mzero` | L1 L2 | Zero L1 bytes of memory starting at address L2. |
+| 0x0171 | `mcopy` | L1 L2 L3 | Copy L1 bytes from address L2 to address L3. Handles overlapping regions correctly. |
+| 0x0178 | `malloc` | L1 S1 | Allocate L1 bytes of heap memory. S1 receives the address of the allocated block, or 0 on failure. |
+| 0x0179 | `mfree` | L1 | Free the heap block at address L1 (must be the exact address returned by `malloc`). |
 
 These opcodes are gated behind `GOP_MemHeap` and require Glulx 3.1.0+.
 The `malloc` and `mfree` opcodes manage memory beyond the initial
@@ -429,8 +429,8 @@ writable memory region.
 
 | Code | Name | Operands | Semantics |
 |---|---|---|---|
-| 0x180 | `accelfunc` | L1 L2 | Register accelerated function L1 at address L2. The interpreter may replace calls to L2 with a native implementation of function L1. |
-| 0x181 | `accelparam` | L1 L2 | Set acceleration parameter L1 to value L2. |
+| 0x0180 | `accelfunc` | L1 L2 | Register accelerated function L1 at address L2. The interpreter may replace calls to L2 with a native implementation of function L1. |
+| 0x0181 | `accelparam` | L1 L2 | Set acceleration parameter L1 to value L2. |
 
 See §30.10 for the full acceleration parameter table and function
 numbers.
@@ -445,26 +445,26 @@ in big-endian byte order within the same 32-bit word as integers.
 
 | Code | Name | Operands | Semantics |
 |---|---|---|---|
-| 0x190 | `numtof` | L1 S1 | Convert signed integer L1 to float. |
-| 0x191 | `ftonumz` | L1 S1 | Convert float L1 to signed integer (truncate toward zero). |
-| 0x192 | `ftonumn` | L1 S1 | Convert float L1 to signed integer (round to nearest). |
+| 0x0190 | `numtof` | L1 S1 | Convert signed integer L1 to float. |
+| 0x0191 | `ftonumz` | L1 S1 | Convert float L1 to signed integer (truncate toward zero). |
+| 0x0192 | `ftonumn` | L1 S1 | Convert float L1 to signed integer (round to nearest). |
 
 #### Rounding
 
 | Code | Name | Operands | Semantics |
 |---|---|---|---|
-| 0x198 | `ceil` | L1 S1 | Round float L1 up to the nearest integer (result is still in float format). |
-| 0x199 | `floor` | L1 S1 | Round float L1 down to the nearest integer (result is still in float format). |
+| 0x0198 | `ceil` | L1 S1 | Round float L1 up to the nearest integer (result is still in float format). |
+| 0x0199 | `floor` | L1 S1 | Round float L1 down to the nearest integer (result is still in float format). |
 
 #### Arithmetic
 
 | Code | Name | Operands | Semantics |
 |---|---|---|---|
-| 0x1A0 | `fadd` | L1 L2 S1 | S1 = L1 + L2 (float addition). |
-| 0x1A1 | `fsub` | L1 L2 S1 | S1 = L1 − L2 (float subtraction). |
-| 0x1A2 | `fmul` | L1 L2 S1 | S1 = L1 × L2 (float multiplication). |
-| 0x1A3 | `fdiv` | L1 L2 S1 | S1 = L1 ÷ L2 (float division). Division by zero produces ±Infinity or NaN. |
-| 0x1A4 | `fmod` | L1 L2 S1 S2 | S1 = remainder of L1 ÷ L2; S2 = quotient (truncated toward zero). Both in float format. |
+| 0x01A0 | `fadd` | L1 L2 S1 | S1 = L1 + L2 (float addition). |
+| 0x01A1 | `fsub` | L1 L2 S1 | S1 = L1 − L2 (float subtraction). |
+| 0x01A2 | `fmul` | L1 L2 S1 | S1 = L1 × L2 (float multiplication). |
+| 0x01A3 | `fdiv` | L1 L2 S1 | S1 = L1 ÷ L2 (float division). Division by zero produces ±Infinity or NaN. |
+| 0x01A4 | `fmod` | L1 L2 S1 S2 | S1 = remainder of L1 ÷ L2; S2 = quotient (truncated toward zero). Both in float format. |
 
 The `fmod` opcode has both `St` and `St2` flags, indicating two store
 destinations.
@@ -473,30 +473,30 @@ destinations.
 
 | Code | Name | Operands | Semantics |
 |---|---|---|---|
-| 0x1A8 | `sqrt` | L1 S1 | S1 = √L1. |
-| 0x1A9 | `exp` | L1 S1 | S1 = e^L1. |
-| 0x1AA | `log` | L1 S1 | S1 = ln(L1) (natural logarithm). |
-| 0x1AB | `pow` | L1 L2 S1 | S1 = L1^L2 (L1 raised to the power L2). |
-| 0x1B0 | `sin` | L1 S1 | S1 = sin(L1) (L1 in radians). |
-| 0x1B1 | `cos` | L1 S1 | S1 = cos(L1). |
-| 0x1B2 | `tan` | L1 S1 | S1 = tan(L1). |
-| 0x1B3 | `asin` | L1 S1 | S1 = arcsin(L1). |
-| 0x1B4 | `acos` | L1 S1 | S1 = arccos(L1). |
-| 0x1B5 | `atan` | L1 S1 | S1 = arctan(L1). |
-| 0x1B6 | `atan2` | L1 L2 S1 | S1 = arctan(L1/L2) using the signs of both arguments to determine the quadrant. |
+| 0x01A8 | `sqrt` | L1 S1 | S1 = √L1. |
+| 0x01A9 | `exp` | L1 S1 | S1 = e^L1. |
+| 0x01AA | `log` | L1 S1 | S1 = ln(L1) (natural logarithm). |
+| 0x01AB | `pow` | L1 L2 S1 | S1 = L1^L2 (L1 raised to the power L2). |
+| 0x01B0 | `sin` | L1 S1 | S1 = sin(L1) (L1 in radians). |
+| 0x01B1 | `cos` | L1 S1 | S1 = cos(L1). |
+| 0x01B2 | `tan` | L1 S1 | S1 = tan(L1). |
+| 0x01B3 | `asin` | L1 S1 | S1 = arcsin(L1). |
+| 0x01B4 | `acos` | L1 S1 | S1 = arccos(L1). |
+| 0x01B5 | `atan` | L1 S1 | S1 = arctan(L1). |
+| 0x01B6 | `atan2` | L1 L2 S1 | S1 = arctan(L1/L2) using the signs of both arguments to determine the quadrant. |
 
 #### Float Comparison and Special Value Tests
 
 | Code | Name | Operands | Semantics |
 |---|---|---|---|
-| 0x1C0 | `jfeq` | L1 L2 L3 Br1 | Branch if \|L1 − L2\| ≤ L3 (approximate equality with tolerance). |
-| 0x1C1 | `jfne` | L1 L2 L3 Br1 | Branch if \|L1 − L2\| > L3 (not approximately equal). |
-| 0x1C2 | `jflt` | L1 L2 Br1 | Branch if L1 < L2 (float comparison). |
-| 0x1C3 | `jfle` | L1 L2 Br1 | Branch if L1 ≤ L2 (float comparison). |
-| 0x1C4 | `jfgt` | L1 L2 Br1 | Branch if L1 > L2 (float comparison). |
-| 0x1C5 | `jfge` | L1 L2 Br1 | Branch if L1 ≥ L2 (float comparison). |
-| 0x1C8 | `jisnan` | L1 Br1 | Branch if L1 is NaN (Not a Number). |
-| 0x1C9 | `jisinf` | L1 Br1 | Branch if L1 is ±Infinity. |
+| 0x01C0 | `jfeq` | L1 L2 L3 Br1 | Branch if \|L1 − L2\| ≤ L3 (approximate equality with tolerance). |
+| 0x01C1 | `jfne` | L1 L2 L3 Br1 | Branch if \|L1 − L2\| > L3 (not approximately equal). |
+| 0x01C2 | `jflt` | L1 L2 Br1 | Branch if L1 < L2 (float comparison). |
+| 0x01C3 | `jfle` | L1 L2 Br1 | Branch if L1 ≤ L2 (float comparison). |
+| 0x01C4 | `jfgt` | L1 L2 Br1 | Branch if L1 > L2 (float comparison). |
+| 0x01C5 | `jfge` | L1 L2 Br1 | Branch if L1 ≥ L2 (float comparison). |
+| 0x01C8 | `jisnan` | L1 Br1 | Branch if L1 is NaN (Not a Number). |
+| 0x01C9 | `jisinf` | L1 Br1 | Branch if L1 is ±Infinity. |
 
 NaN comparisons follow IEEE-754 rules: NaN is not equal to anything,
 including itself. `jfeq` with a NaN operand never branches (unless the
@@ -514,58 +514,58 @@ paired representation.
 
 | Code | Name | Operands | Semantics |
 |---|---|---|---|
-| 0x200 | `numtod` | L1 S1 S2 | Convert integer L1 to double (S1 = high word, S2 = low word). |
-| 0x201 | `dtonumz` | L1 L2 S1 | Convert double (L1:L2) to integer (truncate toward zero). |
-| 0x202 | `dtonumn` | L1 L2 S1 | Convert double (L1:L2) to integer (round to nearest). |
-| 0x203 | `ftod` | L1 S1 S2 | Convert single-precision float L1 to double (S1:S2). |
-| 0x204 | `dtof` | L1 L2 S1 | Convert double (L1:L2) to single-precision float S1. |
+| 0x0200 | `numtod` | L1 S1 S2 | Convert integer L1 to double (S1 = high word, S2 = low word). |
+| 0x0201 | `dtonumz` | L1 L2 S1 | Convert double (L1:L2) to integer (truncate toward zero). |
+| 0x0202 | `dtonumn` | L1 L2 S1 | Convert double (L1:L2) to integer (round to nearest). |
+| 0x0203 | `ftod` | L1 S1 S2 | Convert single-precision float L1 to double (S1:S2). |
+| 0x0204 | `dtof` | L1 L2 S1 | Convert double (L1:L2) to single-precision float S1. |
 
 #### Rounding
 
 | Code | Name | Operands | Semantics |
 |---|---|---|---|
-| 0x208 | `dceil` | L1 L2 S1 S2 | Round double (L1:L2) up; result in double format (S1:S2). |
-| 0x209 | `dfloor` | L1 L2 S1 S2 | Round double (L1:L2) down; result in double format (S1:S2). |
+| 0x0208 | `dceil` | L1 L2 S1 S2 | Round double (L1:L2) up; result in double format (S1:S2). |
+| 0x0209 | `dfloor` | L1 L2 S1 S2 | Round double (L1:L2) down; result in double format (S1:S2). |
 
 #### Arithmetic
 
 | Code | Name | Operands | Semantics |
 |---|---|---|---|
-| 0x210 | `dadd` | L1 L2 L3 L4 S1 S2 | (L1:L2) + (L3:L4) → (S1:S2). |
-| 0x211 | `dsub` | L1 L2 L3 L4 S1 S2 | (L1:L2) − (L3:L4) → (S1:S2). |
-| 0x212 | `dmul` | L1 L2 L3 L4 S1 S2 | (L1:L2) × (L3:L4) → (S1:S2). |
-| 0x213 | `ddiv` | L1 L2 L3 L4 S1 S2 | (L1:L2) ÷ (L3:L4) → (S1:S2). |
-| 0x214 | `dmodr` | L1 L2 L3 L4 S1 S2 | Remainder of (L1:L2) ÷ (L3:L4) → (S1:S2). |
-| 0x215 | `dmodq` | L1 L2 L3 L4 S1 S2 | Quotient of (L1:L2) ÷ (L3:L4) → (S1:S2), truncated toward zero. |
+| 0x0210 | `dadd` | L1 L2 L3 L4 S1 S2 | (L1:L2) + (L3:L4) → (S1:S2). |
+| 0x0211 | `dsub` | L1 L2 L3 L4 S1 S2 | (L1:L2) − (L3:L4) → (S1:S2). |
+| 0x0212 | `dmul` | L1 L2 L3 L4 S1 S2 | (L1:L2) × (L3:L4) → (S1:S2). |
+| 0x0213 | `ddiv` | L1 L2 L3 L4 S1 S2 | (L1:L2) ÷ (L3:L4) → (S1:S2). |
+| 0x0214 | `dmodr` | L1 L2 L3 L4 S1 S2 | Remainder of (L1:L2) ÷ (L3:L4) → (S1:S2). |
+| 0x0215 | `dmodq` | L1 L2 L3 L4 S1 S2 | Quotient of (L1:L2) ÷ (L3:L4) → (S1:S2), truncated toward zero. |
 
 #### Transcendental Functions
 
 | Code | Name | Operands | Semantics |
 |---|---|---|---|
-| 0x218 | `dsqrt` | L1 L2 S1 S2 | √(L1:L2) → (S1:S2). |
-| 0x219 | `dexp` | L1 L2 S1 S2 | e^(L1:L2) → (S1:S2). |
-| 0x21A | `dlog` | L1 L2 S1 S2 | ln(L1:L2) → (S1:S2). |
-| 0x21B | `dpow` | L1 L2 L3 L4 S1 S2 | (L1:L2)^(L3:L4) → (S1:S2). |
-| 0x220 | `dsin` | L1 L2 S1 S2 | sin(L1:L2) → (S1:S2). |
-| 0x221 | `dcos` | L1 L2 S1 S2 | cos(L1:L2) → (S1:S2). |
-| 0x222 | `dtan` | L1 L2 S1 S2 | tan(L1:L2) → (S1:S2). |
-| 0x223 | `dasin` | L1 L2 S1 S2 | arcsin(L1:L2) → (S1:S2). |
-| 0x224 | `dacos` | L1 L2 S1 S2 | arccos(L1:L2) → (S1:S2). |
-| 0x225 | `datan` | L1 L2 S1 S2 | arctan(L1:L2) → (S1:S2). |
-| 0x226 | `datan2` | L1 L2 L3 L4 S1 S2 | arctan((L1:L2)/(L3:L4)) → (S1:S2). |
+| 0x0218 | `dsqrt` | L1 L2 S1 S2 | √(L1:L2) → (S1:S2). |
+| 0x0219 | `dexp` | L1 L2 S1 S2 | e^(L1:L2) → (S1:S2). |
+| 0x021A | `dlog` | L1 L2 S1 S2 | ln(L1:L2) → (S1:S2). |
+| 0x021B | `dpow` | L1 L2 L3 L4 S1 S2 | (L1:L2)^(L3:L4) → (S1:S2). |
+| 0x0220 | `dsin` | L1 L2 S1 S2 | sin(L1:L2) → (S1:S2). |
+| 0x0221 | `dcos` | L1 L2 S1 S2 | cos(L1:L2) → (S1:S2). |
+| 0x0222 | `dtan` | L1 L2 S1 S2 | tan(L1:L2) → (S1:S2). |
+| 0x0223 | `dasin` | L1 L2 S1 S2 | arcsin(L1:L2) → (S1:S2). |
+| 0x0224 | `dacos` | L1 L2 S1 S2 | arccos(L1:L2) → (S1:S2). |
+| 0x0225 | `datan` | L1 L2 S1 S2 | arctan(L1:L2) → (S1:S2). |
+| 0x0226 | `datan2` | L1 L2 L3 L4 S1 S2 | arctan((L1:L2)/(L3:L4)) → (S1:S2). |
 
 #### Double Comparison and Special Value Tests
 
 | Code | Name | Operands | Semantics |
 |---|---|---|---|
-| 0x230 | `jdeq` | L1 L2 L3 L4 L5 L6 Br1 | Branch if \|(L1:L2) − (L3:L4)\| ≤ (L5:L6). |
-| 0x231 | `jdne` | L1 L2 L3 L4 L5 L6 Br1 | Branch if \|(L1:L2) − (L3:L4)\| > (L5:L6). |
-| 0x232 | `jdlt` | L1 L2 L3 L4 Br1 | Branch if (L1:L2) < (L3:L4). |
-| 0x233 | `jdle` | L1 L2 L3 L4 Br1 | Branch if (L1:L2) ≤ (L3:L4). |
-| 0x234 | `jdgt` | L1 L2 L3 L4 Br1 | Branch if (L1:L2) > (L3:L4). |
-| 0x235 | `jdge` | L1 L2 L3 L4 Br1 | Branch if (L1:L2) ≥ (L3:L4). |
-| 0x238 | `jdisnan` | L1 L2 Br1 | Branch if (L1:L2) is NaN. |
-| 0x239 | `jdisinf` | L1 L2 Br1 | Branch if (L1:L2) is ±Infinity. |
+| 0x0230 | `jdeq` | L1 L2 L3 L4 L5 L6 Br1 | Branch if \|(L1:L2) − (L3:L4)\| ≤ (L5:L6). |
+| 0x0231 | `jdne` | L1 L2 L3 L4 L5 L6 Br1 | Branch if \|(L1:L2) − (L3:L4)\| > (L5:L6). |
+| 0x0232 | `jdlt` | L1 L2 L3 L4 Br1 | Branch if (L1:L2) < (L3:L4). |
+| 0x0233 | `jdle` | L1 L2 L3 L4 Br1 | Branch if (L1:L2) ≤ (L3:L4). |
+| 0x0234 | `jdgt` | L1 L2 L3 L4 Br1 | Branch if (L1:L2) > (L3:L4). |
+| 0x0235 | `jdge` | L1 L2 L3 L4 Br1 | Branch if (L1:L2) ≥ (L3:L4). |
+| 0x0238 | `jdisnan` | L1 L2 Br1 | Branch if (L1:L2) is NaN. |
+| 0x0239 | `jdisinf` | L1 L2 Br1 | Branch if (L1:L2) is ±Infinity. |
 
 ### 31.3.16 Synthetic Opcodes (Compiler Macros)
 

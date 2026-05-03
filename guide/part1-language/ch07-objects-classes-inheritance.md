@@ -358,13 +358,15 @@ Class Weapon(10)
     with damage 1;
 ```
 
-The `(10)` causes the compiler to manufacture 10 anonymous instances
-of `Weapon` at compile time. Each duplicate is initially placed as a
-child of the `Weapon` class object and serves as a ready-to-use
-instance that `Weapon.create()` can hand out and `Weapon.destroy(obj)`
-can return to the pool. The number of duplicates must be in the range
-0 to 10000; if `(N)` is omitted, no duplicates are pre-created and the
-class has no pool.
+The `(10)` causes the compiler to manufacture a pool of 10 anonymous
+duplicate instances of `Weapon` at compile time (internally one
+additional duplicate is also created and kept as an untouched
+prototype used by `recreate`, `destroy`, and `copy`). Each duplicate
+is initially placed as a child of the `Weapon` class object; the 10
+pooled duplicates are ready-to-use instances that `Weapon.create()`
+can hand out and `Weapon.destroy(obj)` can return to the pool. The
+number of duplicates must be in the range 0 to 10000; if `(N)` is
+omitted, no duplicates are pre-created and the class has no pool.
 
 The `(N)` notation does **not** impose a global limit on how many
 instances of the class may exist: ordinary instance declarations
@@ -500,7 +502,12 @@ This is essential for individual properties, which may not exist on all objects.
 
 Classes provide built-in methods for managing a pool of pre-created
 instances (see §7.6.2). All of them are invoked on the *class* object,
-not on an individual instance:
+not on an individual instance.
+
+The class-message machinery is unavailable on Z-machine v3: any use of
+`Class.create`, `Class.recreate`, `Class.destroy`, `Class.copy`, or
+`Class.remaining` produces a compile-time error ("Class messages are
+not supported in v3"). Use v5+ or Glulx for class-pool features.
 
 ### 7.11.1 `create`
 
@@ -524,6 +531,10 @@ property values and attributes to those of the class prototype. `obj`
 must be `ofclass ClassName`. Up to three extra arguments may be
 passed, in which case the object's `create` property (if any) is then
 called with them. This is useful for object pooling.
+
+On Glulx, `recreate` first calls the object's `destroy` property (if
+provided) before resetting it; the Z-machine variant does not call
+`destroy` during `recreate`.
 
 ```inform6
 Class Bullet(20)

@@ -807,13 +807,13 @@ The complete list, grouped by function:
 
 | Separator | Name | Description |
 | --------- | ---- | ----------- |
-| `#` | `HASH_SEP` | Directive prefix |
+| `#` | `HASH_SEP` | Directive prefix (top level) / system-constant prefix (in expressions) |
 | `##` | `HASHHASH_SEP` | Action name prefix |
-| `#a$` | `HASHADOLLAR_SEP` | System constant (array) |
-| `#g$` | `HASHGDOLLAR_SEP` | System constant (global) |
-| `#n$` | `HASHNDOLLAR_SEP` | System constant (number/entry) |
-| `#r$` | `HASHRDOLLAR_SEP` | System constant (routine) |
-| `#w$` | `HASHWDOLLAR_SEP` | System constant (word/dictionary) |
+| `#a$` | `HASHADOLLAR_SEP` | Action constant (legacy form of `##`) |
+| `#g$` | `HASHGDOLLAR_SEP` | Global variable index (within the globals array) |
+| `#n$` | `HASHNDOLLAR_SEP` | Dictionary word literal (legacy form of `'word'`) |
+| `#r$` | `HASHRDOLLAR_SEP` | Routine packed address (legacy form of bare routine name) |
+| `#w$` | `HASHWDOLLAR_SEP` | Obsolete — recognised by the lexer but rejected by the parser |
 
 ### 1.9.2 Multi-Character Separator Matching
 
@@ -872,26 +872,24 @@ value.
 The identifier following `##` must begin with a letter or underscore —
 whitespace between `##` and the name is not permitted.
 
-### 1.10.3 System Constant Access: `#a$`, `#g$`, `#n$`, `#r$`, `#w$`
+### 1.10.3 Legacy Compound Prefixes: `#a$`, `#g$`, `#n$`, `#r$`, `#w$`
 
-These five compound separators provide low-level access to compiler-
-generated tables and addresses:
+These five compound separators are mostly historical; each survives chiefly
+to support Inform 5 source code. Whitespace between the prefix and the
+identifier is not permitted.
 
-| Prefix | Meaning | Example |
-| ------ | ------- | ------- |
-| `#a$` | Array address | `#a$MyArray` — address of array `MyArray` |
-| `#g$` | Global variable address | `#g$score` — address of global `score` |
-| `#n$` | Entry number | `#n$MyAttr` — number assigned to attribute `MyAttr` |
-| `#r$` | Routine address | `#r$MyFunc` — packed address of routine `MyFunc` |
-| `#w$` | Dictionary word address | `#w$lamp` — address of dictionary entry for "lamp" |
-
-Like `##`, these read the following identifier characters into the token
-text. Whitespace between the prefix and the identifier is not permitted.
+| Prefix | Meaning |
+| ------ | ------- |
+| `#a$` | Action constant — legacy equivalent of `##`. `#a$Take` is the action number for *Take*. The compiler issues an obsolete-feature warning. |
+| `#g$` | Global-variable **index** within the globals array. `#g$score` is the offset of `score` (so `score` is equivalent to `#globals_array-->#g$score`); it is *not* the variable's address. |
+| `#n$` | Dictionary-word literal — legacy equivalent of `'word'`. Its main remaining use is for one-character dictionary words such as `#n$a`, since `'a'` is the ZSCII value of the letter `a` rather than the dictionary entry for `"a"`. |
+| `#r$` | Routine packed address — legacy equivalent of writing the routine name directly. The compiler issues an obsolete-feature warning. |
+| `#w$` | Obsolete: removed in modern Inform 6. The lexer still recognises the token, but the parser rejects it with an error. |
 
 ```inform6
-x = #r$Main;       ! Packed address of the Main routine
-x = #g$score;      ! Address of the global variable 'score'
-x = #w$lamp;       ! Dictionary address of the word 'lamp'
+x = #r$Main;       ! Packed address of the Main routine (use 'Main' instead)
+x = #n$a;          ! Dictionary entry for the single-character word "a"
+x = #g$score;      ! Index of the global 'score' within the globals array
 ```
 
 For `#a$`, `#g$`, `#r$`, and `##`, the character following the prefix

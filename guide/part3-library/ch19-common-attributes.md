@@ -46,8 +46,8 @@ if (room hasnt visited)   ! Test for absence
 ```
 
 The Z-machine supports up to 48 attributes per object; Glulx has no
-practical limit. The library defines approximately 30 standard
-attributes, leaving room for game-specific attributes.
+practical limit. The library defines 31 standard attributes (plus one
+conditional attribute), leaving room for game-specific attributes.
 
 Attributes are declared in `linklpa.h` with the `Attribute` directive:
 
