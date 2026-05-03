@@ -125,13 +125,18 @@ the default source extension (`.inf`) before opening the file.
 ### 11.3.2 Include Search Order
 
 Additional source files are brought in with the `Include` directive
-(§10.9). When the compiler encounters an `Include` directive, it searches
-for the file in the following order:
+(§10.9). Where the compiler looks for the file depends on the form of
+the directive:
 
-1. The directory containing the file that issued the `Include` (for
-   `Include ">filename"` form).
-2. The directories listed in the **include path**, searched left to right.
-3. The current working directory (if no include path is set).
+- If the filename already contains a directory separator, it is used
+  as-is and no search path is applied.
+- For `Include ">filename"`, the compiler looks **only** in the
+  directory of the file that issued the `Include` (the `>` form is
+  described in the next subsection).
+- For an ordinary `Include "filename"`, the compiler searches the
+  directories listed in the **include path**, in the order given (left
+  to right). If the include path is unset (empty), the filename is
+  used relative to the current working directory.
 
 ### 11.3.3 The `>` Prefix
 
