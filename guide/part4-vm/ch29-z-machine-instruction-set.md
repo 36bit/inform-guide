@@ -474,7 +474,6 @@ These EXT opcodes were introduced in version 1.1 of the specification:
 | Name | Code | Flags | Description |
 |------|------|-------|-------------|
 | `set_true_colour` | `0x0D` | — | Set foreground and background using true-colour values (v5+) |
-| `buffer_screen` | `0x1D` | St | Control screen buffering (v6 only) |
 
 ### 29.3.7 Version-Variant Opcodes
 

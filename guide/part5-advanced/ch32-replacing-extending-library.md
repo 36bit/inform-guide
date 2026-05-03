@@ -224,7 +224,7 @@ The following library routines are frequently replaced by games:
 | `DrawStatusLine` | `verblibm.h` | Draws the status line (Z-machine) |
 | `PrintRank` | `verblibm.h` | Prints the player's rank based on score |
 | `BeforeParsing` | Stub in `grammar.h` | Hook called before each input is parsed |
-| `Initialise` | Stub in `grammar.h` | Game setup (though typically defined, not replaced) |
+| `Initialise` | Game-defined (not in library) | Game setup (typically defined by the game) |
 
 Note that routines declared via `Stub` in `grammar.h` (see §32.3) are
 intended to be defined by the game directly rather than replaced — since

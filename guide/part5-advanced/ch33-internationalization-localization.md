@@ -737,9 +737,10 @@ extension table.
 - The Z-machine can support at most 97 extra characters (ZSCII 155–251)
   beyond the base Latin-1 set.
 - Unicode characters beyond U+FFFF cannot be placed in the ZSCII table.
-- Alphabet A2 has only about 12 replaceable positions (digits and some
-  punctuation), since positions 0–2 are reserved and several punctuation
-  characters are protected.
+- Alphabet A2 has 21 replaceable positions. Positions 0–2 are reserved for
+  shift characters, and three positions (`.`, `,`, and `~` at positions 12,
+  13, and 19) are protected as essential punctuation, but the remaining 21
+  positions (digits 0–9 and miscellaneous punctuation) may be replaced.
 - The `Zcharacter` directive is rejected with an error in Glulx mode.
 
 ## 33.4 Unicode Support in Glulx
