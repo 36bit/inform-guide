@@ -34,9 +34,9 @@ is assigned a number automatically, starting from 0, in declaration order.
 
 ### §B.1.1 Standard Attributes
 
-The following 31 attributes are declared by the standard library in `linklpa.h`
-(lines 34–65). The Number column shows the attribute number assigned by the
-compiler in declaration order.
+The following 31 attributes are declared by the standard library in `linklpa.h`.
+The Number column shows the attribute number assigned by the compiler in
+declaration order.
 
 | Number | Name           | Alias            | Category     | Set By             | Description                                              | Reference |
 |-------:|----------------|------------------|--------------|--------------------|----------------------------------------------------------|-----------|

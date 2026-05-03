@@ -99,7 +99,7 @@ reported, then restored afterward.
 ### §C.1.2 The LibraryMessages Object
 
 The `LibraryMessages` object provides the primary customization point. It is
-declared in `verblib.h` (lines 41–43):
+declared in `verblib.h`:
 
 ```inform6
 #Ifndef LibraryMessages;
@@ -122,7 +122,7 @@ that works like `LibraryMessages.before()`.
 ### §C.1.4 Message Parameters (lm_n, lm_o, lm_s)
 
 When `L___M` is called, it copies the message parameters into three global
-variables before invoking the handler chain (`parser.h`, lines 336–338):
+variables before invoking the handler chain (defined in `parser.h`):
 
 ```inform6
 Global lm_n;    ! Message number (n)
@@ -1269,8 +1269,8 @@ reference when customizing specific categories of parser output.
 ### §C.7.1 Parser Error Messages (27–42)
 
 These messages are produced when the parser fails to understand player input.
-Each corresponds to a parser error constant defined in `parser.h`
-(lines 475–492). The mapping is:
+Each corresponds to a parser error constant defined in `parser.h`. The
+mapping is:
 
 | Parser Error Constant | Value | Miscellany # | Triggered When |
 |-----------------------|------:|-------------:|----------------|
@@ -1355,7 +1355,7 @@ The remaining Miscellany messages cover:
 
 The `##ListMiscellany` messages (documented in §C.4.19) are used by the
 internal object listing routines (`WriteListFrom` and supporting code in
-`verblib.h`, lines 580–700). These messages format parenthetical annotations
+`verblib.h`). These messages format parenthetical annotations
 that appear after object names in room descriptions and inventory listings.
 
 The messages fall into several categories:
@@ -1416,7 +1416,7 @@ These messages begin a parenthetical that may be continued by messages 11–17.
 The runtime error messages (documented in §C.5.21) indicate programming
 errors or exceeded resource limits. They are printed with `** ... **`
 delimiters and are dispatched through `L__M(##RunTimeError, n, p1, p2)` from
-the `RunTimeError` routine in `verblib.h` (line 158).
+the `RunTimeError` routine in `verblib.h`.
 
 These messages cannot be meaningfully customized via `LibraryMessages` since
 they indicate error conditions, but they pass through the same `L__M` dispatch
@@ -1465,27 +1465,26 @@ directly from 5 to 7.
 ## §C.10 Parser Error Constant Cross-Reference
 
 This table provides a quick cross-reference between the parser error constants
-defined in `parser.h` (lines 475–492), the `##Miscellany` message number
-that each triggers, and the parser line where the error is reported
-(`parser.h`, lines 2375–2415).
+defined in `parser.h` and the `##Miscellany` message number that each
+triggers.
 
-| Constant | Value | Miscellany # | Default Message | Parser Line |
-|----------|------:|-------------:|-----------------|-------------|
-| `STUCK_PE` | 1 | 27 | "I didn't understand that sentence." | 2375 |
-| `UPTO_PE` | 2 | 28, 56 | "I only understood you as far as wanting to " + "." | 2376–2378 |
-| `NUMBER_PE` | 3 | 29 | "I didn't understand that number." | 2381 |
-| `CANTSEE_PE` | 4 | 30 | "[Actor] can't see any such thing." | 2382 |
-| `TOOLIT_PE` | 5 | 31 | "[Actor] seem[s] to have said too little." | 2383 |
-| `NOTHELD_PE` | 6 | 32 | "[Actor] isn't holding that." | 2384 |
-| `MULTI_PE` | 7 | 33 | "You can't use multiple objects with that verb." | 2385 |
-| `MMULTI_PE` | 8 | 34 | "You can only use multiple objects once on a line." | 2386 |
-| `VAGUE_PE` | 9 | 35 | "I'm not sure what ~[pronoun]~ refers to." | 2387 |
-| `EXCEPT_PE` | 10 | 36 | "You excepted something not included anyway." | 2388 |
-| `ANIMA_PE` | 11 | 37 | "[Actor] can only do that to something animate." | 2389 |
-| `VERB_PE` | 12 | 38 | "That's not a verb I recognise." | 2390 |
-| `SCENERY_PE` | 13 | 39 | "That's not something you need to refer to..." | 2391 |
-| `ITGONE_PE` | 14 | 35 or 40 | Pronoun referent gone (35 if no object, 40 if visible) | 2394–2395 |
-| `JUNKAFTER_PE` | 15 | 41 | "I didn't understand the way that finished." | 2397 |
-| `TOOFEW_PE` | 16 | 42 | "None/Only [n] of those is/are available." | 2398 |
-| `NOTHING_PE` | 17 | 43 or 44 | "Nothing to do" (43) or "There is nothing to [verb]" (44) | 2402–2415 |
-| `ASKSCOPE_PE` | 18 | — | No message; handled by `scope=` routine | — |
+| Constant | Value | Miscellany # | Default Message |
+|----------|------:|-------------:|-----------------|
+| `STUCK_PE` | 1 | 27 | "I didn't understand that sentence." |
+| `UPTO_PE` | 2 | 28, 56 | "I only understood you as far as wanting to " + "." |
+| `NUMBER_PE` | 3 | 29 | "I didn't understand that number." |
+| `CANTSEE_PE` | 4 | 30 | "[Actor] can't see any such thing." |
+| `TOOLIT_PE` | 5 | 31 | "[Actor] seem[s] to have said too little." |
+| `NOTHELD_PE` | 6 | 32 | "[Actor] isn't holding that." |
+| `MULTI_PE` | 7 | 33 | "You can't use multiple objects with that verb." |
+| `MMULTI_PE` | 8 | 34 | "You can only use multiple objects once on a line." |
+| `VAGUE_PE` | 9 | 35 | "I'm not sure what ~[pronoun]~ refers to." |
+| `EXCEPT_PE` | 10 | 36 | "You excepted something not included anyway." |
+| `ANIMA_PE` | 11 | 37 | "[Actor] can only do that to something animate." |
+| `VERB_PE` | 12 | 38 | "That's not a verb I recognise." |
+| `SCENERY_PE` | 13 | 39 | "That's not something you need to refer to..." |
+| `ITGONE_PE` | 14 | 35 or 40 | Pronoun referent gone (35 if no object, 40 if visible) |
+| `JUNKAFTER_PE` | 15 | 41 | "I didn't understand the way that finished." |
+| `TOOFEW_PE` | 16 | 42 | "None/Only [n] of those is/are available." |
+| `NOTHING_PE` | 17 | 43 or 44 | "Nothing to do" (43) or "There is nothing to [verb]" (44) |
+| `ASKSCOPE_PE` | 18 | — | No message; handled by `scope=` routine |
