@@ -502,7 +502,12 @@ This is essential for individual properties, which may not exist on all objects.
 
 Classes provide built-in methods for managing a pool of pre-created
 instances (see §7.6.2). All of them are invoked on the *class* object,
-not on an individual instance:
+not on an individual instance.
+
+The class-message machinery is unavailable on Z-machine v3: any use of
+`Class.create`, `Class.recreate`, `Class.destroy`, `Class.copy`, or
+`Class.remaining` produces a compile-time error ("Class messages are
+not supported in v3"). Use v5+ or Glulx for class-pool features.
 
 ### 7.11.1 `create`
 
@@ -526,6 +531,10 @@ property values and attributes to those of the class prototype. `obj`
 must be `ofclass ClassName`. Up to three extra arguments may be
 passed, in which case the object's `create` property (if any) is then
 called with them. This is useful for object pooling.
+
+On Glulx, `recreate` first calls the object's `destroy` property (if
+provided) before resetting it; the Z-machine variant does not call
+`destroy` during `recreate`.
 
 ```inform6
 Class Bullet(20)
