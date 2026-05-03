@@ -77,7 +77,7 @@ a far greater address space.
 
 Portable code that depends on numeric range must account for the target.
 The compiler predefines `TARGET_ZCODE` or `TARGET_GLULX` (but not both)
-and provides `WORDSIZE` as a runtime constant:
+and provides `WORDSIZE` as a compile-time constant:
 
 ```inform6
 Constant LIMIT = WORDSIZE * 8;   ! 16 or 32
