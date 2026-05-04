@@ -40,37 +40,37 @@ declaration order.
 
 | Number | Name           | Alias            | Category     | Set By             | Description                                              | Reference |
 |-------:|----------------|------------------|--------------|--------------------|----------------------------------------------------------|-----------|
-|      0 | `animate`      |                  | Object type  | Game author        | Object is a living creature; enables `life` processing   | §19.2.1   |
-|      1 | `absent`       | `non_floating`   | State        | Game author / lib  | Suppresses `found_in` floating; temporarily removes from play | §19.2.2   |
-|      2 | `clothing`     |                  | Object type  | Game author        | Object can be worn by the player                         | §19.2.3   |
-|      3 | `concealed`    |                  | Visibility   | Game author        | Hidden from room descriptions but reachable by name      | §19.2.4   |
-|      4 | `container`    |                  | Object type  | Game author        | Object can hold other objects inside it                  | §19.2.5   |
-|      5 | `door`         |                  | Object type  | Game author        | Object is a door connecting two rooms                    | §19.2.6   |
-|      6 | `edible`       |                  | Physical     | Game author        | Object can be eaten (removed from play on `Eat`)         | §19.2.7   |
-|      7 | `enterable`    |                  | Physical     | Game author        | Player can enter or sit on this object                   | §19.2.8   |
-|      8 | `general`      |                  | State        | Game author        | General-purpose flag with no built-in semantics          | §19.2.9   |
-|      9 | `light`        |                  | Physical     | Game author / lib  | Object provides illumination                             | §19.2.10  |
-|     10 | `lockable`     |                  | Physical     | Game author        | Container or door can be locked/unlocked                 | §19.2.11  |
-|     11 | `locked`       |                  | State        | Game author / lib  | Container or door is currently locked                    | §19.2.12  |
-|     12 | `moved`        |                  | State        | Library            | Set when player first picks up the object                | §19.2.13  |
-|     13 | `on`           |                  | State        | Library            | Switchable object is currently switched on               | §19.2.14  |
-|     14 | `open`         |                  | State        | Game author / lib  | Container or door is currently open                      | §19.2.15  |
-|     15 | `openable`     |                  | Physical     | Game author        | Container or door can be opened and closed               | §19.2.16  |
-|     16 | `proper`       |                  | Gender/name  | Game author        | Proper noun — printed without an article                 | §19.2.17  |
-|     17 | `scenery`      |                  | Visibility   | Game author        | Part of room description; not listed separately; not takeable | §19.2.18  |
-|     18 | `scored`       |                  | State        | Game author        | Contributes to automatic scoring when visited/taken      | §19.2.19  |
-|     19 | `static`       |                  | Visibility   | Game author        | Cannot be taken; listed normally in room descriptions    | §19.2.20  |
-|     20 | `supporter`    |                  | Object type  | Game author        | Objects can be placed on top of this object              | §19.2.21  |
-|     21 | `switchable`   |                  | Physical     | Game author        | Object has an on/off state controlled by `SwitchOn`/`SwitchOff` | §19.2.22  |
-|     22 | `talkable`     |                  | Object type  | Game author        | Non-animate object can receive conversation commands     | §19.2.23  |
-|     23 | `transparent`  |                  | Visibility   | Game author        | Contents visible even when closed                        | §19.2.24  |
-|     24 | `visited`      |                  | State        | Library            | Room has been entered by the player at least once        | §19.2.25  |
-|     25 | `workflag`     |                  | Internal     | Library            | Temporary flag used internally by library list routines  | §19.2.26  |
-|     26 | `worn`         |                  | State        | Library            | Clothing is currently being worn by the player           | §19.2.27  |
-|     27 | `male`         |                  | Gender/name  | Game author        | Object uses masculine pronouns (he/him)                  | §19.2.28  |
-|     28 | `female`       |                  | Gender/name  | Game author        | Object uses feminine pronouns (she/her)                  | §19.2.29  |
-|     29 | `neuter`       |                  | Gender/name  | Game author        | Object uses neuter pronouns (it/its)                     | §19.2.30  |
-|     30 | `pluralname`   |                  | Gender/name  | Game author        | Object uses plural pronouns (they/them)                  | §19.2.31  |
+|      0 | `animate`      |                  | Object type  | Game author        | Object is a living creature; enables `life` processing   | §19.3.6   |
+|      1 | `absent`       | `non_floating`   | State        | Game author / lib  | Suppresses `found_in` floating; temporarily removes from play | §19.7.1   |
+|      2 | `clothing`     |                  | Object type  | Game author        | Object can be worn by the player                         | §19.2.8   |
+|      3 | `concealed`    |                  | Visibility   | Game author        | Hidden from room descriptions but reachable by name      | §19.4.3   |
+|      4 | `container`    |                  | Object type  | Game author        | Object can hold other objects inside it                  | §19.3.1   |
+|      5 | `door`         |                  | Object type  | Game author        | Object is a door connecting two rooms                    | §19.3.3   |
+|      6 | `edible`       |                  | Physical     | Game author        | Object can be eaten (removed from play on `Eat`)         | §19.3.5   |
+|      7 | `enterable`    |                  | Physical     | Game author        | Player can enter or sit on this object                   | §19.3.4   |
+|      8 | `general`      |                  | State        | Game author        | General-purpose flag with no built-in semantics          | §19.6.4   |
+|      9 | `light`        |                  | Physical     | Game author / lib  | Object provides illumination                             | §19.4.5   |
+|     10 | `lockable`     |                  | Physical     | Game author        | Container or door can be locked/unlocked                 | §19.2.4   |
+|     11 | `locked`       |                  | State        | Game author / lib  | Container or door is currently locked                    | §19.2.3   |
+|     12 | `moved`        |                  | State        | Library            | Set when player first picks up the object                | §19.6.1   |
+|     13 | `on`           |                  | State        | Library            | Switchable object is currently switched on               | §19.2.5   |
+|     14 | `open`         |                  | State        | Game author / lib  | Container or door is currently open                      | §19.2.1   |
+|     15 | `openable`     |                  | Physical     | Game author        | Container or door can be opened and closed               | §19.2.2   |
+|     16 | `proper`       |                  | Gender/name  | Game author        | Proper noun — printed without an article                 | §19.5.5   |
+|     17 | `scenery`      |                  | Visibility   | Game author        | Part of room description; not listed separately; not takeable | §19.4.1   |
+|     18 | `scored`       |                  | State        | Game author        | Contributes to automatic scoring when visited/taken      | §19.6.3   |
+|     19 | `static`       |                  | Visibility   | Game author        | Cannot be taken; listed normally in room descriptions    | §19.4.2   |
+|     20 | `supporter`    |                  | Object type  | Game author        | Objects can be placed on top of this object              | §19.3.2   |
+|     21 | `switchable`   |                  | Physical     | Game author        | Object has an on/off state controlled by `SwitchOn`/`SwitchOff` | §19.2.6   |
+|     22 | `talkable`     |                  | Object type  | Game author        | Non-animate object can receive conversation commands     | §19.3.7   |
+|     23 | `transparent`  |                  | Visibility   | Game author        | Contents visible even when closed                        | §19.4.4   |
+|     24 | `visited`      |                  | State        | Library            | Room has been entered by the player at least once        | §19.6.2   |
+|     25 | `workflag`     |                  | Internal     | Library            | Temporary flag used internally by library list routines  | §19.7.2   |
+|     26 | `worn`         |                  | State        | Library            | Clothing is currently being worn by the player           | §19.2.7   |
+|     27 | `male`         |                  | Gender/name  | Game author        | Object uses masculine pronouns (he/him)                  | §19.5.1   |
+|     28 | `female`       |                  | Gender/name  | Game author        | Object uses feminine pronouns (she/her)                  | §19.5.2   |
+|     29 | `neuter`       |                  | Gender/name  | Game author        | Object uses neuter pronouns (it/its)                     | §19.5.3   |
+|     30 | `pluralname`   |                  | Gender/name  | Game author        | Object uses plural pronouns (they/them)                  | §19.5.4   |
 
 **Alias:** `non_floating` is declared as an alias for `absent` on the same
 source line. Both names refer to attribute number 1.
@@ -147,7 +147,7 @@ below lists all common properties in numeric order.
 
 | Number | Name                | Default    | Additive | Value Type(s)                        | Description                                                     | Reference |
 |-------:|---------------------|------------|:--------:|--------------------------------------|-----------------------------------------------------------------|-----------|
-|      1 | `name`              | `0`        | Yes      | Dictionary words                     | Words the parser uses to recognize this object                  | §18.6.1   |
+|      1 | `name`              | `0`        | Yes      | Dictionary words                     | Words the parser uses to recognize this object                  | §18.2.1   |
 |      2 | *(class inheritance)* | `0`      | Yes      | *(compiler internal)*                | Stores class membership chain; not directly accessible          | —         |
 |      3 | *(instance variables table)* | `0` | No    | *(compiler internal, Z-code only)*   | Address of individual property table; reserved in Glulx          | —         |
 |      4 | `before`            | `NULL`     | Yes      | Routine                              | Intercepts actions before processing; return `true` to block    | §18.3.1   |
