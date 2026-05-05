@@ -597,8 +597,11 @@ Abbreviate "ing ";
 Abbreviations reduce the size of encoded text in the story file. The
 compiler substitutes frequently occurring strings with compact tokens.
 
-> **[Z-machine]** The compiler enforces a hard limit of **96**
-> abbreviations for all Z-machine versions it targets (3 and later).
+> **[Z-machine]** The compiler defaults to a limit of **64**
+> abbreviations (controlled by `$MAX_ABBREVS`, which defaults to 64).
+> The hard ceiling is **96**: `$MAX_ABBREVS` may be raised up to 96, but
+> `$MAX_ABBREVS` and `$MAX_DYNAMIC_STRINGS` must sum to exactly 96, so
+> raising one requires lowering the other (their defaults are 64 and 32).
 > As of compiler 6.42, abbreviation strings may be of any length
 > (earlier versions limited them to 64 characters).
 
