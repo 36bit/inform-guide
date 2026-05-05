@@ -2772,12 +2772,12 @@ Verb 'take'
 
 **Default behavior:**
 
-1. If `noun` is already in `actor`:
-   - If `noun` has `worn`, redirects to `<<Disrobe noun, actor>>`.
-   - If `onotheld_mode` is set, sets `notheld_mode = onotheld_mode` and returns.
-   - Otherwise prints `L__M(##Take, 1, noun)` and stops.
-2. Calls `AttemptToTakeObject()`. If unsuccessful, stops.
-3. Calls `AfterRoutines()`. If not intercepted, prints a success message (suppressed if `keep_silent` is set).
+1. If `noun` is in `actor` and has `worn`, redirects to `<<Disrobe noun, actor>>`.
+2. If `onotheld_mode == 0` or `noun` is not in `actor`, calls `AttemptToTakeObject(noun)`. If it returns true, stops.
+3. Calls `AfterRoutines()`. If intercepted, stops.
+4. Sets `notheld_mode = onotheld_mode`.
+5. If `notheld_mode == 1` or `keep_silent` is set, stops.
+6. Prints `L__M(##Take, 1, noun)` (the "you already have that" message).
 
 **Checks performed:** `worn` attribute; parent relationships; `notheld_mode`/`onotheld_mode`.
 
@@ -2787,7 +2787,7 @@ Verb 'take'
 
 | Message | Condition |
 |---------|-----------|
-| `L__M(##Take, 1)` | `noun` is already held by `actor` |
+| `L__M(##Take, 1)` | `noun` was already in `actor`, `AttemptToTakeObject` was skipped, and neither `notheld_mode == 1` nor `keep_silent` is set |
 
 > **Note:** `AttemptToTakeObject()` handles the complex taking logic including capacity checks, the `Receive` fake action, and most Take messages (`L__M(##Take, 2–13)`).
 
