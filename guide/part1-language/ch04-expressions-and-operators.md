@@ -50,8 +50,8 @@ a branch jumps past the right operand; for `||`, if the left operand is
 true, a branch jumps past the right operand.
 
 At the constant-folding level, the compiler also applies short-circuit
-rules: `0 && <anything>` folds to 0, and `1 || <anything>` folds to 1,
-without evaluating the right-hand expression.
+rules: `0 && <anything>` folds to 0, and any non-zero constant `||
+<anything>` folds to 1, without evaluating the right-hand expression.
 
 ## 4.2 Arithmetic Operators
 
