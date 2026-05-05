@@ -190,9 +190,10 @@ The number of common properties is limited:
   `Property`). The standard library declares 47 with `Property`,
   which together with `name` gives 48 user-visible common properties.
 - **Glulx**: Limit depends on the `INDIV_PROP_START` setting (default
-  256), so by default common properties are numbered 1–255. In
-  practice the limit is much higher than the standard library
-  requires.
+  256), so by default common property numbers run 1–255 (`INDIV_PROP_START - 1`),
+  of which `INDIV_PROP_START - 3` (default 253, including the built-in `name`)
+  are user-declarable. In practice the limit is much higher than the
+  standard library requires.
 
 A default value can be set:
 
@@ -679,11 +680,11 @@ Restrictions on `private`:
 | Limit | Z-machine | Glulx |
 |---|---|---|
 | Maximum objects | 255 (v3); v4+ limited only by memory | Limited only by memory |
-| Maximum common properties | 31 (v3, of which 29 are user-declarable), 63 (v4+, of which 61 are user-declarable) | `INDIV_PROP_START - 1` (default 255) |
+| Maximum common properties | 31 (v3, of which 29 are user-declarable), 63 (v4+, of which 61 are user-declarable) | `INDIV_PROP_START - 1` (default 255), of which `INDIV_PROP_START - 3` (default 253) are user-declarable |
 | Maximum attributes | 32 (v3), 48 (v4+) | `NUM_ATTR_BYTES × 8` (default 56, max 312) |
 | Maximum data per common property | 8 bytes / 4 words (v3), 64 bytes / 32 words (v4+) | 32768 values per property |
 | Maximum data per individual property | 64 bytes / 32 words | 32768 values per property |
-| Maximum classes | Limited only by the maximum number of objects (every class is itself an object and consumes an object-number slot, so on v3 the four built-in metaclasses plus all user classes share the 255-object cap) | Limited only by memory (every class is an object and consumes an object-number slot) |
+| Maximum classes | Capped at 256 by the compiler (`VENEER_CONSTRAINT_ON_CLASSES_Z`), and additionally capped by the object limit (on v3, four built-in metaclasses plus all user classes share the 255-object cap) | Capped at 32768 by the compiler (`VENEER_CONSTRAINT_ON_CLASSES_G`); every class is an object and consumes an object-number slot |
 
 ---
 
