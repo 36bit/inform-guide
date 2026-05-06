@@ -81,7 +81,7 @@ classes.
 | `highest_object_number` | Z/G | The highest valid object number. The valid range of object numbers is `#lowest_object_number` through `#highest_object_number` inclusive. |
 | `lowest_class_number` | Z/G | Always 0. Classes are numbered starting from 0. |
 | `highest_class_number` | Z/G | The index of the last class, equal to (total classes) − 1. |
-| `class_objects_array` | Z/G | Address of the class-numbers table. This table maps class indices to their corresponding object numbers. On Glulx, the address is in RAM. |
+| `class_objects_array` | Z | Address of the class-numbers table. This table maps class indices to their corresponding object numbers. |
 
 ---
 
@@ -209,7 +209,7 @@ error when `$OMIT_SYMBOL_TABLE` is set.
 
 | Constant | VM | Description |
 |----------|-----|-------------|
-| `lowest_global_number` | Z/G | Always 16. On the Z-machine, globals 0–15 are reserved for the VM's local variable area. User globals start at index 16. |
+| `lowest_global_number` | Z | Always 16. On the Z-machine, globals 0–15 are reserved for the VM's local variable area. User globals start at index 16. |
 | `highest_global_number` | Z | The index of the last global variable, equal to 16 + (total user globals) − 1. |
 | `globals_array` | Z/G | Address of the global variables area. On Z-machine, this is the variables offset. On Glulx, this is the variables offset. |
 | `global_names_array` † | Z | Address of the global-names table. |
@@ -253,11 +253,11 @@ targeting Glulx, and vice versa.
 `attribute_names_array`, `highest_property_number`,
 `property_names_array`, `highest_routine_number`, `routines_array`,
 `routine_names_array`, `routine_flags_array`,
-`highest_global_number`, `global_names_array`,
+`lowest_global_number`, `highest_global_number`, `global_names_array`,
 `global_flags_array`, `highest_array_number`, `arrays_array`,
 `array_names_array`, `array_flags_array`,
 `highest_constant_number`, `constants_array`,
-`constant_names_array`, `oddeven_packing`.
+`constant_names_array`, `class_objects_array`, `oddeven_packing`.
 
 **Glulx only**:
 
@@ -273,10 +273,9 @@ targeting Glulx, and vice versa.
 `action_names_array`,
 `lowest_fake_action_number`, `highest_fake_action_number`,
 `fake_action_names_array`,
-`lowest_routine_number`, `lowest_global_number`, `globals_array`,
+`lowest_routine_number`, `globals_array`,
 `lowest_array_number`, `lowest_constant_number`,
 `lowest_class_number`, `highest_class_number`,
-`class_objects_array`,
 `lowest_object_number`, `highest_object_number`,
 `grammar_table`, `dictionary_table`,
 `highest_meta_action_number`.
