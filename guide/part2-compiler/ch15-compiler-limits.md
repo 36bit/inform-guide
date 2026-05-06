@@ -127,9 +127,11 @@ Several additional limits apply across all Z-machine versions:
   set to values that do not sum to 96, the compiler warns and resets
   both to their defaults.
 
-- **Property values per property:** A single property may hold at most
-  32,768 values (entries) on either platform. This is a compiler-imposed
-  limit; in practice it is never reached in normal use.
+- **Property values per property:** On the Z-machine, a single property
+  may hold at most **32 values** (64 bytes). For V3 common properties the
+  limit is tighter: **4 values** (8 bytes). These are hard limits enforced
+  by the compiler with an error such as "Limit (of 32 values) exceeded for
+  property". In practice they are rarely reached.
 
 ---
 
@@ -154,7 +156,9 @@ Z-machine's size constraints. Its limits are far more generous:
 - **Properties:** There is no architectural limit on properties. The
   setting `$INDIV_PROP_START` (default 256) determines the boundary
   between common and individual properties; properties numbered below
-  it are common, those at or above it are individual.
+  it are common, those at or above it are individual. A single property
+  may hold at most **32,768 values**; this is a compiler-imposed limit
+  that is effectively never reached in practice.
 
 - **Dictionary word resolution:** Controlled by `$DICT_WORD_SIZE`
   (default 9). Unlike the Z-machine, this is freely adjustable.

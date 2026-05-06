@@ -309,9 +309,10 @@ Array handlers --> ProcessA ProcessB ProcessC;
 
 ### 6.8.2 Argument Limits for `indirect()`
 
-On the Z-machine, `indirect()` supports up to 7 arguments (including the
-routine address, so effectively 6 passed arguments). The compiler
-generates different call opcodes depending on the number of arguments.
+On the Z-machine, `indirect()` supports the routine address plus up to
+**7 call arguments** (8 operands total). This is the same limit as a
+direct call. The compiler generates different call opcodes depending on
+the number of arguments.
 
 ## 6.9 Variable-Argument Routines (Glulx)
 

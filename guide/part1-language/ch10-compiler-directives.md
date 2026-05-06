@@ -654,7 +654,7 @@ parser-terminating characters.
 Zcharacter 'ä';                         ! add a character to the alphabet
 Zcharacter "abcdefghijklmnopqrstuvwxyz" ! redefine all three alphabet rows
            "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-           " 0123456789.,!?_#'~/\\-:()";
+           "0123456789.,!?_#'/\-:()";
 Zcharacter table 'a' 'b' 'c';           ! define the ZSCII-to-Unicode table
 Zcharacter table + '@{e9}' '@{e8}';     ! add to the existing table
 Zcharacter terminating 129 130;         ! add input-terminating ZSCII codes
