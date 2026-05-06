@@ -170,11 +170,11 @@ Abbreviate "you ";
 
 #### `DICT_WORD_SIZE`
 
-**Platform:** Glulx only (fixed at 6 in Z-code, 4 in Z-machine v3)
+**Platform:** Glulx only (fixed at 9 in Z-machine v4+, 6 in Z-machine v3)
 **Default:** 9
 
 The number of characters stored per dictionary word. In Z-code, this is fixed
-by the virtual machine specification (6 characters in v4+, 4 in v3). In Glulx,
+by the virtual machine specification (9 characters in v4+, 6 in v3). In Glulx,
 this can be set to any value. Increasing this value allows the parser to
 distinguish longer words, at the cost of a larger dictionary table.
 

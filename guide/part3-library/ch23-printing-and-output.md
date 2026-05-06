@@ -64,7 +64,7 @@ function calls. They are part of the language, not the library:
 |-----------|--------|--------|
 | `(string) addr` | `print_paddr` | Prints the string at packed address `addr` |
 | `(char) expr` | `print_char` | Prints the character with ZSCII/Unicode value `expr` |
-| `(address) expr` | `print_addr` | Prints the dictionary word at byte address `expr` |
+| `(address) expr` | `print_addr` | Prints the Z-encoded string at byte address `expr` (dictionary words, Lowstring constants, etc.) |
 | `(object) expr` | `print_obj` | Prints an object's `short_name` via the raw VM opcode |
 
 A bare expression (without a format specifier) is printed as a signed

@@ -80,7 +80,9 @@ small number of property slots for internal use (`name`, class
 inheritance, individual property table), so the practical limit on
 user-declarable common properties is **29** in V3 and **61** in V4+.
 Exceeding this limit produces the error `All 29 properties already
-declared` (or `All 61 …`).
+declared` (or `All 61 …`). Similarly, the "max globals" column shows
+the architectural total of 240; the compiler reserves 7 of those slots,
+so the user limit is **233** (see §15.2.2).
 
 **V3** is the original Infocom format. Its 128 KB file size limit, 255
 maximum objects, and 32 attributes make it unsuitable for large modern
@@ -117,7 +119,10 @@ Several additional limits apply across all Z-machine versions:
   V6 and V7 use separate routine and string offset values in the header
   to extend addressing beyond the basic scale factor.
 
-- **Global variables:** All versions support a maximum of 240 globals.
+- **Global variables:** The Z-machine architecture provides 240 global
+  variable slots. The compiler reserves 7 of them for internal use
+  (four temporaries, `self`, `sender`, and `sw__var`), leaving at most
+  **233** user-declarable globals. See §3.1 for details.
 
 - **Abbreviations and dynamic strings:** The Z-machine allocates a
   shared pool of exactly 96 slots for these two features combined.
@@ -127,9 +132,11 @@ Several additional limits apply across all Z-machine versions:
   set to values that do not sum to 96, the compiler warns and resets
   both to their defaults.
 
-- **Property values per property:** A single property may hold at most
-  32,768 values (entries) on either platform. This is a compiler-imposed
-  limit; in practice it is never reached in normal use.
+- **Property values per property:** On the Z-machine, a single property
+  may hold at most **32 values** (64 bytes). For V3 common properties the
+  limit is tighter: **4 values** (8 bytes). These are hard limits enforced
+  by the compiler with an error such as "Limit (of 32 values) exceeded for
+  property". In practice they are rarely reached.
 
 ---
 
@@ -154,7 +161,9 @@ Z-machine's size constraints. Its limits are far more generous:
 - **Properties:** There is no architectural limit on properties. The
   setting `$INDIV_PROP_START` (default 256) determines the boundary
   between common and individual properties; properties numbered below
-  it are common, those at or above it are individual.
+  it are common, those at or above it are individual. A single property
+  may hold at most **32,768 values**; this is a compiler-imposed limit
+  that is effectively never reached in practice.
 
 - **Dictionary word resolution:** Controlled by `$DICT_WORD_SIZE`
   (default 9). Unlike the Z-machine, this is freely adjustable.
