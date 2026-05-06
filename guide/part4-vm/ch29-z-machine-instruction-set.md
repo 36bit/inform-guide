@@ -474,6 +474,7 @@ These EXT opcodes were introduced in version 1.1 of the specification:
 | Name | Code | Flags | Description |
 |------|------|-------|-------------|
 | `set_true_colour` | `0x0D` | — | Set foreground and background using true-colour values (v5+) |
+| `buffer_screen` | `0x1D` | St | Control screen buffering (v6 only) |
 
 ### 29.3.7 Version-Variant Opcodes
 
@@ -1111,7 +1112,7 @@ from version 5 onwards. `save` and `restore` at `$05`/`$06` are version
 | 26 | `print_form` | `$1A` | 6 | — | — |
 | 27 | `make_menu` | `$1B` | 6 | Br | 8 |
 | 28 | `picture_table` | `$1C` | 6 | — | 3 |
-| 29 | `buffer_screen` | `$1D` | 6 | St | — |
+| 29 | `buffer_screen` | `$1D` | 6 (ZSpec 1.1) | St | — |
 
 ### 29.8.6 Table Legend
 

@@ -80,7 +80,9 @@ small number of property slots for internal use (`name`, class
 inheritance, individual property table), so the practical limit on
 user-declarable common properties is **29** in V3 and **61** in V4+.
 Exceeding this limit produces the error `All 29 properties already
-declared` (or `All 61 …`).
+declared` (or `All 61 …`). Similarly, the "max globals" column shows
+the architectural total of 240; the compiler reserves 7 of those slots,
+so the user limit is **233** (see §15.2.2).
 
 **V3** is the original Infocom format. Its 128 KB file size limit, 255
 maximum objects, and 32 attributes make it unsuitable for large modern
@@ -117,7 +119,10 @@ Several additional limits apply across all Z-machine versions:
   V6 and V7 use separate routine and string offset values in the header
   to extend addressing beyond the basic scale factor.
 
-- **Global variables:** All versions support a maximum of 240 globals.
+- **Global variables:** The Z-machine architecture provides 240 global
+  variable slots. The compiler reserves 7 of them for internal use
+  (four temporaries, `self`, `sender`, and `sw__var`), leaving at most
+  **233** user-declarable globals. See §3.1 for details.
 
 - **Abbreviations and dynamic strings:** The Z-machine allocates a
   shared pool of exactly 96 slots for these two features combined.
