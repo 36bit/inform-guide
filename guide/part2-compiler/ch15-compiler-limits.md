@@ -119,11 +119,13 @@ Several additional limits apply across all Z-machine versions:
 
 - **Global variables:** All versions support a maximum of 240 globals.
 
-- **Abbreviations:** The Z-machine supports a maximum of 96
-  abbreviations (though the compiler default `$MAX_ABBREVS` is 64).
-
-- **Dynamic strings:** Z-code supports a maximum of 96 dynamic string
-  variables (`@00` through `@95`).
+- **Abbreviations and dynamic strings:** The Z-machine allocates a
+  shared pool of exactly 96 slots for these two features combined.
+  The defaults are `$MAX_ABBREVS=64` and `$MAX_DYNAMIC_STRINGS=32`
+  (summing to 96). If only one value is changed, the compiler
+  automatically adjusts the other to keep the sum at 96; if both are
+  set to values that do not sum to 96, the compiler warns and resets
+  both to their defaults.
 
 - **Property values per property:** A single property may hold at most
   32,768 values (entries) on either platform. This is a compiler-imposed
@@ -512,7 +514,7 @@ trade-offs:
 | Max attributes | 48 | 48 | 56+ (configurable) |
 | Max properties | 63 | 63 | No hard limit |
 | Integer size | 16-bit | 16-bit | 32-bit |
-| Local variables | 15 | 15 | 119 |
+| Local variables | 15 | 15 | 118 |
 | Dictionary resolution | 9 chars | 9 chars | Configurable |
 | Interpreter support | Excellent | Good | Good |
 | Multimedia | Limited | Limited | Full (via Glk) |

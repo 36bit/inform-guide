@@ -159,6 +159,9 @@ that the compiler can substitute with single-byte tokens in Z-encoded text,
 saving space. The Z-machine specification limits this to 96. This setting is
 not meaningful in Glulx, where abbreviations are unlimited.
 
+`MAX_ABBREVS` and `MAX_DYNAMIC_STRINGS` must sum to exactly 96 in Z-code, so
+raising one requires lowering the other.
+
 ```inform6
 !% $MAX_ABBREVS=96
 Abbreviate "the ";
@@ -318,6 +321,9 @@ The maximum number of dynamic string substitution variables. These are
 referenced in strings with the `@00` through `@31` syntax (or `@(N)` for
 higher numbers). The `string` statement assigns text to these variables at
 runtime. In Z-code the maximum is 96.
+
+`MAX_DYNAMIC_STRINGS` and `MAX_ABBREVS` must sum to exactly 96 in Z-code, so
+raising one requires lowering the other.
 
 ```inform6
 !% $MAX_DYNAMIC_STRINGS=64

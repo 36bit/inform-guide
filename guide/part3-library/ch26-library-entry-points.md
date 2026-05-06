@@ -107,7 +107,7 @@ and before the first `Look`.
 |------ |---------------------------------------------------------- |
 | 0     | Print the banner, then perform an initial `Look`.         |
 | 1     | Print the banner, then perform an initial `Look` (same as 0). |
-| 2     | Do not print the banner or perform an initial `Look`.     |
+| 2     | Do not print the banner. The initial `Look` is still performed (unless `NOINITIAL_LOOK` is defined). |
 
 **Typical usage:**
 
@@ -123,8 +123,10 @@ and before the first `Look`.
 - The `location` variable *must* be set to a valid room object before
   `Initialise` returns, or the game will crash.
 - If `Initialise` prints any text, it appears before the banner.
-- A return value of 2 is useful when the game wants to display a
-  custom title screen before normal play begins.
+- A return value of 2 is useful when the game provides its own banner
+  output inside `Initialise` and wants to suppress the library's default
+  banner. The initial `Look` still runs; to suppress that too, compile
+  with `Constant NOINITIAL_LOOK;` before including the library.
 
 ## 26.3 `BeforeParsing()`
 

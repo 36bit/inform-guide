@@ -898,17 +898,17 @@ function. Common selectors include:
 | Selector | Glk Function | Description |
 |---|---|---|
 | `$0004` | `glk_gestalt` | Query Glk capabilities. |
-| `$0040` | `glk_window_iterate` | Iterate over windows. |
-| `$0047` | `glk_window_open` | Open a new window. |
-| `$002F` | `glk_window_get_size` | Get window dimensions. |
+| `$0020` | `glk_window_iterate` | Iterate over windows. |
+| `$0023` | `glk_window_open` | Open a new window. |
+| `$0025` | `glk_window_get_size` | Get window dimensions. |
 | `$0080` | `glk_put_char` | Output a single character. |
 | `$0081` | `glk_put_char_stream` | Output a character to a stream. |
-| `$0086` | `glk_put_buffer` | Output a buffer of characters. |
+| `$0084` | `glk_put_buffer` | Output a buffer of characters. |
 | `$00A0` | `glk_char_to_lower` | Convert character to lowercase. |
 | `$00D0` | `glk_request_line_event` | Request line input. |
 | `$00D2` | `glk_request_char_event` | Request character input. |
-| `$00E0` | `glk_select` | Wait for and retrieve an event. |
-| `$0160` | `glk_fileref_create_by_prompt` | Prompt user for a file. |
+| `$00C0` | `glk_select` | Wait for and retrieve an event. |
+| `$0062` | `glk_fileref_create_by_prompt` | Prompt user for a file. |
 
 These selectors are defined in the `infglk.h` header file. The
 complete set of selectors is documented in the Glk specification.
