@@ -493,7 +493,7 @@ over 130 opcodes organised into the following categories:
 | Search | 0x0150–0x0152 | 3 | Linear, binary, and linked list search |
 | Memory/heap | 0x170–0x179 | 4 | Zero, copy, malloc, free |
 | Acceleration | 0x180–0x181 | 2 | Register accelerated functions |
-| Floating point | 0x190–0x1C9 | 26 | Single-precision IEEE-754 operations |
+| Floating point | 0x190–0x1C9 | 29 | Single-precision IEEE-754 operations |
 | Double precision | 0x200–0x239 | 32 | Double-precision IEEE-754 operations |
 
 ### 30.7.3 Feature-Gated Opcode Groups
@@ -702,7 +702,7 @@ Z-machine produces an error.
 
 ### 30.9.3 Single-Precision Opcodes
 
-Twenty-six opcodes provide single-precision floating-point operations.
+Twenty-nine opcodes provide single-precision floating-point operations.
 These are gated behind the `GOP_Float` feature flag and require Glulx version 3.1.2 or later. The opcodes fall into
 several groups:
 
