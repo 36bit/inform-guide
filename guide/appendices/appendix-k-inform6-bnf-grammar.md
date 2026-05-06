@@ -368,7 +368,9 @@ abbreviate-directive
 ```
 
 Declares one or more abbreviation strings for Z-machine text compression.
-Maximum 96 abbreviations in Z-code (64 in version 3).
+The hard ceiling is 96 abbreviations in Z-code; the default `$MAX_ABBREVS`
+setting is 64, and the 96-slot pool is shared with `$MAX_DYNAMIC_STRINGS`.
+Not supported in Glulx mode.
 
 ### §K.3.3 Array
 
