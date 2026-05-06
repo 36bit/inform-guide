@@ -68,9 +68,12 @@ The compiler maintains an **alphabet table** of three 26-letter alphabets
 - **Alphabet 1 (A1):** uppercase letters and additional characters.
 - **Alphabet 2 (A2):** digits, punctuation, and special characters.
 
-Two positions in A2 have special meaning: position 1 encodes newline
-(which is why `^` in strings produces a newline), and position 19 holds
-the tilde, which the language maps to the double-quote character (which is why
+Two positions in A2 have special meaning: position 0 is reserved as an
+escape code by the Z-Machine standard, and position 1 encodes newline
+(which is why `^` in strings produces a newline). The tilde character is
+also held in A2 — at position 19 in the default alphabet, or at position 2
+when A2 has been redefined by the `Zcharacter` directive (see §1.1.4) —
+and is mapped by the language to the double-quote character (which is why
 `~` in strings produces `"`).
 
 ### 1.1.3 Unicode Support (Glulx)

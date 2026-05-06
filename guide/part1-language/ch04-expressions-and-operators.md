@@ -806,13 +806,14 @@ The `indirect()` built-in handles indirect calls with zero arguments.
 For calls with arguments, `indirect(fn, arg1, arg2, ...)` passes them
 through. On Glulx, the number of arguments that `indirect()` can accept
 is essentially unlimited. On the Z-machine (version 4 and later), the
-compiler rejects calls that pass more than eight items in total (the
-routine address plus seven call arguments). The practical effect is that
-`indirect()` is limited to passing at most **seven** arguments to the
-called function — the same cap as a direct call such as
-`Foo(a1, ..., a7)`. On version 3 story files, the underlying call opcode
-supports far fewer operands, and the limit drops to at most three
-arguments.
+compiler rejects `indirect()` calls that pass more than seven items in
+total (the routine address plus six call arguments), so `indirect()` is
+limited to passing at most **six** arguments to the called function.
+A direct call such as `Foo(a1, ..., a7)` may carry one more, since the
+direct-call path accepts up to seven call arguments. On version 3 story
+files, the underlying call opcode supports far fewer operands, and the
+limit drops to at most three arguments for both direct calls and
+`indirect()`.
 
 ## 4.13 Operator Precedence Table
 
