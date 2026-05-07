@@ -400,7 +400,7 @@ The standard library defines these meta actions:
 | `Save` | `save` |
 | `Score` | `score` |
 | `FullScore` | `fullscore`, `full` |
-| `ScriptOn` / `ScriptOff` | `script`, `transcript`, `noscript` |
+| `ScriptOn` / `ScriptOff` | `script`, `transcript`, `noscript`, `unscript` |
 | `CommandsOn` / `CommandsOff` / `CommandsRead` | `recording`, `replay` |
 | `Verify` | `verify` |
 | `Version` | `version` |
