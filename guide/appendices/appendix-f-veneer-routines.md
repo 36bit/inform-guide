@@ -865,7 +865,7 @@ runtime checks.
 0 if x == y, -1 if x < y.
 
 **Invoked by:** `Z__Region`, `RT__ChLDB`, `RT__ChLDW`, `RT__ChSTB`,
-`RT__ChSTW`, `RT__ChPrintA`.
+`RT__ChSTW`, `RT__ChPrintA`, and `Dynam__String` [Glulx only].
 
 **Signature:** `Unsigned__Compare(x, y)`
 
@@ -1592,14 +1592,14 @@ over the built-in veneer code. The following routines are typically replaced:
 
 | Veneer Routine | Library Replacement Location | Enhancement |
 |---------------|------------------------------|-------------|
-| `R_Process` | `parserm.h` | Full action processing with `before`/`after` hooks |
-| `DefArt` | `english.h` / `parserm.h` | Handles `proper`, `article` property, plurals |
-| `InDefArt` | `english.h` / `parserm.h` | Handles indefinite articles per language |
-| `CDefArt` | `english.h` / `parserm.h` | Capitalized definite articles |
-| `CInDefArt` | `english.h` / `parserm.h` | Capitalized indefinite articles |
-| `PrintShortName` | `parserm.h` | Supports `short_name` property |
-| `EnglishNumber` | `english.h` | Prints numbers as English words |
-| `Box__Routine` | `linklpa.h` | Enhanced box quote display |
+| `R_Process` | `parser.h` | Full action processing with `before`/`after` hooks |
+| `DefArt` | `parser.h` | Handles `proper`, `article` property, plurals |
+| `InDefArt` | `parser.h` | Handles indefinite articles per language |
+| `CDefArt` | `parser.h` | Capitalized definite articles |
+| `CInDefArt` | `parser.h` | Capitalized indefinite articles |
+| `PrintShortName` | `parser.h` | Supports `short_name` property |
+| `EnglishNumber` | `parser.h` | Delegates to `LanguageNumber` (defined in `english.h`) for English-word output |
+| `Box__Routine` | `parser.h` | Enhanced box quote display |
 
 Programs that do not include the standard library get the minimal veneer
 implementations, which provide basic functionality sufficient for simple
