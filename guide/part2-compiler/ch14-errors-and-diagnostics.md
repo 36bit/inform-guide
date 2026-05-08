@@ -468,20 +468,25 @@ and adds approximately 1200 lines of library code to the compiled game.
 ### 14.8.2 Infix Commands
 
 At runtime, Infix commands are entered at the game prompt prefixed with
-`;` (semicolon). The following commands are available:
+`;` (semicolon, with no space before the verb). The library defines the
+following meta verbs:
 
 | Command | Description |
 |---------|-------------|
-| `; expression` | Evaluate an expression and print the result. |
-| `; showobj obj` | Display all properties and attributes of *obj*. |
-| `; showverb "verb"` | Show the grammar table for *verb*. |
-| `; watch obj` | Monitor changes to *obj* — report when properties or attributes change. |
-| `; unwatch obj` | Stop monitoring *obj*. |
-| `; inventory` | List all watched objects. |
-| `; give obj attr` | Set attribute *attr* on *obj*. |
-| `; give obj ~attr` | Clear attribute *attr* on *obj*. |
-| `; move obj to dest` | Move *obj* to *dest* in the object tree. |
-| `; remove obj` | Remove *obj* from the object tree. |
+| `;//` *expr* | Evaluate *expr* and print the result; bare `;//` prints a welcome banner. |
+| `;i`, `;inv`, `;inventory` | List the objects and routines currently being watched. |
+| `;x` *value*, `;examine` *value* | Examine an object or routine: print its attributes, properties, address, etc. |
+| `;xo` *value*, `;exo` *value* | Examine an object form (slightly different presentation). |
+| `;xs` *value*, `;exs` *value* | Examine a string or short-name form. |
+| `;<` *action* [*noun* [*second*]] | Invoke an action directly, as in `;< Take lamp`. |
+| `;give` *obj* *attr* | Give an attribute to *obj*. |
+| `;move` *obj* `to` *dest* | Move *obj* to *dest* in the object tree. |
+| `;remove` *obj* | Remove *obj* from the object tree. |
+| `;watch` [`timers`/`daemons`/`actions`/`messages`/`objects`/*obj*/*routine*] [`off`] / `;w` … | Turn watching on or off for the given category, object, or routine. |
+
+To stop watching a particular target, use `;watch` with the same target
+followed by `off` (for example `;watch silver_bars off`); there is no
+separate `;unwatch` verb.
 
 ### 14.8.3 Example Session
 
@@ -489,17 +494,17 @@ At runtime, Infix commands are entered at the game prompt prefixed with
 West of House
 You are standing in an open field west of a white house.
 
->; showobj white_house
-Object "white house" (23) in "West of House"
+>;x white_house
+white house (object 23)
   has  container open static
   with name 'white' 'house' 'building',
        description "The house is a beautiful colonial house.",
        ...
 
->; give white_house locked
-[Setting attribute "locked" of "white house"]
+>;give white_house locked
+[Giving "locked" to white house]
 
->; 2 + 3
+>;// 2 + 3
 5
 ```
 

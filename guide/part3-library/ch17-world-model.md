@@ -371,8 +371,11 @@ Objects with the `clothing` attribute can be worn by the player.
 | `worn`     | The object is currently being worn     |
 
 The `Wear` action puts on a piece of clothing (adding the `worn`
-attribute); the `Disrobe` action removes it. An object that is `worn`
-cannot be dropped — the player must take it off first.
+attribute); the `Disrobe` action removes it. When the player tries to
+drop, give, put, insert, throw, or otherwise dispose of a worn item,
+the library performs an **implicit `Disrobe`** first (via
+`ImplicitDisrobe`) and then continues with the requested action; the
+player does not have to take the item off explicitly.
 
 ```inform6
 Object  raincoat "yellow raincoat" cloakroom

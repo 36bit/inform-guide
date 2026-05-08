@@ -121,8 +121,11 @@ Object  ceiling_fan "ceiling fan" porch
 ### 19.2.7 `worn`
 
 Indicates that a piece of clothing is currently being worn. Set by the
-`Wear` action, cleared by `Disrobe`. An item that is `worn` cannot be
-dropped until removed.
+`Wear` action, cleared by `Disrobe`. When the player tries to drop,
+give, put, insert, throw, push, or pull a `worn` item, the library
+performs an **implicit `Disrobe`** first (via `ImplicitDisrobe`) and
+then continues with the requested action; the player is not required
+to take the item off explicitly. See §17.7.
 
 ### 19.2.8 `clothing`
 

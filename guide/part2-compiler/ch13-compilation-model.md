@@ -618,8 +618,13 @@ The compiler supports three grammar table formats, selected by the
   with fixed-size token entries.
 - **Version 2** (default): stores grammar lines as flat arrays of
   variable-length tokens. More compact and flexible than version 1.
-- **Version 3**: an extended version of the format. Used when
-  `$GRAMMAR_META_FLAG` is set; supports action sorting and metadata.
+- **Version 3**: an extended Z-code-only format added in compiler
+  version 6.43. There is no GV3 for Glulx.
+
+`$GRAMMAR_META_FLAG` is an independent setting (it can be combined with
+any grammar version) that lets each individual action be marked as
+meta and reorders the action table so that meta actions come first; see
+§22 for details.
 
 The grammar table is written into the static memory area of the story
 file, and its starting address is recorded in the file header.

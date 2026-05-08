@@ -47,8 +47,8 @@ the following parameters for each version:
 | 4 | Plus | 4 | 4 | No | 4 |
 | 5 | Advanced | 4 | 4 | No | 5 |
 | 6 | Graphical | 4 | 8 | Yes | 6 |
-| 7 | Extended Alternate | 4 | 8 | Yes | 5 |
-| 8 | Extended | 8 | 8 | No | 5 |
+| 7 | Expanded Advanced | 4 | 8 | Yes | 5 |
+| 8 | Expanded Advanced | 8 | 8 | No | 5 |
 
 The **scale factor** is the packed address multiplier. Routine and string
 addresses stored in the story file are *packed addresses* that must be
