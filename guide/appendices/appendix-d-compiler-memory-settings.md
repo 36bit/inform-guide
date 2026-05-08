@@ -118,7 +118,7 @@ describes value constraints enforced by the compiler.
 | `NUM_ATTR_BYTES` | 6 | 7 | [Glulx] | Multiple of 4, plus 3 | Space (in bytes) used to store attribute flags; each byte stores 8 attributes |
 | `DICT_WORD_SIZE` | 6 | 9 | [Glulx] | Any ≥ 0 | Number of characters in a dictionary word |
 | `DICT_CHAR_SIZE` | 1 | 1 | [Glulx] | 1 or 4 | Byte size of one character in the dictionary (4 enables full Unicode input) |
-| `GRAMMAR_VERSION` | 1 | 2 | [All] | Validated later | Grammar table format: 1 = Infocom format, 2 = Inform standard |
+| `GRAMMAR_VERSION` | 1 | 2 | [All] | Validated later | Grammar table format: 1 = Infocom format, 2 = Inform standard, 3 = compact (Z-code only, added in 6.43) |
 | `GRAMMAR_META_FLAG` | 0 | 0 | [All] | 0–1 | If 1, meta actions are indicated by value (≤ `#largest_meta_action`) rather than dict word flags |
 | `MAX_DYNAMIC_STRINGS` | 32 | 100 | [All] | 0–96 in Z-code; unlimited in Glulx | Maximum number of string substitution variables (`@00` or `@(0)`) |
 | `HASH_TAB_SIZE` | 512 | 512 | [All] | Any ≥ 0 | Size of hash tables used for the heaviest symbol banks |
@@ -249,9 +249,10 @@ table but removes one byte of per-word data available to the game.
 
 Selects the table format used for verb grammar. Version 1 uses a format based
 on Infocom's original grammar tables. Version 2 is the Inform standard format,
-which is more flexible and supports features like the `meta` keyword in grammar
-definitions. The default is 1 for Z-code (for Infocom compatibility) and 2 for
-Glulx.
+used by modern libraries. Version 3 (added in 6.43) is a compact alternative
+to version 2 that uses smaller per-token encoding. The default is 1 for Z-code
+(for Infocom compatibility) and 2 for Glulx. Z-code accepts versions 1, 2, or
+3; Glulx accepts only version 2.
 
 #### `GRAMMAR_META_FLAG`
 
@@ -287,8 +288,8 @@ This would provide 88 attribute slots. The value must satisfy the constraint:
 #### `INDIV_PROP_START`
 
 **Platform:** All
-**Z-machine Default:** 64
-**Glulx Default:** 256
+**Z-machine Default:** 64 (fixed; cannot be changed)
+**Glulx Default:** 256 (must be ≥ 256)
 
 Defines the boundary between common properties and individual properties.
 Properties numbered 1 through `INDIV_PROP_START - 1` are common properties
@@ -297,6 +298,10 @@ numbered `INDIV_PROP_START` and above are individual properties (per-object,
 accessed by identifier). The class-system individual properties (`create`,
 `recreate`, `destroy`, `remaining`, `copy`, `call`, `print`,
 `print_to_array`) are assigned starting at `INDIV_PROP_START`.
+
+In Z-code, `INDIV_PROP_START` is fixed at 64 by the compiler; attempting to
+set it to any other value produces a fatal error. In Glulx, the value must
+be at least 256; lower values are silently raised to 256 with a warning.
 
 #### `GLULX_OBJECT_EXT_BYTES`
 
