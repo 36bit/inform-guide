@@ -170,13 +170,17 @@ Abbreviate "you ";
 
 #### `DICT_WORD_SIZE`
 
-**Platform:** Glulx only (fixed at 9 in Z-machine v4+, 6 in Z-machine v3)
+**Platform:** Glulx only (fixed at 6 in Z-code)
 **Default:** 9
 
-The number of characters stored per dictionary word. In Z-code, this is fixed
-by the virtual machine specification (9 characters in v4+, 6 in v3). In Glulx,
-this can be set to any value. Increasing this value allows the parser to
-distinguish longer words, at the cost of a larger dictionary table.
+The number of characters stored per dictionary word. In Z-code,
+`DICT_WORD_SIZE` is fixed at 6 by the compiler (a fatal error is reported if
+the value is changed). The on-disk Z-machine dictionary entry length depends
+on the VM version (4 bytes encoding 6 z-characters in v3; 6 bytes encoding 9
+z-characters in v4 and later), but this is a property of the target VM rather
+than of `DICT_WORD_SIZE`. In Glulx, this can be set to any value. Increasing
+this value allows the parser to distinguish longer words, at the cost of a
+larger dictionary table.
 
 ```inform6
 !% $DICT_WORD_SIZE=12
