@@ -138,10 +138,10 @@ binary-literal
 float-literal
     ::= "$+" float-chars       (* positive float; Glulx only *)
     |   "$-" float-chars       (* negative float; Glulx only *)
-    |   "$+<" float-chars      (* positive float, low word; Glulx double *)
-    |   "$-<" float-chars      (* negative float, low word; Glulx double *)
-    |   "$+>" float-chars      (* positive float, high word; Glulx double *)
-    |   "$->" float-chars      (* negative float, high word; Glulx double *)
+    |   "$<+" float-chars      (* positive float, low word; Glulx double *)
+    |   "$<-" float-chars      (* negative float, low word; Glulx double *)
+    |   "$>+" float-chars      (* positive float, high word; Glulx double *)
+    |   "$>-" float-chars      (* negative float, high word; Glulx double *)
 
 hex-digit
     ::= digit | "a" | ... | "f" | "A" | ... | "F"
@@ -192,8 +192,9 @@ dict-char
     ::= any-character-except-quote-and-separator
 
 dict-flags
-    ::= { "p" | "s" | "n" }
-    (* p = plural, s = singular, n = noun *)
+    ::= { [ "~" ] ( "p" | "s" | "n" ) }
+    (* p = plural, s = singular, n = noun;
+       a leading "~" negates the flag (e.g. "//~p" clears the plural bit) *)
 ```
 
 Dictionary word literals in single quotes with length ≥ 2 are dictionary
