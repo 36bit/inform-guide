@@ -899,9 +899,9 @@ grammar-line
 ```
 
 The `*` introduces each grammar line. The identifier after `->` is the
-action name. `reverse` swaps noun and second (grammar version 2+ only).
-`meta` marks the action as meta (grammar version 2+ with `GRAMMAR_META_FLAG`
-only).
+action name. `reverse` swaps noun and second (grammar version 2 or later
+only). `meta` marks this action as a meta-action; it requires
+`$GRAMMAR_META_FLAG` to be set, but works in any grammar version.
 
 ### §K.5.3 Grammar Tokens
 
@@ -1610,9 +1610,11 @@ The compiler supports three grammar table encodings, selected by the
 | 2 | Z-code and Glulx | 6 (Z) / varies (G) | Default; 3 bytes/token |
 | 3 | Z-code only | 31 | Compact; 2 bytes/token |
 
-Grammar version 1 does not support the `topic`, `reverse`, or `meta`
-grammar features. Grammar version 3 is a compact encoding where the token
-count is embedded in the action word, eliminating the terminator byte.
+Grammar version 1 does not support the `topic` token type or the
+per-grammar-line `reverse` keyword. (Per-action `meta` is independent of
+grammar version — it is gated by `$GRAMMAR_META_FLAG`.) Grammar version 3
+is a compact encoding where the token count is embedded in the action
+word, eliminating the terminator byte.
 
 ---
 
