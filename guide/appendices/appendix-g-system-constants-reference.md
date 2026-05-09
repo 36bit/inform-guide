@@ -105,7 +105,7 @@ individual properties).
 | Constant | VM | Description |
 |----------|-----|-------------|
 | `lowest_property_number` | Z/G | Always 1. Properties are numbered starting from 1. |
-| `highest_property_number` | Z | The index of the last individual property, equal to (total individual properties) − 1. This count includes both common and individual properties. |
+| `highest_property_number` | Z | The number of the highest allocated individual property, equal to `no_individual_properties − 1`. This counter starts at `INDIV_PROP_START + 8` (above the eight class-system properties `create` … `print_to_array`) and is incremented as each new individual property is allocated. Common properties have separate, lower numbers. |
 | `property_names_array` † | Z | Address of the property-names table. Equal to the identifiers table address plus 2. Contains packed string addresses for property names. |
 
 ---
@@ -120,7 +120,7 @@ fake actions.
 | `lowest_action_number` | Z/G | Always 0. Actions are numbered from 0. |
 | `highest_action_number` | Z/G | The index of the last action, equal to (total actions) − 1. |
 | `action_names_array` † | Z/G | Address of the action-names table. Contains packed string addresses for action names. On Glulx, the address is in RAM. |
-| `lowest_fake_action_number` | Z/G | The starting number for fake actions. In grammar version 1: 256. In grammar version 2: 4096. Resolved at compile time. |
+| `lowest_fake_action_number` | Z/G | The starting number for fake actions. In grammar version 1: 256. In grammar versions 2 and 3: 4096. Resolved at compile time. |
 | `highest_fake_action_number` | Z/G | The number of the last fake action, equal to `lowest_fake_action_number` + (total fake actions) − 1. |
 | `fake_action_names_array` † | Z/G | Address of the fake-action-names table. On Glulx, the address is in RAM. |
 | `highest_meta_action_number` | Z/G | The highest action number flagged as meta, or −1 (as a 16-bit value, `$FFFF` on Z-machine) if no meta actions exist. Requires `$GRAMMAR_META_FLAG` to be set; produces a compile-time error otherwise. See §22.3 for details on meta action sorting. |

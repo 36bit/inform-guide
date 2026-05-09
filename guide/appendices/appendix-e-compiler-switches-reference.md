@@ -126,9 +126,9 @@ The `-v` switch selects the Z-machine version:
 
 | Switch | Version | Nickname | Notes |
 |--------|---------|----------|-------|
-| `-v3` | 3 | "Standard" / "ZIP" | 4-character dictionary words; no bold/italic; strict runtime checking disabled by default |
-| `-v4` | 4 | "Plus" / "EZIP" | 6-character dictionary words |
-| `-v5` | 5 | "Advanced" / "XZIP" | **Default.** 9-character dictionary words; full feature set |
+| `-v3` | 3 | "Standard" / "ZIP" | 4-byte dictionary entries (6 z-characters); no bold/italic; strict runtime checking disabled by default |
+| `-v4` | 4 | "Plus" / "EZIP" | 6-byte dictionary entries (9 z-characters); adds bold/italic and extended opcodes |
+| `-v5` | 5 | "Advanced" / "XZIP" | **Default.** Same dictionary format as v4; adds undo, colour, and other features |
 | `-v6` | 6 | Graphical / "YZIP" | Graphical support; extended memory map |
 | `-v7` | 7 | Expanded "Advanced" | Extended memory map; same 4× packed address scale factor as v5 |
 | `-v8` | 8 | Expanded "Advanced" | Like v5 but with 8× packed address scale factor for larger files |
@@ -158,7 +158,7 @@ format, and debugging features.
 | `-S` | on/off | `runtime_error_checking_switch` | on | Compile strict error-checking code at runtime. Enabled by default. Use `-~S` to disable. |
 | `-T` | on/off | `throwback_switch` | off | [RISC OS only] Enable throwback of errors in the Desktop Development Environment (DDE). Only available when compiled with `ARC_THROWBACK` defined. |
 | `-V` | — | — | — | Print the compiler version and date, then exit immediately. |
-| `-W` | 3–99 | `ZCODE_HEADER_EXT_WORDS` | 3 | [Z-machine only] Set the minimum size of the header extension table in words. Accepts a one- or two-digit number (e.g., `-W3`, `-W16`). Also settable via `$ZCODE_HEADER_EXT_WORDS`. |
+| `-W` | 0–99 | `ZCODE_HEADER_EXT_WORDS` | 3 | [Z-machine only] Set the minimum size of the header extension table in words. Accepts a one- or two-digit number (e.g., `-W3`, `-W16`); use `-W0` to omit the Unicode translation table. Also settable via `$ZCODE_HEADER_EXT_WORDS`. |
 | `-X` | on/off | `define_INFIX_switch` | off | Compile with INFIX debugging facilities present, enabling interactive debugging in supporting interpreters. |
 
 ### §E.3.1 Character Set Selection (`-C`)

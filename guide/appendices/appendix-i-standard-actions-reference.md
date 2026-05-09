@@ -746,12 +746,10 @@ Verb 'remove'
 **Default behavior:**
 
 1. Calls `ObjectIsUntouchable(noun)` — aborts if the noun cannot be touched.
-2. If `noun` does not have the `clothing` attribute, prints
-   `L__M(##Disrobe, 1, noun)` (not something you can take off).
-3. If `noun` does not have the `worn` attribute (not currently worn), prints
-   `L__M(##Disrobe, 2, noun)`.
-4. Otherwise, gives `noun` `~worn` (clears the `worn` attribute).
-5. Calls `AfterRoutines()`.
+2. If `noun hasnt clothing`, prints `L__M(##Disrobe, 1, noun)`.
+3. If `noun has clothing` but `hasnt worn`, also prints `L__M(##Disrobe, 1, noun)`.
+4. Otherwise, gives `noun ~worn` (clears the `worn` attribute).
+5. Calls `AfterRoutines()`. If not intercepted and not `keep_silent`, prints `L__M(##Disrobe, 2, noun)` (success).
 
 **Checks performed:**
 
@@ -771,8 +769,8 @@ Verb 'remove'
 
 | Message | Condition |
 |---------|-----------|
-| `L__M(##Disrobe, 1, noun)` | `noun` is not `clothing` |
-| `L__M(##Disrobe, 2, noun)` | `noun` is not currently worn (`hasnt worn`) |
+| `L__M(##Disrobe, 1, noun)` | `noun hasnt clothing`, **or** `noun has clothing && hasnt worn` (the same message handles both refusals) |
+| `L__M(##Disrobe, 2, noun)` | Success — `noun` was taken off |
 
 **Related actions:** Wear
 
@@ -1431,19 +1429,22 @@ Verb 'put'
 
 **Default behavior:**
 
-1. If `second == d_obj` (the "down" direction object), redirect to `<<Drop noun>>`.
-2. If `actor` is in `second`, print `L__M(##Insert, 1)` ("You'd need to get out first.").
-3. If `noun` is already in `second`, print `L__M(##Drop, 1)` ("Already there.").
-4. Check via `CommonAncestor()` that moving `noun` into `second` would not create a recursive containment loop.
-5. If `second hasnt container`, print `L__M(##Insert, 3)`.
-6. If `noun has worn`, call `ImplicitDisrobe(noun)`.
-7. Check `multiflag` for multiple-object operations and capacity constraints.
-8. If `second has container` but `second hasnt open`, call `ImplicitOpen(second)`.
-9. Check `ObjectDoesNotFit(noun, second)` and `AtFullCapacity(second)`.
-10. Temporarily set `action` to `##Receive` and `receive_action` to `##Insert`; call `RunRoutines(second, before)`. If intercepted, stop.
-11. Move `noun` to `second`.
-12. Call `AfterRoutines()`.
-13. If not intercepted, print `L__M(##Insert, 9, noun, second)`.
+1. Sets `receive_action = ##Insert`.
+2. If `second == d_obj` (the "down" direction object) or `actor in second`, redirect to `<<Drop noun, actor>>`.
+3. If `parent(noun) == second` (already inside), print `L__M(##Drop, 1, noun)`.
+4. Call `ImplicitTake(noun)`. If the actor still does not hold `noun`, print `L__M(##Insert, 1, noun)`.
+5. Compute `ancestor = CommonAncestor(noun, second)`. If `ancestor == noun` (recursive containment), print `L__M(##Insert, 5, noun)`.
+6. Call `ObjectIsUntouchable(second)` — if untouchable, stop.
+7. If `second` is outside the common ancestor, temporarily set `action` to `##Receive` and call `RunRoutines(second, before)`. Restore `action` to `##Insert`. If `second has container && second hasnt open`, call `ImplicitOpen(second)`; if it returns true, print `L__M(##Insert, 3, second)` (the container is closed).
+8. If `second hasnt container`, print `L__M(##Insert, 2, second)`.
+9. If `noun has worn` and `no_implicit_actions` is set, print `L__M(##Disrobe, 4, noun)`.
+10. If `noun has worn`, call `ImplicitDisrobe(noun)`.
+11. Call `ObjectDoesNotFit(noun, second)` (and the extension hook); if either returns true, stop.
+12. If `AtFullCapacity(noun, second)`, print `L__M(##Insert, 7, second)`.
+13. Move `noun` to `second`.
+14. Call `AfterRoutines()`. If intercepted, return.
+15. If `second` is outside the common ancestor, temporarily set `action` to `##Receive` and call `RunRoutines(second, after)`.
+16. If `multiflag` is set, print `L__M(##Insert, 8, noun)` ("Done."). Otherwise print `L__M(##Insert, 9, noun, second)` (success).
 
 **Checks performed:** `container`, `open`, `worn` attributes; `parent` relationships; capacity
 
@@ -1453,15 +1454,15 @@ Verb 'put'
 
 | Message | Condition |
 |---------|-----------|
-| `L__M(##Insert, 1)` | Actor is inside the target container |
-| `L__M(##Insert, 2)` | (reserved/used internally) |
-| `L__M(##Insert, 3)` | Second noun is not a container |
-| `L__M(##Insert, 5)` | Recursive containment would result |
-| `L__M(##Insert, 7)` | Implicit take or disrobe failed |
-| `L__M(##Insert, 8)` | Container is full / object does not fit |
-| `L__M(##Insert, 9)` | Success — object placed in container |
-| `L__M(##Drop, 1)` | Object is already in the container |
-| `L__M(##Disrobe, 4)` | Implicit disrobe refusal |
+| `L__M(##Drop, 1, noun)` | `noun` is already inside `second` |
+| `L__M(##Insert, 1, noun)` | Implicit take of `noun` failed; actor is not holding it |
+| `L__M(##Insert, 2, second)` | `second` is not a container |
+| `L__M(##Insert, 3, second)` | `second` is a closed container (after a failed implicit-open) |
+| `L__M(##Insert, 5, noun)` | Trying to put `noun` inside itself |
+| `L__M(##Insert, 7, second)` | `second` is at full capacity |
+| `L__M(##Insert, 8, noun)` | Multi-object success ("Done.") |
+| `L__M(##Insert, 9, noun, second)` | Single-object success |
+| `L__M(##Disrobe, 4, noun)` | `noun` is worn and `no_implicit_actions` is set |
 
 **Related actions:** PutOn, Drop, Transfer, Remove, Receive (fake)
 
@@ -2037,11 +2038,12 @@ Verb 'pull' 'drag'
 **Default behavior:**
 
 1. Calls `ObjectIsUntouchable(noun)`.
-2. If `noun == player` or `noun == actor`, prints `L__M(##Pull, 1, noun)`.
-3. If `noun` has `static`, prints `L__M(##Pull, 6, noun)`.
-4. If `noun` has `scenery`, prints `L__M(##Pull, 2, noun)`.
-5. If `noun` has `animate`, prints `L__M(##Pull, 5, noun)`.
-6. Otherwise prints `L__M(##Pull, 4, noun)`.
+2. If `noun == player`, prints `L__M(##Pull, 1, noun)`.
+3. If `noun == actor`, prints `L__M(##Pull, 6, noun)`.
+4. If `noun` has `static`, prints `L__M(##Pull, 2, noun)`.
+5. If `noun` has `scenery`, prints `L__M(##Pull, 3, noun)`.
+6. If `noun` has `animate`, prints `L__M(##Pull, 5, noun)`.
+7. Otherwise prints `L__M(##Pull, 4, noun)`.
 
 **Checks performed:** `static`, `scenery`, `animate` attributes; self-reference.
 
@@ -2051,11 +2053,12 @@ Verb 'pull' 'drag'
 
 | Message | Condition |
 |---------|-----------|
-| `L__M(##Pull, 1)` | Pulling yourself |
-| `L__M(##Pull, 2)` | `noun` is scenery |
+| `L__M(##Pull, 1)` | Pulling the player object |
+| `L__M(##Pull, 2)` | `noun` is static |
+| `L__M(##Pull, 3)` | `noun` is scenery |
 | `L__M(##Pull, 4)` | Default refusal |
 | `L__M(##Pull, 5)` | `noun` is animate |
-| `L__M(##Pull, 6)` | `noun` is static |
+| `L__M(##Pull, 6)` | `noun == actor` (and actor is not the player) |
 
 **Related actions:** Push, Turn
 
@@ -2076,11 +2079,12 @@ Verb 'push' 'clear' 'move' 'press' 'shift'
 **Default behavior:**
 
 1. Calls `ObjectIsUntouchable(noun)`.
-2. If `noun == player` or `noun == actor`, prints `L__M(##Push, 1, noun)`.
-3. If `noun` has `static`, prints `L__M(##Push, 5, noun)`.
-4. If `noun` has `scenery`, prints `L__M(##Push, 2, noun)`.
-5. If `noun` has `animate`, prints `L__M(##Push, 5, noun)`.
-6. Otherwise prints `L__M(##Push, 4, noun)`.
+2. If `noun == player`, prints `L__M(##Push, 1, noun)`.
+3. If `noun == actor`, prints `L__M(##Push, 5, noun)`.
+4. If `noun` has `static`, prints `L__M(##Push, 2, noun)`.
+5. If `noun` has `scenery`, prints `L__M(##Push, 3, noun)`.
+6. If `noun` has `animate`, prints `L__M(##Push, 5, noun)`.
+7. Otherwise prints `L__M(##Push, 4, noun)`.
 
 **Checks performed:** `static`, `scenery`, `animate` attributes; self-reference.
 
@@ -2090,10 +2094,11 @@ Verb 'push' 'clear' 'move' 'press' 'shift'
 
 | Message | Condition |
 |---------|-----------|
-| `L__M(##Push, 1)` | Pushing yourself |
-| `L__M(##Push, 2)` | `noun` is scenery |
+| `L__M(##Push, 1)` | Pushing the player object |
+| `L__M(##Push, 2)` | `noun` is static |
+| `L__M(##Push, 3)` | `noun` is scenery |
 | `L__M(##Push, 4)` | Default refusal |
-| `L__M(##Push, 5)` | `noun` is static or animate |
+| `L__M(##Push, 5)` | `noun` is animate, or `noun == actor` (and actor is not the player) |
 
 **Related actions:** Pull, Turn, PushDir
 
@@ -2147,18 +2152,22 @@ Verb 'put'
 
 **Default behavior:**
 
-1. If `second == d_obj`, redirects to `<<Drop noun>>`.
-2. If actor is in `second`, prints `L__M(##PutOn, 1)`.
-3. If `noun` is already on `second`, prints `L__M(##PutOn, 2)`.
-4. Checks `CommonAncestor()` to prevent recursive placement.
-5. If `second` hasnt `supporter`, prints `L__M(##PutOn, 3)`.
-6. If `noun` has `worn`, calls `ImplicitDisrobe()`.
-7. Checks multiflag for multiple-object capacity.
-8. Checks `ObjectDoesNotFit()` and `AtFullCapacity()`.
-9. Temporarily sets `action` to `##Receive` and `receive_action` to `##PutOn`, calls `RunRoutines(second, before)`.
-10. Moves `noun` to `second`.
-11. Calls `AfterRoutines()`.
-12. If not intercepted, prints `L__M(##PutOn, 8, noun, second)`.
+1. Sets `receive_action = ##PutOn`.
+2. If `second == d_obj` or `actor in second`, redirects to `<<Drop noun, actor>>`.
+3. If `parent(noun) == second` (already on the supporter), prints `L__M(##Drop, 1, noun)`.
+4. Calls `ImplicitTake(noun)`. If the actor still does not hold `noun`, prints `L__M(##PutOn, 1, noun)`.
+5. Computes `ancestor = CommonAncestor(noun, second)`. If `ancestor == noun` (would create a recursive container), prints `L__M(##PutOn, 2, noun)`.
+6. Calls `ObjectIsUntouchable(second)` — if untouchable, stops.
+7. If `second` is outside the common ancestor, temporarily sets `action` to `##Receive` and calls `RunRoutines(second, before)`. Restores `action` to `##PutOn`.
+8. If `second` hasnt `supporter`, prints `L__M(##PutOn, 3, second)`.
+9. If `noun` has `worn` and `no_implicit_actions` is set, prints `L__M(##Disrobe, 4, noun)`.
+10. If `noun` has `worn`, calls `ImplicitDisrobe(noun)`.
+11. Calls `ObjectDoesNotFit(noun, second)`; if it returns true (or the extension hook does), stops.
+12. If `AtFullCapacity(noun, second)`, prints `L__M(##PutOn, 6, second)`.
+13. Moves `noun` to `second`.
+14. Calls `AfterRoutines()`. If intercepted, returns.
+15. If `second` is outside the common ancestor, temporarily sets `action` to `##Receive` and calls `RunRoutines(second, after)`.
+16. If `multiflag` is set, prints `L__M(##PutOn, 7)` ("Done."). Otherwise prints `L__M(##PutOn, 8, noun, second)` (success).
 
 **Checks performed:** `supporter`, `worn` attributes; parent relationships; capacity.
 
@@ -2168,14 +2177,14 @@ Verb 'put'
 
 | Message | Condition |
 |---------|-----------|
-| `L__M(##PutOn, 1)` | Actor is already on the supporter |
-| `L__M(##PutOn, 2)` | `noun` is already on `second` |
-| `L__M(##PutOn, 3)` | `second` is not a supporter |
-| `L__M(##PutOn, 6)` | Capacity exceeded |
-| `L__M(##PutOn, 7)` | Multi-object capacity exceeded |
-| `L__M(##PutOn, 8)` | Success |
-| `L__M(##Disrobe, 4)` | Implicit disrobe message |
-| `L__M(##Drop, 1)` | Redirected drop |
+| `L__M(##Drop, 1, noun)` | `noun` is already on `second` |
+| `L__M(##PutOn, 1, noun)` | Implicit take of `noun` failed; the actor is not holding it |
+| `L__M(##PutOn, 2, noun)` | Trying to put `noun` on itself (or inside its own container chain) |
+| `L__M(##PutOn, 3, second)` | `second` is not a supporter |
+| `L__M(##PutOn, 6, second)` | `second` is at full capacity |
+| `L__M(##PutOn, 7)` | Multi-object success ("Done.") |
+| `L__M(##PutOn, 8, noun, second)` | Single-object success |
+| `L__M(##Disrobe, 4, noun)` | `noun` is worn and `no_implicit_actions` is set |
 
 **Related actions:** Insert, Drop, Transfer, Receive (fake)
 
@@ -2773,11 +2782,11 @@ Verb 'take'
 **Default behavior:**
 
 1. If `noun` is in `actor` and has `worn`, redirects to `<<Disrobe noun, actor>>`.
-2. If `onotheld_mode == 0` or `noun` is not in `actor`, calls `AttemptToTakeObject(noun)`. If it returns true, stops.
+2. If `onotheld_mode == 0` or `noun` is not in `actor`, calls `AttemptToTakeObject(noun)`. If that routine returns true (it printed an error message), stops.
 3. Calls `AfterRoutines()`. If intercepted, stops.
 4. Sets `notheld_mode = onotheld_mode`.
 5. If `notheld_mode == 1` or `keep_silent` is set, stops.
-6. Prints `L__M(##Take, 1, noun)` (the "you already have that" message).
+6. Prints `L__M(##Take, 1, noun)` ("Taken.").
 
 **Checks performed:** `worn` attribute; parent relationships; `notheld_mode`/`onotheld_mode`.
 
@@ -2787,9 +2796,9 @@ Verb 'take'
 
 | Message | Condition |
 |---------|-----------|
-| `L__M(##Take, 1)` | `noun` was already in `actor`, `AttemptToTakeObject` was skipped, and neither `notheld_mode == 1` nor `keep_silent` is set |
+| `L__M(##Take, 1, noun)` | Default success message ("Taken.") |
 
-> **Note:** `AttemptToTakeObject()` handles the complex taking logic including capacity checks, the `Receive` fake action, and most Take messages (`L__M(##Take, 2–13)`).
+> **Note:** `AttemptToTakeObject()` handles the complex taking logic — capacity checks, the `LetGo` fake action, and most Take error messages (`L__M(##Take, 2–13)`, e.g. "always self-possessed", "would care for that", "fixed in place", capacity-exceeded, etc.).
 
 **Related actions:** Drop, Remove, PutOn, Insert, Give
 
@@ -2905,14 +2914,15 @@ Verb 'throw'
 
 **Default behavior:**
 
-1. If `second == nothing` or `second <= 1`, prints `L__M(##ThrowAt, 1, noun)` and stops.
-2. Calls `ObjectIsUntouchable(second)` — if untouchable, stops.
-3. If `second` hasnt `animate`:
+1. Calls `ObjectIsUntouchable(noun)` — if untouchable, stops.
+2. If `second == nothing`, prints `L__M(##ThrowAt, 1, noun)` and stops.
+3. If `second > 1`:
    - Temporarily sets `action` to `##ThrownAt` and calls `RunRoutines(second, before)`.
    - If intercepted, restores `action` to `##ThrowAt` and returns.
    - Restores `action` to `##ThrowAt`.
 4. If `noun` has `worn`, calls `ImplicitDisrobe()`.
-5. Calls `RunLife(second, ##ThrowAt)`. If `RunLife` returns false, prints `L__M(##ThrowAt, 2, noun)`.
+5. If `second` hasnt `animate`, prints `L__M(##ThrowAt, 1, noun)` and stops.
+6. Calls `RunLife(second, ##ThrowAt)`. If `RunLife` returns false, prints `L__M(##ThrowAt, 2, noun)`.
 
 **Checks performed:** `animate` attribute on `second`; `worn` attribute on `noun`; validity of `second`.
 
@@ -2922,7 +2932,7 @@ Verb 'throw'
 
 | Message | Condition |
 |---------|-----------|
-| `L__M(##ThrowAt, 1)` | No valid target (`second` is `nothing` or ≤ 1) |
+| `L__M(##ThrowAt, 1)` | `second` is `nothing`, or `second` is not animate |
 | `L__M(##ThrowAt, 2)` | Target's `life` routine did not handle the action |
 
 > **Note:** Uses the `ThrownAt` fake action to let inanimate targets intercept the throw via their `before` property.
@@ -3051,11 +3061,12 @@ Verb 'turn' 'rotate' 'screw' 'twist' 'unscrew'
 **Default behavior:**
 
 1. Calls `ObjectIsUntouchable(noun)` — if untouchable, stops.
-2. If `noun == player` or `noun == actor`, prints `L__M(##Turn, 1, noun)` and stops.
-3. If `noun` has `static`, prints `L__M(##Turn, 5, noun)` and stops.
-4. If `noun` has `scenery`, prints `L__M(##Turn, 2, noun)` and stops.
-5. If `noun` has `animate`, prints `L__M(##Turn, 5, noun)` and stops.
-6. Otherwise prints `L__M(##Turn, 4, noun)`.
+2. If `noun == player`, prints `L__M(##Turn, 1, noun)` and stops.
+3. If `noun == actor`, prints `L__M(##Turn, 5, noun)` and stops.
+4. If `noun` has `static`, prints `L__M(##Turn, 2, noun)` and stops.
+5. If `noun` has `scenery`, prints `L__M(##Turn, 3, noun)` and stops.
+6. If `noun` has `animate`, prints `L__M(##Turn, 5, noun)` and stops.
+7. Otherwise prints `L__M(##Turn, 4, noun)`.
 
 **Checks performed:** `static`, `scenery`, `animate` attributes; self-reference.
 
@@ -3065,10 +3076,11 @@ Verb 'turn' 'rotate' 'screw' 'twist' 'unscrew'
 
 | Message | Condition |
 |---------|-----------|
-| `L__M(##Turn, 1)` | Trying to turn yourself |
-| `L__M(##Turn, 2)` | `noun` is scenery |
+| `L__M(##Turn, 1)` | Trying to turn the player object |
+| `L__M(##Turn, 2)` | `noun` is static |
+| `L__M(##Turn, 3)` | `noun` is scenery |
 | `L__M(##Turn, 4)` | Default stub response |
-| `L__M(##Turn, 5)` | `noun` is static or animate |
+| `L__M(##Turn, 5)` | `noun` is animate, or `noun == actor` (and actor is not the player) |
 
 **Related actions:** Pull, Push
 

@@ -961,10 +961,10 @@ routine.
 | `CommandsOff` | Yes | recording | `CommandsOffSub` | verblib.h |
 | `CommandsOn` | Yes | recording | `CommandsOnSub` | verblib.h |
 | `CommandsRead` | Yes | replay | `CommandsReadSub` | verblib.h |
-| `Consult` | No | consult, look, read | `ConsultSub` | verblib.h |
+| `Consult` | No | consult, look, l, read | `ConsultSub` | verblib.h |
 | `Cut` | No | cut, chop, prune, slice | `CutSub` | verblib.h |
 | `Dig` | No | dig | `DigSub` | verblib.h |
-| `Disrobe` | No | disrobe, doff, shed, remove, take, put | `DisrobeSub` | verblib.h |
+| `Disrobe` | No | disrobe, doff, shed, remove, take | `DisrobeSub` | verblib.h |
 | `Drink` | No | drink, sip, swallow | `DrinkSub` | verblib.h |
 | `Drop` | No | drop, discard, put | `DropSub` | verblib.h |
 | `Eat` | No | eat | `EatSub` | verblib.h |
@@ -972,7 +972,7 @@ routine.
 | `EmptyT` | No | empty | `EmptyTSub` | verblib.h |
 | `Enter` | No | enter, cross, get, go, run, walk, leave, sit, lie, stand | `EnterSub` | verblib.h |
 | `Examine` | No | examine, x, check, describe, watch, look, l, read | `ExamineSub` | verblib.h |
-| `Exit` | No | exit, out, outside, get, leave, stand | `ExitSub` | verblib.h |
+| `Exit` | No | exit, out, outside, get, go, run, walk, leave, stand | `ExitSub` | verblib.h |
 | `Fill` | No | fill | `FillSub` | verblib.h |
 | `FullScore` | Yes | fullscore, full | `FullScoreSub` | verblib.h |
 | `GetOff` | No | get | `GetOffSub` | verblib.h |
