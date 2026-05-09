@@ -518,6 +518,7 @@ Z-machine versions, as determined by the compiler source code:
 | Common properties | 31 | 63 | 63 | 63 | 63 | 63 |
 | Global variables | 240 | 240 | 240 | 240 | 240 | 240 |
 | Maximum verbs | 255 | 255 | 255 | 255 | 255 | 255 |
+| Maximum actions | 256/1024* | 256/1024* | 256/1024* | 256/1024* | 256/1024* | 256/1024* |
 | Dictionary word resolution | 6 chars | 9 chars | 9 chars | 9 chars | 9 chars | 9 chars |
 | Object entry size | 9 bytes | 14 bytes | 14 bytes | 14 bytes | 14 bytes | 14 bytes |
 | Dict entry size | 7 bytes | 9 bytes | 9 bytes | 9 bytes | 9 bytes | 9 bytes |
@@ -525,6 +526,8 @@ Z-machine versions, as determined by the compiler source code:
 | Extended memory map | No | No | No | Yes | Yes | No |
 | Status line | Score/time | Score/time | — | — | — | — |
 | Terminating chars table | No | No | Yes | Yes | Yes | Yes |
+
+*\* Action limits depend on the grammar version used: GV1 allows 256 actions, while GV2/GV3 allow 1024 actions.*
 
 ### 28.8.1 Readable Memory Limit
 

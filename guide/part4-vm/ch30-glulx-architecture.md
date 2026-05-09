@@ -112,6 +112,7 @@ version and the version required by the features used.
 | Packed addresses | Yes (scale factors 2, 4, or 8) | No — direct byte addresses |
 | Maximum objects | 255 (v3) or 65,535 (v4+) | No fixed limit |
 | Maximum verbs | 255 | 65,535 |
+| Maximum actions | 256 (GV1) or 1024 (GV2/3) | Effectively unlimited |
 | Maximum attributes | 32 (v3) or 48 (v4+) | Configurable (up to 312) |
 | Maximum properties | 31 (v3) or 63 (v4+) | No fixed limit |
 | I/O | Built into VM | External (Glk API) |
