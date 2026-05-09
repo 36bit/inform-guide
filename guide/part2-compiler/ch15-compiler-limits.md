@@ -213,7 +213,7 @@ current values, run `inform $LIST`.
 
 | Setting | Z-code default | Glulx default | Description |
 | ------- | -------------- | ------------- | ----------- |
-| `$GRAMMAR_VERSION` | 1 | 2 | Grammar table format. Version 2 is the standard format used by modern libraries; version 1 is the older Infocom-style format. |
+| `$GRAMMAR_VERSION` | 1 | 2 | Grammar table format. Version 2 is the standard format used by modern libraries; version 1 is the older Infocom-style format. Version 3 is a compact format (Z-code only, new in 6.43). |
 | `$INDIV_PROP_START` | 64 (fixed) | 256 | First individual property number. Properties below this are common; those at or above are individual. |
 | `$NUM_ATTR_BYTES` | 6 (fixed) | 7 | Bytes used for attribute flags. Each byte provides 8 attributes (Z-code: 48; Glulx default: 56). |
 

@@ -263,7 +263,7 @@ action number in the bottom 10 bits, the `reverse` flag in bit 10, and
 the token count in the top 5 bits. Since the count is in the header,
 no `ENDIT_TOKEN` terminator is needed. Token data values are single
 bytes rather than words; dictionary and routine addresses are looked up
-in auxiliary tables. PunyInform uses GV3.
+in auxiliary tables. GV3 limits verbs to 31 tokens per line. PunyInform uses GV3.
 
 **[Glulx]** Only GV2 is supported. Each grammar line has a two-byte
 action number, a one-byte flags field (bit 0 is the `reverse` flag),

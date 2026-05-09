@@ -180,11 +180,9 @@ set it to any other value produces a fatal error. The Z-machine specification
 itself uses two different on-disk dictionary entry sizes depending on the VM
 version: v3 entries are 4 bytes encoding **6 z-characters** (which decode to
 up to 6 resolved characters), and v4 and later use 6 bytes encoding **9
-z-characters** (up to 9 resolved characters). Inform 6 standardises on a
-6-character source-side limit even when targeting v5/v8, so the extra
-3-z-character capacity in v4+ entries is left unused; Inform games cannot
-distinguish two dictionary words that share their first 6 source characters
-in any Z-code version.
+z-characters** (up to 9 resolved characters). Inform 6 internally limits the
+word size to 4 bytes in v3 and 6 bytes in v4+, and the extra space allows
+words up to 9 source characters to be parsed correctly.
 
 In Glulx, this can be set to any value. Increasing it allows the parser to
 distinguish longer words, at the cost of a larger dictionary table.
@@ -744,7 +742,7 @@ option.
 | Setting | Description |
 |---------|-------------|
 | `GRAMMAR_META_FLAG` | Use action values for meta indication |
-| `GRAMMAR_VERSION` | Grammar table format (1 or 2) |
+| `GRAMMAR_VERSION` | Grammar table format (1, 2, or 3) |
 
 ### Objects and Properties
 

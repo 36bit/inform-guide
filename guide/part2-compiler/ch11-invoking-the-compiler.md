@@ -422,8 +422,11 @@ date. After a successful compilation, it prints a summary:
 
 ```
 Inform 6.44 for Unix (25th February 2025)
-In: 1 source code file            53 syntactic lines
-Out:   Version 5 story file        3.5K long (limit 256K)
+In:  1 source code files                53 syntactic lines
+    53 textual lines                  2120 characters (ISO 8859-1 Latin1)
+Allocated:
+   120 symbols                      204800 bytes of memory
+Out:   Version 5 "Advanced" story.z5 1.870225 (3K long):
 ```
 
 ### 11.8.2 Statistics (`-s`)
