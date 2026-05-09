@@ -660,11 +660,13 @@ target and version:
 Characters beyond the limit are silently discarded. In Z-machine v3
 each dictionary word is compressed into 4 bytes of Z-encoded text
 holding up to 6 Z-characters; in v4+ it is 6 bytes holding
-up to 9 Z-characters. Neither figure is user-configurable: the Z-code
-compiler internally limits `DICT_WORD_SIZE` to 4 bytes in v3 games
-and 6 bytes in v4+ and rejects any attempt to change it. For Glulx,
-the memory setting `$DICT_WORD_SIZE` can be set to any
-value and defaults to 9.
+up to 9 Z-characters. The memory setting `$DICT_WORD_SIZE` is ignored
+for Z-code, as the compiler automatically limits the dictionary to
+4 bytes (v3) or 6 bytes (v4+). (Note that due to a current compiler
+quirk, explicitly attempting to set `$DICT_WORD_SIZE` to anything other
+than 6 on the command line for a Z-code game will result in a fatal error,
+even if the value matches the version's byte size.) For Glulx, the
+memory setting `$DICT_WORD_SIZE` can be set to any value and defaults to 9.
 
 ```inform6
 ! In Z-machine v5: 'pineapples' is truncated to 'pineapple' (9 chars)

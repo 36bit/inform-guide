@@ -1031,6 +1031,9 @@ version:
 | Common properties         | 31    | 63    | 63       |
 | Dictionary word length    | 6     | 9     | 9        |
 | Maximum verb count        | 255   | 255   | 255      |
+| Maximum action count      | 256/1024* | 256/1024* | 256/1024* |
+
+*\* Action limits depend on the grammar version used: GV1 allows 256 actions, while GV2/GV3 allow 1024 actions.*
 
 > **[Glulx]** Glulx removes or greatly relaxes all of these limits.
 > Story file size is limited only by available memory. Objects,

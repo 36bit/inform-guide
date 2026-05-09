@@ -537,15 +537,17 @@ Fake actions are also used by the library itself for internal actions like
 `##Receive`, `##ThrownAt`, `##Order`, and others that are never generated
 directly by the parser (see §20.5).
 
-### 32.4.6 VM Limits on Verbs
+### 32.4.6 VM Limits on Verbs and Actions
+
+It is important to distinguish between **verbs** (dictionary words that drive grammar, like "take" or "drop") and **actions** (the resulting subroutine triggered by the parser, like `##Take`).
 
 **[Z-machine]** The Z-machine format limits the game to a maximum of 255
 verb entries. Each `Verb` directive or `Extend only` operation that creates
-a new verb entry counts against this limit. In practice, the standard
-library uses approximately 60 verb entries, leaving ample room for
-game-defined verbs.
+a new verb entry counts against this limit. (This is because the Z-machine's dictionary format relies on a single byte to track verb references.) In practice, the standard library uses approximately 60 verb entries, leaving ample room for game-defined verbs.
 
-**[Glulx]** Although the VM itself has no architectural limitation on the number of verbs, the Inform 6 compiler enforces a fixed maximum of 65,535 verbs for Glulx programs. In practice, this is effectively unlimited.
+However, the limit on *actions* is much higher. Under Grammar Version 2 (GV2) and Version 3 (GV3), the Z-machine supports up to **1024 distinct actions**. (Under the older Grammar Version 1, actions are limited to 256).
+
+**[Glulx]** Although the VM itself has no architectural limitation on the number of verbs, the Inform 6 compiler enforces a fixed maximum of 65,535 verbs for Glulx programs. In practice, this is effectively unlimited. Glulx also supports a virtually unlimited number of actions.
 
 ## 32.5 Extending Classes
 
