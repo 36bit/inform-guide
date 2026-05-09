@@ -173,14 +173,21 @@ Abbreviate "you ";
 **Platform:** Glulx only (fixed at 6 in Z-code)
 **Default:** 9
 
-The number of characters stored per dictionary word. In Z-code,
-`DICT_WORD_SIZE` is fixed at 6 by the compiler (a fatal error is reported if
-the value is changed). The on-disk Z-machine dictionary entry length depends
-on the VM version (4 bytes encoding 6 z-characters in v3; 6 bytes encoding 9
-z-characters in v4 and later), but this is a property of the target VM rather
-than of `DICT_WORD_SIZE`. In Glulx, this can be set to any value. Increasing
-this value allows the parser to distinguish longer words, at the cost of a
-larger dictionary table.
+The number of source characters stored per dictionary word.
+
+In Z-code, `DICT_WORD_SIZE` is fixed at 6 by the compiler — attempting to
+set it to any other value produces a fatal error. The Z-machine specification
+itself uses two different on-disk dictionary entry sizes depending on the VM
+version: v3 entries are 4 bytes encoding **6 z-characters** (which decode to
+up to 6 resolved characters), and v4 and later use 6 bytes encoding **9
+z-characters** (up to 9 resolved characters). Inform 6 standardises on a
+6-character source-side limit even when targeting v5/v8, so the extra
+3-z-character capacity in v4+ entries is left unused; Inform games cannot
+distinguish two dictionary words that share their first 6 source characters
+in any Z-code version.
+
+In Glulx, this can be set to any value. Increasing it allows the parser to
+distinguish longer words, at the cost of a larger dictionary table.
 
 ```inform6
 !% $DICT_WORD_SIZE=12
