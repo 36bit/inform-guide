@@ -111,6 +111,7 @@ version and the version required by the features used.
 | Address space | Up to 512 KB (v8) | Up to ~256 MB |
 | Packed addresses | Yes (scale factors 2, 4, or 8) | No — direct byte addresses |
 | Maximum objects | 255 (v3) or 65,535 (v4+) | No fixed limit |
+| Maximum verbs | 255 | 65,535 |
 | Maximum attributes | 32 (v3) or 48 (v4+) | Configurable (up to 312) |
 | Maximum properties | 31 (v3) or 63 (v4+) | No fixed limit |
 | I/O | Built into VM | External (Glk API) |

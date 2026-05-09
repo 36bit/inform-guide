@@ -545,8 +545,7 @@ a new verb entry counts against this limit. In practice, the standard
 library uses approximately 60 verb entries, leaving ample room for
 game-defined verbs.
 
-**[Glulx]** No practical limit on the number of verb entries exists in
-the Glulx format.
+**[Glulx]** Although the VM itself has no architectural limitation on the number of verbs, the Inform 6 compiler enforces a fixed maximum of 65,535 verbs for Glulx programs. In practice, this is effectively unlimited.
 
 ## 32.5 Extending Classes
 
@@ -629,8 +628,7 @@ compiler walks the class list, copying properties and attributes in order.
 - Circular inheritance (A inherits from B, B inherits from A) is
   prevented by the requirement that a class must be defined before it can
   be used as a parent.
-- The number of classes is limited by available memory, but is not subject
-  to a fixed compiler constant in Inform 6.44.
+- The number of classes is limited by a fixed compiler constant in Inform 6.44 (`VENEER_CONSTRAINT_ON_CLASSES_Z` caps it at 256 for Z-Machine, `VENEER_CONSTRAINT_ON_CLASSES_G` caps it at 32,768 for Glulx).
 
 ### 32.5.4 Runtime Class Testing
 

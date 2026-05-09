@@ -517,6 +517,7 @@ Z-machine versions, as determined by the compiler source code:
 | Attributes per object | 32 | 48 | 48 | 48 | 48 | 48 |
 | Common properties | 31 | 63 | 63 | 63 | 63 | 63 |
 | Global variables | 240 | 240 | 240 | 240 | 240 | 240 |
+| Maximum verbs | 255 | 255 | 255 | 255 | 255 | 255 |
 | Dictionary word resolution | 6 chars | 9 chars | 9 chars | 9 chars | 9 chars | 9 chars |
 | Object entry size | 9 bytes | 14 bytes | 14 bytes | 14 bytes | 14 bytes | 14 bytes |
 | Dict entry size | 7 bytes | 9 bytes | 9 bytes | 9 bytes | 9 bytes | 9 bytes |
