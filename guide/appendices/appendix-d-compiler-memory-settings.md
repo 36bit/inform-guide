@@ -116,7 +116,7 @@ describes value constraints enforced by the compiler.
 |---------|-----------|---------------|----------|-------|-------------|
 | `MAX_ABBREVS` | 64 | — | [Z-machine] | 0–96 | Maximum number of declared abbreviations |
 | `NUM_ATTR_BYTES` | 6 | 7 | [Glulx] | Multiple of 4, plus 3 | Space (in bytes) used to store attribute flags; each byte stores 8 attributes |
-| `DICT_WORD_SIZE` | — | 9 | [Glulx] | Any ≥ 0 | Number of characters in a dictionary word (ignored in Z-code; see §D.3.1) |
+| `DICT_WORD_SIZE` | 6 (ignored) | 9 | [Glulx] | Any ≥ 0 | Number of characters in a dictionary word (ignored in Z-code; see §D.3.1) |
 | `DICT_CHAR_SIZE` | 1 | 1 | [Glulx] | 1 or 4 | Byte size of one character in the dictionary (4 enables full Unicode input) |
 | `GRAMMAR_VERSION` | 1 | 2 | [All] | Validated later | Grammar table format: 1 = Infocom format, 2 = Inform standard, 3 = compact (Z-code only, added in 6.43) |
 | `GRAMMAR_META_FLAG` | 0 | 0 | [All] | 0–1 | If 1, meta actions are indicated by value (≤ `#largest_meta_action`) rather than dict word flags |
@@ -283,14 +283,16 @@ allows individual actions to be precisely marked as meta.
 
 #### `NUM_ATTR_BYTES`
 
-**Platform:** Glulx only (fixed at 6 in Z-code)
+**Platform:** Glulx only (fixed at 6 in Z-code regardless of version)
 **Default:** 7
 
 The number of bytes used to store attribute flags in each object record. Each
 byte provides 8 attribute slots, so the default of 7 provides 56 attributes
 (numbered 0–55). In Glulx the value must be a multiple of 4, plus 3, so the
 allowed values are 3, 7, 11, 15, and so on. In Z-code this is fixed at 6
-(48 attribute slots, numbered 0–47; only attributes 0–31 are usable in v3).
+regardless of Z-machine version (48 attribute slots, numbered 0–47); the
+Z-machine v3 format writes only 4 of those 6 bytes to the object header, so
+in practice only attributes 0–31 are usable in v3 builds.
 
 ```inform6
 !% $NUM_ATTR_BYTES=11
