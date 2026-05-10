@@ -310,11 +310,10 @@ Array handlers --> ProcessA ProcessB ProcessC;
 ### 6.8.2 Argument Limits for `indirect()`
 
 On the Z-machine (versions 4 and later), `indirect()` supports the
-routine address plus up to **6 call arguments** (7 operands in total).
-This is one fewer than a direct call, where the routine address plus 7
-call arguments are allowed. On version 3 the limit drops to 3 call
-arguments, the same cap that applies to direct calls. The compiler
-generates different call opcodes depending on the number of arguments.
+routine address plus up to **7 call arguments**, the same limit as a
+direct call. On version 3 the limit drops to 3 call arguments, the
+same cap that applies to direct calls. The compiler generates different
+call opcodes depending on the number of arguments.
 
 ## 6.9 Variable-Argument Routines (Glulx)
 

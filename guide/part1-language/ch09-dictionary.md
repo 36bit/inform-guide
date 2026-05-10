@@ -146,6 +146,13 @@ Object -> pineapple "pineapple"
 The Z-machine word size is fixed by the virtual machine specification and
 cannot be changed by the programmer.
 
+> **Warning:** The `$DICT_WORD_SIZE` compiler setting is silently ignored
+> for Z-code targets. Due to a compiler quirk, setting `$DICT_WORD_SIZE` to
+> any value other than its default of **6** on the command line (or via a
+> `!%` header directive) when compiling for Z-code causes a fatal compile
+> error: "You cannot change DICT_WORD_SIZE in Z-code". Use `$DICT_WORD_SIZE`
+> only when targeting Glulx.
+
 ### 9.3.2 Glulx Limits
 
 > **[Glulx]** On Glulx, the number of significant characters is controlled
