@@ -477,7 +477,7 @@ text data:
 
 | Setting | Z-code default | Glulx default | Description |
 | ------- | -------------- | ------------- | ----------- |
-| `$DICT_WORD_SIZE` | 6 | 9 | Number of characters stored per dictionary word. Z-code words beyond this length are silently truncated. Increasing this value in Glulx allows the parser to distinguish longer words. |
+| `$DICT_WORD_SIZE` | 6 | 9 | Number of characters stored per dictionary word. For Z-code, this setting is ignored — the compiler handles dictionary word sizes automatically (6 Z-characters in V3, 9 Z-characters in V4+). Due to a compiler quirk, setting this to any value other than 6 when compiling for Z-code produces a fatal error. For Glulx, words beyond this length are silently truncated; increasing it allows the parser to distinguish longer words. |
 | `$DICT_CHAR_SIZE` | 1 | 1 | Bytes per character in dictionary words. Set to 4 in Glulx to support full Unicode dictionary entries. In Z-code, this is always 1. |
 | `$MAX_ABBREVS` | 64 | N/A | Maximum number of `Abbreviate` directives. Z-code only; not meaningful in Glulx. In Z-code, `$MAX_ABBREVS` and `$MAX_DYNAMIC_STRINGS` share a pool of exactly 96 slots and must sum to 96. |
 | `$MAX_DYNAMIC_STRINGS` | 32 | 100 | Maximum number of string substitution variables (`@00`, `@(0)`, etc.). In Z-code, `$MAX_ABBREVS` and `$MAX_DYNAMIC_STRINGS` share a pool of exactly 96 slots and must sum to 96. |

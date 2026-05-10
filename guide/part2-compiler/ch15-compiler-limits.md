@@ -204,7 +204,7 @@ current values, run `inform $LIST`.
 
 | Setting | Z-code default | Glulx default | Description |
 | ------- | -------------- | ------------- | ----------- |
-| `$DICT_WORD_SIZE` | 6 (fixed) | 9 | Characters stored per dictionary word. Longer words are truncated during parsing. |
+| `$DICT_WORD_SIZE` | 6 (ignored) | 9 | Characters stored per dictionary word. For Z-code, this setting is ignored; the compiler uses the correct size automatically (6 Z-characters in V3, 9 Z-characters in V4+). Due to a compiler quirk, setting this to any value other than 6 causes a fatal error in Z-code. For Glulx, words longer than this limit are truncated. |
 | `$DICT_CHAR_SIZE` | 1 (fixed) | 1 | Bytes per character in dictionary words. Set to 4 in Glulx for Unicode dictionary entries. |
 | `$MAX_ABBREVS` | 64 | N/A | Maximum number of `Abbreviate` directives. Z-code hard limit is 96. Not meaningful in Glulx (no abbreviation limit). |
 | `$MAX_DYNAMIC_STRINGS` | 32 | 100 | Maximum number of string substitution variables (`@00`, `@(0)`, etc.). Z-code hard limit is 96. |
@@ -417,9 +417,13 @@ input in non-Latin scripts), also set `$DICT_CHAR_SIZE=4`:
 inform -G $DICT_WORD_SIZE=12 $DICT_CHAR_SIZE=4 adventure.inf
 ```
 
-**[Z-machine]** Dictionary word size cannot be changed in Z-code; it
-is fixed at 6 characters (V3) or 9 characters (V4+) by the VM
-specification.
+**[Z-machine]** The `$DICT_WORD_SIZE` setting is ignored for Z-code; the
+compiler automatically determines the correct dictionary word storage based
+on the Z-machine version (6 Z-characters packed into 4 bytes for V3; 9
+Z-characters packed into 6 bytes for V4+). The setting is always treated
+as 6 regardless of the configured value — due to a compiler quirk,
+setting `$DICT_WORD_SIZE` to any value other than 6 when compiling for
+Z-code produces a fatal error.
 
 ### 15.7.2 Enabling Dead-Code Stripping
 

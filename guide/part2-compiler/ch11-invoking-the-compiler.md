@@ -600,12 +600,12 @@ inform adventure.inf
 
 Because `$` compiler settings on the command line have higher precedence
 than those in `!%` header comments (§11.7.2), a command-line `$` setting
-overrides the same setting embedded in the source. For example, if the
-source contains `!% $DICT_WORD_SIZE=9`, you can still build with a
+overrides the same setting embedded in the source. For example, if a
+Glulx source contains `!% $DICT_WORD_SIZE=9`, you can still build with a
 12-character dictionary by writing:
 
 ```
-inform $DICT_WORD_SIZE=12 adventure.inf
+inform -G $DICT_WORD_SIZE=12 adventure.inf
 ```
 
 Note that this reversal applies *only* to `$` settings. For ordinary
@@ -616,5 +616,5 @@ overridden from the command line.
 **Use long options (6.35+):**
 
 ```
-inform --path include_path=i6lib --opt DICT_WORD_SIZE=12 --trace STATS adventure.inf
+inform -G --path include_path=i6lib --opt DICT_WORD_SIZE=12 --trace STATS adventure.inf
 ```
