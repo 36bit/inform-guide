@@ -725,7 +725,9 @@ These routines provide fundamental services used by many other veneer routines.
 ### §F.6.1 `Copy__Primitive` (Index 21) — Deep Object Copy
 
 **Purpose:** Performs a deep copy of one object's data onto another. Used by the
-class system for `create`, `recreate`, `destroy`, and `copy` operations.
+class system for `recreate`, `destroy`, and `copy` operations. (The `create`
+operation does not call `Copy__Primitive`; it simply removes and returns a
+pre-allocated duplicate child object.)
 
 **Invoked by:** `Cl__Ms` (class message dispatch).
 

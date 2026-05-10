@@ -251,8 +251,7 @@ strings are compressed using Huffman encoding, which assigns shorter bit
 sequences to more frequently occurring characters and substrings.
 
 The `-H` switch controls Huffman compression for Glulx targets. It is
-enabled by default; passing `-H` disables it (the switch toggles the
-setting). With Huffman compression enabled, the compiler:
+enabled by default; use `-~H` to disable it. With Huffman compression enabled, the compiler:
 
 1. Analyses the frequency of all characters and common substrings across
    all game text.
@@ -460,7 +459,7 @@ The following table lists the most commonly tuned memory settings:
 | `MAX_DYNAMIC_STRINGS` | 32 | 100 | Maximum number of `@NN` dynamic strings |
 | `MAX_STACK_SIZE` | N/A | 4096 | Glulx interpreter stack size (in bytes) |
 | `MEMORY_MAP_EXTENSION` | N/A | 0 | Extra zero-bytes appended to Glulx story file |
-| `DICT_WORD_SIZE` | 6 | 9 | Dictionary word resolution length (in characters) |
+| `DICT_WORD_SIZE` | ignored | 9 | Dictionary word resolution length in characters (Glulx only; ignored in Z-code) |
 
 ### 35.4.3 Local Variable Limits
 

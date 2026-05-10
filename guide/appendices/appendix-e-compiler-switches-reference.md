@@ -254,7 +254,7 @@ or both [All].
 |---------|--------|-----------|-----------|-------------------|
 | `MAX_ABBREVS` | [Z] | 64 | — | Maximum declared abbreviations (max 96) |
 | `NUM_ATTR_BYTES` | [G] | — | 7 | Bytes for attribute flags (fixed at 6 in Z-code) |
-| `DICT_WORD_SIZE` | [G] | — | 9 | Characters per dictionary word (fixed at 9 in Z-machine v4+, 6 in v3) |
+| `DICT_WORD_SIZE` | [G] | — | 9 | Characters per dictionary word (ignored in Z-code; the compiler auto-selects 4 bytes/v3 or 6 bytes/v4+) |
 | `DICT_CHAR_SIZE` | [G] | — | 1 | Byte size of one dictionary character: 1 or 4 (Z-code uses compressed encoding) |
 | `GRAMMAR_VERSION` | [All] | 1 | 2 | Grammar table format version |
 | `GRAMMAR_META_FLAG` | [All] | 0 | 0 | Use action-value ordering for meta actions |
@@ -522,7 +522,7 @@ command on the same line, preceded by `!`.
 ```inform6
 !% -DG
 !% +include_path=../inform6lib
-!% $DICT_WORD_SIZE=12
+!% $DICT_WORD_SIZE=12    ! Glulx only (-G flag is required for this to take effect)
 
 ! This is a regular comment — not a header comment.
 ! The compiler has already stopped reading !% lines.
