@@ -147,6 +147,9 @@ Zcharacter terminating 255;
 This declares additional ZSCII codes (beyond the default 13 for Enter)
 that terminate keyboard input. The value 255 is commonly used to mean
 "any function key." You can specify up to 32 terminating characters.
+The terminating-characters table is emitted into the Z-machine story
+file only when targeting version 5 or later; on versions 3 and 4 the
+directive is silently ignored.
 
 ### 1.1.5 Line Endings
 
