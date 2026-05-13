@@ -143,8 +143,18 @@ Object -> pineapple "pineapple"
   ! literals simply produce the same dictionary entry.
 ```
 
-The Z-machine word size is fixed by the virtual machine specification and
-cannot be changed by the programmer.
+The Z-machine word size is fixed by the virtual machine specification:
+the compiler automatically limits each dictionary entry's encoded text
+to 4 bytes (v3) or 6 bytes (v4+), and the memory setting
+`$DICT_WORD_SIZE` is ignored when targeting Z-code.
+
+> **Note:** Due to a current compiler quirk, explicitly attempting to
+> set `$DICT_WORD_SIZE` to any value other than 6 on the command line
+> (or in an `!%` header comment) for a Z-code game will produce a fatal
+> error, *even if the value matches the version's natural byte size*
+> (for example, `$DICT_WORD_SIZE=4` for v3). To compile cleanly, simply
+> omit the setting and let the compiler choose the correct size for the
+> target version.
 
 ### 9.3.2 Glulx Limits
 

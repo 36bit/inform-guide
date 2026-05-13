@@ -308,10 +308,10 @@ verbs so the parser can give them full scope. It is wrapped in
 Two additional functions in `english.h` assist the parser with verb
 handling:
 
-- `LanguageVerbLikesAdverb(w)` (line 320): Returns true if the verb word
+- `LanguageVerbLikesAdverb(w)` (line 324): Returns true if the verb word
   `w` is intransitive and takes a direction adverb rather than a noun
   object (e.g., "go north" rather than "take lamp").
-- `LanguageVerbMayBeName(w)` (line 336): Returns true if the verb word `w`
+- `LanguageVerbMayBeName(w)` (line 339): Returns true if the verb word `w`
   could also be an object name (e.g., "long" in "long sword" vs. "long"
   as a `VERBOSE` synonym).
 
@@ -633,9 +633,11 @@ The Z-machine encodes text using three alphabets:
 
 - **A0** (lowercase): 26 letters, initially `a`–`z`
 - **A1** (uppercase): 26 letters, initially `A`–`Z`
-- **A2** (punctuation/special): 23 usable positions (positions 0–2 are
-  reserved for shift characters), initially containing digits and common
-  punctuation
+- **A2** (punctuation/special): 23 usable positions. Index 0 of the
+  alphabet is reserved by the Z-machine for the ZSCII escape sequence and
+  index 1 for newline, so neither stores a printable character; in
+  addition, when A2 is fully redefined, the compiler forces index 2 to
+  the tilde `~`. Initially A2 contains digits and common punctuation.
 
 Characters in A0 are the most compact (one Z-character each). Characters
 in A1 or A2 require a shift character prefix (two Z-characters). Any
@@ -655,8 +657,10 @@ Zcharacter "abcdefghijklmnopqrstuvwxyz"
 ```
 
 Each string replaces one alphabet: A0 (26 characters), A1 (26 characters),
-A2 (23 characters, since positions 0–2 are reserved). The compiler
-replaces the entire alphabet array for each position.
+A2 (23 characters: the compiler fills indices 3–25 from this string and
+forces index 2 to `~`; indices 0 and 1 are not part of the printable
+alphabet — they are the Z-machine's ZSCII-escape and newline slots). The
+compiler replaces the entire alphabet array for each position.
 
 **Form 2: Add a single character to alphabet A2**
 
@@ -737,10 +741,12 @@ extension table.
 - The Z-machine can support at most 97 extra characters (ZSCII 155–251)
   beyond the base Latin-1 set.
 - Unicode characters beyond U+FFFF cannot be placed in the ZSCII table.
-- Alphabet A2 has 21 replaceable positions. Positions 0 and 1 are reserved for
-  shift characters, and three positions (`.`, `,`, and `~` at positions 12,
-  13, and 19) are protected as essential punctuation, but the remaining 21
-  positions (digits 0–9 and miscellaneous punctuation) may be replaced.
+- Alphabet A2 has 21 replaceable positions. Indices 0 and 1 are not
+  printable slots (the Z-machine uses them for the ZSCII-escape signal
+  and newline, respectively), and three positions (`.`, `,`, and `~` at
+  indices 12, 13, and 19) are protected as essential punctuation, but
+  the remaining 21 positions (digits 0–9 and miscellaneous punctuation)
+  may be replaced.
 - The `Zcharacter` directive is rejected with an error in Glulx mode.
 
 ## 33.4 Unicode Support in Glulx

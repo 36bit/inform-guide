@@ -614,10 +614,12 @@ each position. Common token types include:
 The compiler supports three grammar table formats, selected by the
 `$GRAMMAR_VERSION` setting:
 
-- **Version 1**: the original format, now obsolete. Stores grammar lines
-  with fixed-size token entries.
-- **Version 2** (default): stores grammar lines as flat arrays of
-  variable-length tokens. More compact and flexible than version 1.
+- **Version 1**: the original format. Stores grammar lines with
+  fixed-size token entries. This is the compiler default for Z-code.
+- **Version 2**: stores grammar lines as flat arrays of variable-length
+  tokens. More compact and flexible than version 1. This is the
+  compiler default for Glulx, and the standard library typically sets
+  `Constant Grammar__Version 2;` to select it for both VMs.
 - **Version 3**: an extended Z-code-only format added in compiler
   version 6.43. There is no GV3 for Glulx.
 

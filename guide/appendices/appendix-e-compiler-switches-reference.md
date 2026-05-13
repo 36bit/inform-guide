@@ -254,7 +254,7 @@ or both [All].
 |---------|--------|-----------|-----------|-------------------|
 | `MAX_ABBREVS` | [Z] | 64 | — | Maximum declared abbreviations (max 96) |
 | `NUM_ATTR_BYTES` | [G] | — | 7 | Bytes for attribute flags (fixed at 6 in Z-code) |
-| `DICT_WORD_SIZE` | [G] | — | 9 | Characters per dictionary word (fixed at 9 in Z-machine v4+, 6 in v3) |
+| `DICT_WORD_SIZE` | [G] | ignored | 9 | Bytes of encoded text per dictionary word. Ignored in Z-code (compiler auto-sizes: 4 bytes / 6 Z-chars in v3, 6 bytes / 9 Z-chars in v4+) |
 | `DICT_CHAR_SIZE` | [G] | — | 1 | Byte size of one dictionary character: 1 or 4 (Z-code uses compressed encoding) |
 | `GRAMMAR_VERSION` | [All] | 1 | 2 | Grammar table format version |
 | `GRAMMAR_META_FLAG` | [All] | 0 | 0 | Use action-value ordering for meta actions |

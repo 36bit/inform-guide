@@ -477,10 +477,19 @@ text data:
 
 | Setting | Z-code default | Glulx default | Description |
 | ------- | -------------- | ------------- | ----------- |
-| `$DICT_WORD_SIZE` | 6 | 9 | Number of characters stored per dictionary word. Z-code words beyond this length are silently truncated. Increasing this value in Glulx allows the parser to distinguish longer words. |
+| `$DICT_WORD_SIZE` | ignored (auto: 4 in v3, 6 in v4+) | 9 | Bytes of encoded text per dictionary word. In Z-code the setting is ignored and the compiler auto-sizes entries (4 bytes / 6 Z-characters in v3; 6 bytes / 9 Z-characters in v4+); see note below. In Glulx, freely adjustable; longer values let the parser distinguish longer words. |
 | `$DICT_CHAR_SIZE` | 1 | 1 | Bytes per character in dictionary words. Set to 4 in Glulx to support full Unicode dictionary entries. In Z-code, this is always 1. |
 | `$MAX_ABBREVS` | 64 | N/A | Maximum number of `Abbreviate` directives. Z-code only; not meaningful in Glulx. In Z-code, `$MAX_ABBREVS` and `$MAX_DYNAMIC_STRINGS` share a pool of exactly 96 slots and must sum to 96. |
 | `$MAX_DYNAMIC_STRINGS` | 32 | 100 | Maximum number of string substitution variables (`@00`, `@(0)`, etc.). In Z-code, `$MAX_ABBREVS` and `$MAX_DYNAMIC_STRINGS` share a pool of exactly 96 slots and must sum to 96. |
+
+> **Note (Z-code `$DICT_WORD_SIZE`):** In Z-code the memory setting is
+> ignored — the compiler auto-sizes dictionary entries to 4 bytes (v3)
+> or 6 bytes (v4+). However, due to a current compiler quirk, explicitly
+> specifying `$DICT_WORD_SIZE` on the command line (or in an `!%`
+> header) for a Z-code target is a fatal error unless the value is
+> exactly 6, *even if the value would match the version's natural byte
+> size* (e.g., `$DICT_WORD_SIZE=4` for v3 still fails). The safest
+> course is to omit the setting entirely for Z-code projects.
 
 ### 12.4.4 Grammar and Action Settings
 
@@ -823,9 +832,10 @@ size limitations. It supports:
 - The Glk I/O system for input, output, graphics, and sound.
 
 When compiling for Glulx, several settings use different defaults
-(for example, `$DICT_WORD_SIZE` defaults to 9 instead of 6), and
-Z-machine-specific settings like `$ZCODE_HEADER_EXT_WORDS` are
-ignored.
+(for example, `$DICT_WORD_SIZE` defaults to 9 — and unlike Z-code,
+where this setting is ignored, in Glulx it is freely adjustable —
+see §12.4.3), and Z-machine-specific settings like
+`$ZCODE_HEADER_EXT_WORDS` are ignored.
 
 ### 12.7.3 Specifying the Glulx VM Version
 
@@ -890,7 +900,7 @@ specialized applications.
 | `$DICT_CHAR_SIZE` | Bytes per character in dictionary words (1 or 4) | §12.4.3 |
 | `$DICT_IMPLICIT_SINGULAR` | Auto-set singular flag on noun words | §12.5.5 |
 | `$DICT_TRUNCATE_FLAG` | Flag words truncated beyond `DICT_WORD_SIZE` | §12.5.6 |
-| `$DICT_WORD_SIZE` | Characters stored per dictionary word | §12.4.3 |
+| `$DICT_WORD_SIZE` | Bytes per dictionary word (ignored in Z-code) | §12.4.3 |
 | `$GLULX_OBJECT_EXT_BYTES` | Extra bytes per Glulx object data block | §12.4.6 |
 | `$GRAMMAR_META_FLAG` | Per-action meta flags in grammar table | §12.5.7 |
 | `$GRAMMAR_VERSION` | Grammar table format version (1, 2, or 3) | §12.4.4 |

@@ -522,7 +522,7 @@ compilation environment:
 | `TARGET_ZCODE` | Defined when compiling for the Z-machine |
 | `TARGET_GLULX` | Defined when compiling for Glulx |
 | `WORDSIZE` | 2 on Z-machine, 4 on Glulx |
-| `DICT_WORD_SIZE` | Number of bytes per dictionary word |
+| `DICT_WORD_SIZE` | Bytes of encoded text per dictionary word: **4** in Z-machine v3, **6** in Z-machine v4+. In Glulx, equals the `$DICT_WORD_SIZE` setting (number of characters; multiplied by `$DICT_CHAR_SIZE` to get bytes) |
 | `true` | 1 |
 | `false` | 0 |
 | `nothing` | 0 (the null object) |
