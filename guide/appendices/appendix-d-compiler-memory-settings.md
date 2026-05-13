@@ -116,7 +116,7 @@ describes value constraints enforced by the compiler.
 |---------|-----------|---------------|----------|-------|-------------|
 | `MAX_ABBREVS` | 64 | — | [Z-machine] | 0–96 | Maximum number of declared abbreviations |
 | `NUM_ATTR_BYTES` | 6 | 7 | [Glulx] | Multiple of 4, plus 3 | Space (in bytes) used to store attribute flags; each byte stores 8 attributes |
-| `DICT_WORD_SIZE` | 6 | 9 | [Glulx] | Any ≥ 0 | Number of characters in a dictionary word |
+| `DICT_WORD_SIZE` | ignored | 9 | [Glulx] | Any ≥ 0 (Glulx) | Bytes of encoded text per dictionary word. **Ignored in Z-code** — the compiler auto-sizes entries to 4 bytes (v3) or 6 bytes (v4+); see notes below. |
 | `DICT_CHAR_SIZE` | 1 | 1 | [Glulx] | 1 or 4 | Byte size of one character in the dictionary (4 enables full Unicode input) |
 | `GRAMMAR_VERSION` | 1 | 2 | [All] | Validated later | Grammar table format: 1 = Infocom format, 2 = Inform standard, 3 = compact (Z-code only, added in 6.43) |
 | `GRAMMAR_META_FLAG` | 0 | 0 | [All] | 0–1 | If 1, meta actions are indicated by value (≤ `#largest_meta_action`) rather than dict word flags |
@@ -170,22 +170,33 @@ Abbreviate "you ";
 
 #### `DICT_WORD_SIZE`
 
-**Platform:** Glulx only (fixed at 6 in Z-code)
-**Default:** 9
+**Platform:** Glulx only (ignored in Z-code)
+**Default:** 9 (Glulx)
 
-The number of source characters stored per dictionary word.
+The number of source characters stored per dictionary word (in Glulx).
+The byte size of the encoded-word area equals `DICT_WORD_SIZE *
+DICT_CHAR_SIZE`.
 
-In Z-code, `DICT_WORD_SIZE` is fixed at 6 by the compiler — attempting to
-set it to any other value produces a fatal error. The Z-machine specification
-itself uses two different on-disk dictionary entry sizes depending on the VM
-version: v3 entries are 4 bytes encoding **6 z-characters** (which decode to
-up to 6 resolved characters), and v4 and later use 6 bytes encoding **9
-z-characters** (up to 9 resolved characters). Inform 6 internally limits the
-word size to 4 bytes in v3 and 6 bytes in v4+, and the extra space allows
-words up to 9 source characters to be parsed correctly.
+In Z-code this setting is **ignored**: the compiler auto-sizes each
+entry's encoded text according to the Z-machine version. The
+Z-machine specification stores dictionary words as compressed
+Z-characters (5 bits each, three packed per 2-byte word). In v3,
+each entry uses 4 bytes encoding **6 Z-characters** (which preserve
+the first 6 resolved characters of the source word). In v4 and later,
+each entry uses 6 bytes encoding **9 Z-characters** (preserving the
+first 9 resolved characters).
 
-In Glulx, this can be set to any value. Increasing it allows the parser to
-distinguish longer words, at the cost of a larger dictionary table.
+> **Compiler quirk.** Although the setting has no effect on the Z-code
+> dictionary layout, the compiler currently treats any explicit
+> `$DICT_WORD_SIZE=N` on the command line (or in an `!%` header) as
+> a fatal error for Z-code targets unless `N == 6`. This is true
+> *even when N matches the version's natural byte size* (for example,
+> `$DICT_WORD_SIZE=4` for v3 still fails). To compile a Z-code
+> project cleanly, omit the setting entirely and let the compiler
+> select the correct size for the target version.
+
+In Glulx, this can be set to any value. Increasing it allows the parser
+to distinguish longer words, at the cost of a larger dictionary table.
 
 ```inform6
 !% $DICT_WORD_SIZE=12

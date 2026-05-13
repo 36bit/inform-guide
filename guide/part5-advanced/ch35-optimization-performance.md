@@ -460,7 +460,7 @@ The following table lists the most commonly tuned memory settings:
 | `MAX_DYNAMIC_STRINGS` | 32 | 100 | Maximum number of `@NN` dynamic strings |
 | `MAX_STACK_SIZE` | N/A | 4096 | Glulx interpreter stack size (in bytes) |
 | `MEMORY_MAP_EXTENSION` | N/A | 0 | Extra zero-bytes appended to Glulx story file |
-| `DICT_WORD_SIZE` | 6 | 9 | Dictionary word resolution length (in characters) |
+| `DICT_WORD_SIZE` | ignored | 9 | Bytes of encoded text per dictionary word. Ignored in Z-code (auto-sized to 4 bytes for v3, 6 bytes for v4+); freely adjustable in Glulx. |
 
 ### 35.4.3 Local Variable Limits
 
