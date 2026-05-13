@@ -832,9 +832,10 @@ size limitations. It supports:
 - The Glk I/O system for input, output, graphics, and sound.
 
 When compiling for Glulx, several settings use different defaults
-(for example, `$DICT_WORD_SIZE` defaults to 9 instead of 6), and
-Z-machine-specific settings like `$ZCODE_HEADER_EXT_WORDS` are
-ignored.
+(for example, `$DICT_WORD_SIZE` defaults to 9 — and unlike Z-code,
+where this setting is ignored, in Glulx it is freely adjustable —
+see §12.4.3), and Z-machine-specific settings like
+`$ZCODE_HEADER_EXT_WORDS` are ignored.
 
 ### 12.7.3 Specifying the Glulx VM Version
 
@@ -899,7 +900,7 @@ specialized applications.
 | `$DICT_CHAR_SIZE` | Bytes per character in dictionary words (1 or 4) | §12.4.3 |
 | `$DICT_IMPLICIT_SINGULAR` | Auto-set singular flag on noun words | §12.5.5 |
 | `$DICT_TRUNCATE_FLAG` | Flag words truncated beyond `DICT_WORD_SIZE` | §12.5.6 |
-| `$DICT_WORD_SIZE` | Characters stored per dictionary word | §12.4.3 |
+| `$DICT_WORD_SIZE` | Bytes per dictionary word (ignored in Z-code) | §12.4.3 |
 | `$GLULX_OBJECT_EXT_BYTES` | Extra bytes per Glulx object data block | §12.4.6 |
 | `$GRAMMAR_META_FLAG` | Per-action meta flags in grammar table | §12.5.7 |
 | `$GRAMMAR_VERSION` | Grammar table format version (1, 2, or 3) | §12.4.4 |

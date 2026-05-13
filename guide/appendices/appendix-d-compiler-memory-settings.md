@@ -743,7 +743,7 @@ option.
 | `DICT_CHAR_SIZE` | Byte size of dictionary characters (1 or 4) |
 | `DICT_IMPLICIT_SINGULAR` | Auto-apply singular flag to noun words |
 | `DICT_TRUNCATE_FLAG` | Use bit 6 for truncation instead of verb marking |
-| `DICT_WORD_SIZE` | Characters per dictionary word |
+| `DICT_WORD_SIZE` | Bytes per dictionary word (Glulx; ignored in Z-code) |
 | `LONG_DICT_FLAG_BUG` | Retain/fix plural flag bug on long words |
 | `MAX_ABBREVS` | Maximum abbreviation count |
 | `ZCODE_LESS_DICT_DATA` | Reduce per-word data bytes from 3 to 2 |
