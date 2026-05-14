@@ -362,7 +362,8 @@ Class Weapon(10)
 The `(10)` causes the compiler to manufacture a pool of 10 anonymous
 duplicate instances of `Weapon` at compile time (internally one
 additional duplicate is also created and kept as an untouched
-prototype used by `recreate`, `destroy`, and `copy`). Each duplicate
+prototype used by `recreate` and `destroy` as the reset template).
+Each duplicate
 is initially placed as a child of the `Weapon` class object; the 10
 pooled duplicates are ready-to-use instances that `Weapon.create()`
 can hand out and `Weapon.destroy(obj)` can return to the pool. The
