@@ -351,7 +351,7 @@ significant for symbol lookup. The lexer reads identifier characters into
 a dynamically grown buffer with no fixed length cap, so two identifiers
 that differ at any position — even far past character 32 — are treated
 as distinct symbols. (Earlier versions of the compiler enforced a 32-character
-limit; that limit was removed in version 6.34.)
+limit; that limit has since been removed.)
 
 ### 1.4.4 Reserved Words (Keywords)
 
