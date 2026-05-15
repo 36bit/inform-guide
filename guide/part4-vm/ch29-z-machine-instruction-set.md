@@ -330,7 +330,7 @@ These opcodes are available in all Z-machine versions (3 and later).
 | `jump` | `0x0C` | Rf | LABEL | Unconditional jump to label |
 | `print_paddr` | `0x0D` | — | — | Print string at packed address |
 | `load` | `0x0E` | St | VARIAB | Load value of variable |
-| `not` | `0x0F` | St | — | Bitwise NOT (v3 only; changes in v4+) |
+| `not` | `0x0F` | St | — | Bitwise NOT (v3–4; moves to VAR in v5+) |
 
 **0OP instructions:**
 
@@ -491,9 +491,8 @@ appropriate form based on the target version.
 | 4 | 1OP | `0x0F` | St |
 | 5+ | VAR | `0x38` | St |
 
-In version 3, `not` is a 1OP instruction. In version 4 it remains 1OP
-but with store. From version 5 onwards, it becomes a VAR instruction
-at opcode `0x38`.
+In versions 3 and 4, `not` is a 1OP instruction that stores its result.
+From version 5 onwards, it becomes a VAR instruction at opcode `0x38`.
 
 **`save` — Save game state:**
 
@@ -1012,12 +1011,11 @@ category.
 | 12 | `jump` | `$0C` | 3+ | Rf | LABEL |
 | 13 | `print_paddr` | `$0D` | 3+ | — | — |
 | 14 | `load` | `$0E` | 3+ | St | VARIAB |
-| 15 | `not` / `call_1n` | `$0F` | 3 / 5+ | St / — | — / CALL |
+| 15 | `not` / `call_1n` | `$0F` | 3–4 / 5+ | St / — | — / CALL |
 
-Note: opcode `$0F` in the 1OP range is `not` in version 3 (with store),
-and `call_1n` from version 5 onwards. In version 4, `not` moves to
-opcode `$0F` with store but is still 1OP. From version 5, `not` becomes
-a VAR instruction at `$38`.
+Note: opcode `$0F` in the 1OP range is `not` in versions 3 and 4 (with
+store), and `call_1n` from version 5 onwards. From version 5, `not`
+becomes a VAR instruction at `$38`.
 
 ### 29.8.3 0OP Opcodes
 
