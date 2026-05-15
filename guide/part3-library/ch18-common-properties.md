@@ -583,7 +583,7 @@ Adds related objects to scope when this object is in scope. The value
 can be:
 
 - **An object** — that object is added to scope.
-- **A routine** — called with `PlaceInScope(obj)` to add objects
+- **A routine** — called with `AddToScope(obj)` to add objects
   programmatically.
 
 ```inform6
@@ -594,7 +594,7 @@ Object  key_ring "key ring" player
 ```
 
 When the player holds the key ring, `brass_key` and `iron_key` become
-individually referable. With a routine form, call `PlaceInScope(obj)`
+individually referable. With a routine form, call `AddToScope(obj)`
 to add objects programmatically.
 
 ### 18.6.3 `grammar`

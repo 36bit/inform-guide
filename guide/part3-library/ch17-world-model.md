@@ -195,8 +195,10 @@ room) and checks:
 1. Does this object have the `light` attribute? If so, return true.
 2. Does any child of this object have a light source? (Checked via
    `HasLightSource`, which recurses into see-through containers.)
-3. If the object is a closed opaque container, stop — light cannot
-   escape. Otherwise, recurse upward to the parent.
+3. If the object is a container, recurse upward to its parent only
+   when it is `open` or `transparent` — a closed opaque container stops
+   the search. Otherwise (the object is not a container), recurse upward
+   only when it is `enterable`, `transparent`, or a `supporter`.
 
 The effect is that a lit torch inside an open box on a table in a dark
 room will illuminate the room, but a lit torch inside a closed opaque

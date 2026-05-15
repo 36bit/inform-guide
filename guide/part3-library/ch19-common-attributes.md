@@ -122,10 +122,10 @@ Object  ceiling_fan "ceiling fan" porch
 
 Indicates that a piece of clothing is currently being worn. Set by the
 `Wear` action, cleared by `Disrobe`. When the player tries to drop,
-give, put, insert, throw, push, or pull a `worn` item, the library
-performs an **implicit `Disrobe`** first (via `ImplicitDisrobe`) and
-then continues with the requested action; the player is not required
-to take the item off explicitly. See §17.7.
+give, put, insert, throw, or eat a `worn` item, the library performs
+an **implicit `Disrobe`** first (via `ImplicitDisrobe`) and then
+continues with the requested action; the player is not required to
+take the item off explicitly. See §17.7.
 
 ### 19.2.8 `clothing`
 
@@ -450,9 +450,11 @@ rarely need to set or test them directly.
 
 ### 19.7.1 `absent`
 
-Suppresses a floating object from appearing in its `found_in` rooms.
-When set, `MoveFloatingObjects` skips the object. Has an alias:
-`non_floating`.
+Removes an object from play. The library's `MoveFloatingObjects`
+routine deletes any object with `absent` set from its current
+location; in addition, floating objects (those with a `found_in`
+property) are not re-placed into their `found_in` rooms while
+`absent` is set. Has an alias: `non_floating`.
 
 ```inform6
 Object  companion "faithful dog"
