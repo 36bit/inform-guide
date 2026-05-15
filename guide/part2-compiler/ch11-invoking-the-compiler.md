@@ -125,7 +125,7 @@ the default source extension (`.inf`) before opening the file.
 ### 11.3.2 Include Search Order
 
 Additional source files are brought in with the `Include` directive
-(§10.9). Where the compiler looks for the file depends on the form of
+(§10.3.1). Where the compiler looks for the file depends on the form of
 the directive:
 
 - If the filename already contains a directory separator, it is used
@@ -414,14 +414,14 @@ the file.
 When the compiler starts, it prints a banner line identifying itself:
 
 ```
-Inform 6.44 for Unix (25th February 2025)
+Inform 6.44 for Unix (11th September 2025)
 ```
 
 The banner includes the version number, the platform, and the release
 date. After a successful compilation, it prints a summary:
 
 ```
-Inform 6.44 for Unix (25th February 2025)
+Inform 6.44 for Unix (11th September 2025)
 In:  1 source code files                53 syntactic lines
     53 textual lines                  2120 characters (ISO 8859-1 Latin1)
 Allocated:
@@ -608,9 +608,14 @@ build with a 12-character dictionary by writing:
 inform -G $DICT_WORD_SIZE=12 adventure.inf
 ```
 
-(The `$DICT_WORD_SIZE` setting is meaningful only for Glulx targets; in
-Z-code it is ignored, and specifying any value other than 6 is currently
-a fatal error — see §15.7.1.)
+(The `$DICT_WORD_SIZE` setting is meaningful only for Glulx targets. In
+Z-code it is ignored: the compiler automatically sizes dictionary words
+to 4 bytes in version 3 and 6 bytes in version 4 and later, regardless of
+this setting. Note, however, that owing to a current compiler quirk,
+explicitly setting `$DICT_WORD_SIZE` to any value other than 6 for a
+Z-code game — on the command line, in an ICL file, or in an `!%` header —
+produces a fatal error, even when the value would match the version's
+actual byte size. See §15.7.1.)
 
 Note that this reversal applies *only* to `$` settings. For ordinary
 switches such as `-v8`, the `!%` header is applied last and so always
