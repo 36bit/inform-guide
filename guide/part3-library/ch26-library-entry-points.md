@@ -127,6 +127,9 @@ and before the first `Look`.
   output inside `Initialise` and wants to suppress the library's default
   banner. The initial `Look` still runs; to suppress that too, compile
   with `Constant NOINITIAL_LOOK;` before including the library.
+- Library extensions' `ext_initialise` hooks run *before* `Initialise()`
+  itself (via `LibraryExtensions.RunAll(ext_initialise)`), and the
+  return value of `Initialise` does not affect whether they ran.
 
 ## 26.3 `BeforeParsing()`
 
@@ -180,7 +183,7 @@ grammar tables.
 
 | Value   | Effect                                                 |
 |-------- |------------------------------------------------------- |
-| `false` | The parser prints its standard "I don't know the verb" error. |
+| `false` | Library extensions' `ext_unknownverb` hooks are tried; if they also return `false`, the parser prints its standard "I don't know the verb" error. |
 | A dictionary word | The parser retries using the returned word as the verb. |
 
 **Typical usage:** Mapping non-standard verbs to standard ones:
@@ -229,7 +232,7 @@ be successfully parsed.
 | Value   | Effect                                                 |
 |-------- |------------------------------------------------------- |
 | `true`  | The error is handled; the parser requests new input.   |
-| `false` | The library prints its default error message.          |
+| `false` | Library extensions' `ext_parsererror` hooks are tried; if any of them returns `true`, the parser requests new input, otherwise the library prints its default error message. |
 
 **Typical usage:**
 
@@ -253,30 +256,37 @@ or deciding which objects to include in a "take all" set.
 **Arguments:**
 
 - `obj` — the object being considered.
-- `code` — the parser's recommendation:
-  - `0` = the parser is not recommending this object
-  - `1` = the parser recommends this object
-  - `2` = the parser is asking for an "all" decision
+- `code` — the context of the call:
+  - `0` = "all" processing: the parser is **not** tentatively
+    including this object in the multiple-object set.
+  - `1` = "all" processing: the parser **is** tentatively including
+    this object in the multiple-object set.
+  - `2` = disambiguation scoring: the parser is asking how strongly
+    this object should be preferred among ambiguous matches.
 
 **Return value:**
 
+For "all" processing (`code` = 0 or 1):
+
 | Value | Effect                                                    |
 |------ |---------------------------------------------------------- |
-| 0     | Accept the parser's recommendation.                       |
-| 1     | Force the object to be included (for "all") or preferred. |
-| 2     | Force the object to be excluded (for "all") or rejected.  |
+| 0     | Accept the parser's tentative recommendation.             |
+| 1     | Force the object to be included in the "all" set.         |
+| 2     | Force the object to be excluded from the "all" set.       |
 
-For non-"all" disambiguation (code 0 or 1), the return value is a
-score from 0 to 9, where higher numbers indicate higher preference.
+For disambiguation scoring (`code` = 2), the return value is added to
+the object's match score (scaled by `SCORE__CHOOSEOBJ`). Higher numbers
+indicate higher preference; a value of 0 means no preference. By
+convention, scores in the range 0–9 are used.
 
 **Typical usage:**
 
 ```inform6
 [ ChooseObjects obj code;
     ! Don't include scenery in "take all"
-    if (code == 2 && obj has scenery) return 2;
+    if (code == 1 && obj has scenery) return 2;
     ! Prefer the lit torch over the unlit one
-    if (obj == torch && torch has light) return 5;
+    if (code == 2 && obj == torch && torch has light) return 5;
     return 0;
 ];
 ```
@@ -317,7 +327,7 @@ fire.
 | Value   | Effect                                                 |
 |-------- |------------------------------------------------------- |
 | `true`  | The action is stopped; no further processing occurs.   |
-| `false` | Processing continues normally.                         |
+| `false` | Library extensions' `ext_gamepreroutine` hooks are tried; if any returns `true`, the action is stopped, otherwise processing continues. |
 
 **Typical usage:** Global rules that apply everywhere:
 
@@ -346,7 +356,7 @@ handler returned `true`.
 | Value   | Effect                                                 |
 |-------- |------------------------------------------------------- |
 | `true`  | Suppress any remaining post-action processing.         |
-| `false` | Default behavior (no additional effect).               |
+| `false` | Library extensions' `ext_gamepostroutine` hooks are tried; the final return value of `AfterRoutines` is the first non-`false` value returned. |
 
 **Typical usage:**
 
@@ -415,8 +425,11 @@ description is printed.
 ];
 ```
 
-**Notes:** `NewRoom()` is called by `PlayerTo()` and the `Go` action.
-It is not called during the initial `Look` at game startup.
+**Notes:** `NewRoom()` is called from `NoteArrival()` (in `LookSub`)
+whenever the player's `location` differs from the most recently
+described location (`lastdesc`). Because `lastdesc` is initially zero,
+`NewRoom` *is* called during the initial `Look` at game startup (after
+`Initialise` has set `location`).
 
 ## 26.12 `DeathMessage()`
 
@@ -529,7 +542,7 @@ to allow the game to override the default printing.
 | Value   | Effect                                                 |
 |-------- |------------------------------------------------------- |
 | `true`  | The game has printed the verb; the library does nothing more. |
-| `false` | The library prints the verb using its default method.  |
+| `false` | Library extensions' `ext_printverb` hooks are tried; if all return `false`, the library prints the verb using its default method (`print (address) verb_word`). |
 
 ## 26.16 `TimePasses()`
 

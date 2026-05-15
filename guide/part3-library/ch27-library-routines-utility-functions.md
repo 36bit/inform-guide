@@ -91,8 +91,12 @@ PlayerTo(treasure_cave, 1);     ! Move silently (no description)
 - `PlayerTo` is the correct way to move the player from game code. Do
   not use `move player to room` directly, as that skips floating
   objects, light adjustment, and scoring.
-- `PlayerTo` calls the `NewRoom()` entry point (via the `Look` action)
-  if flag is 0 or 2.
+- `PlayerTo` causes the `NewRoom()` entry point to fire for every
+  value of `flag`: when `flag` is 1 it is called via `NoteArrival()`
+  directly, and when `flag` is 0 or 2 it is called via the `Look`
+  action (which invokes `LookSub`, which in turn calls
+  `NoteArrival()`). `NewRoom()` only fires when `location` has
+  actually changed since the previous arrival.
 
 ### 27.1.2 `MoveFloatingObjects()`
 
