@@ -510,20 +510,21 @@ Grammar lines can include a `scope=RoutineName` token, which defines a
 custom scope for that specific grammar line. The routine is called with
 `scope_stage` set to indicate the current phase:
 
-| `scope_stage` | Meaning                                     |
-|-------------- |-------------------------------------------- |
-| 1             | Pre-search: return `true` to proceed        |
-| 2             | Search: call `PlaceInScope`/`ScopeWithin`   |
-| 3             | Post-search: no objects matched             |
+| `scope_stage` | Meaning                                                           |
+|-------------- |------------------------------------------------------------------ |
+| 1             | Query: return `1` if this token matches multiple objects, else `0`|
+| 2             | Search: call `PlaceInScope`/`ScopeWithin` to populate scope       |
+| 3             | Error: no objects matched — print an error message                |
 
 During stage 2, the routine should call `PlaceInScope(obj)` for each
 object that should be matchable, or `ScopeWithin(domain)` to add all
-children of a domain.
+children of a domain. Returning `true` from stage 2 suppresses the
+library's standard scope search for this grammar line.
 
 ```inform6
 [ MyScopeRoutine;
     switch (scope_stage) {
-        1: rfalse;              ! Not interested in pre-search
+        1: rfalse;              ! Token matches a single object (not multi)
         2: ScopeWithin(limbo);  ! All objects in limbo are matchable
            rtrue;               ! Don't also do standard scope
         3: "You can't see any such thing in the spirit world.";
@@ -549,15 +550,19 @@ into scope whenever it is itself in scope. The property can be either:
   ```
 
 - **A routine:** the routine is called, and it should call
-  `PlaceInScope(obj)` for each additional object.
+  `AddToScope(obj)` for each additional object. `AddToScope` is the
+  proper helper inside `add_to_scope` routines: it both adds `obj` to
+  scope (when called during scope searching) *and* participates in
+  light-source detection (when `HasLightSource` is probing the object).
+  Using `PlaceInScope` here would skip the light-source check.
 
   ```inform6
   Object  toolbelt "tool belt" player
     with  name 'tool' 'belt',
           add_to_scope [;
-              PlaceInScope(hammer);
-              PlaceInScope(wrench);
-              if (self has open) PlaceInScope(screwdriver);
+              AddToScope(hammer);
+              AddToScope(wrench);
+              if (self has open) AddToScope(screwdriver);
           ];
   ```
 
@@ -630,6 +635,7 @@ point — for example, to allow the player to feel around in the dark:
 | `TestScope(obj, actor)`        | Is `obj` in scope for `actor`?             |
 | `LoopOverScope(routine, actor)`| Call `routine(obj)` for each in-scope obj  |
 | `PlaceInScope(thing)`          | Add `thing` to current scope search        |
+| `AddToScope(obj)`              | Helper for `add_to_scope` routines         |
 | `ScopeWithin(domain)`          | Add all children of `domain` to scope      |
 | `ScopeCeiling(person)`         | Return highest see-through ancestor        |
 | `IsSeeThrough(obj)`            | Is `obj` transparent/open/supporter?       |
