@@ -414,14 +414,14 @@ the file.
 When the compiler starts, it prints a banner line identifying itself:
 
 ```
-Inform 6.44 for Unix (25th February 2025)
+Inform 6.44 for Unix (11th September 2025)
 ```
 
 The banner includes the version number, the platform, and the release
 date. After a successful compilation, it prints a summary:
 
 ```
-Inform 6.44 for Unix (25th February 2025)
+Inform 6.44 for Unix (11th September 2025)
 In:  1 source code files                53 syntactic lines
     53 textual lines                  2120 characters (ISO 8859-1 Latin1)
 Allocated:

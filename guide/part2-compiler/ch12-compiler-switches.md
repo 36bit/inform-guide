@@ -208,6 +208,11 @@ When compiling for Glulx (with `-G`), the `-v` switch specifies the
 Glulx VM version instead, using dotted notation: `-v3.1.0`, `-v3.1.2`,
 etc. See §12.7 for details on what each version provides.
 
+Selecting `-v3` or `-v4` automatically turns off strict mode (the
+runtime error checks normally enabled by `-S`), unless `-S` has been
+given explicitly. Strict mode requires v5-era opcodes and is therefore
+incompatible with the older Z-machine versions.
+
 **`-w` — Suppress Warnings**
 
 Suppresses all non-fatal warning messages. Errors are still reported.
@@ -274,9 +279,14 @@ in a particular format.
 **`-G` — Glulx Target**
 
 Compiles to Glulx format instead of Z-machine. When this switch is
-active, several Z-machine-specific switches (such as `-v3`–`-v8` and
-`-B`) become irrelevant, and Glulx-specific settings (such as
-`$MAX_STACK_SIZE` and `$GLULX_OBJECT_EXT_BYTES`) become available.
+active, several Z-machine-specific switches (such as `-B`) become
+irrelevant, and Glulx-specific settings (such as `$MAX_STACK_SIZE` and
+`$GLULX_OBJECT_EXT_BYTES`) become available. Once `-G` is in force, the
+`-v` switch instead selects a Glulx VM version (see §12.7.3).
+
+Two restrictions apply: `-G` cannot be set from a `Switches` directive
+inside source code, and it must come **before** any `-v` switch on the
+command line — placing `-G` after `-v` is an error.
 
 **`-H` — Huffman Compression**
 
@@ -362,9 +372,8 @@ This defines `DEBUG`, turns **off** strict mode, and turns on statistics.
 ## 12.3 Path Options
 
 Path options use the `+` prefix and control where the compiler searches
-for include files and where it writes output files. These options are
-only available on the command line or in ICL files — they cannot appear
-in `!%` header comments.
+for include files and where it writes output files. They are accepted
+on the command line, in ICL files, and in `!%` header comments.
 
 ### 12.3.1 Setting Include Paths
 
@@ -477,18 +486,16 @@ text data:
 
 | Setting | Z-code default | Glulx default | Description |
 | ------- | -------------- | ------------- | ----------- |
-| `$DICT_WORD_SIZE` | ignored (auto: 4 in v3, 6 in v4+) | 9 | Bytes of encoded text per dictionary word. In Z-code the setting is ignored and the compiler auto-sizes entries (4 bytes / 6 Z-characters in v3; 6 bytes / 9 Z-characters in v4+); see note below. In Glulx, freely adjustable; longer values let the parser distinguish longer words. |
+| `$DICT_WORD_SIZE` | 6 (must be 6) | 9 | Number of characters per dictionary word. In Z-code the setting is fixed at 6 — see note below. In Glulx, freely adjustable; longer values let the parser distinguish longer words. |
 | `$DICT_CHAR_SIZE` | 1 | 1 | Bytes per character in dictionary words. Set to 4 in Glulx to support full Unicode dictionary entries. In Z-code, this is always 1. |
 | `$MAX_ABBREVS` | 64 | N/A | Maximum number of `Abbreviate` directives. Z-code only; not meaningful in Glulx. In Z-code, `$MAX_ABBREVS` and `$MAX_DYNAMIC_STRINGS` share a pool of exactly 96 slots and must sum to 96. |
 | `$MAX_DYNAMIC_STRINGS` | 32 | 100 | Maximum number of string substitution variables (`@00`, `@(0)`, etc.). In Z-code, `$MAX_ABBREVS` and `$MAX_DYNAMIC_STRINGS` share a pool of exactly 96 slots and must sum to 96. |
 
-> **Note (Z-code `$DICT_WORD_SIZE`):** In Z-code the memory setting is
-> ignored — the compiler auto-sizes dictionary entries to 4 bytes (v3)
-> or 6 bytes (v4+). However, due to a current compiler quirk, explicitly
-> specifying `$DICT_WORD_SIZE` on the command line (or in an `!%`
-> header) for a Z-code target is a fatal error unless the value is
-> exactly 6, *even if the value would match the version's natural byte
-> size* (e.g., `$DICT_WORD_SIZE=4` for v3 still fails). The safest
+> **Note (Z-code `$DICT_WORD_SIZE`):** In Z-code the setting must be 6,
+> which is also the default; any other value (including `4` for v3) is
+> a fatal error. The source-level constant `DICT_WORD_SIZE` exposed to
+> compiled code is, however, 4 in v3 and 6 in v4+, reflecting the number
+> of Z-characters actually stored per dictionary entry. The safest
 > course is to omit the setting entirely for Z-code projects.
 
 ### 12.4.4 Grammar and Action Settings
@@ -496,7 +503,7 @@ text data:
 | Setting | Z-code default | Glulx default | Description |
 | ------- | -------------- | ------------- | ----------- |
 | `$GRAMMAR_VERSION` | 1 | 2 | Grammar table format version. Version 1 is the classic Infocom format; version 2 is the standard Inform format; version 3 (added in 6.43) extends version 2 with additional features. |
-| `$INDIV_PROP_START` | 64 | 256 | First individual property number. Properties below this value are common properties; those at or above it are individual properties. |
+| `$INDIV_PROP_START` | 64 (fixed) | 256 | First individual property number. Properties below this value are common properties; those at or above it are individual properties. In Z-code this is fixed at 64 — any other value is a fatal error. In Glulx it must be at least 256 (smaller values are silently raised). |
 
 ### 12.4.5 Z-Code Specific Settings
 
@@ -833,7 +840,7 @@ size limitations. It supports:
 
 When compiling for Glulx, several settings use different defaults
 (for example, `$DICT_WORD_SIZE` defaults to 9 — and unlike Z-code,
-where this setting is ignored, in Glulx it is freely adjustable —
+where this setting must be 6, in Glulx it is freely adjustable —
 see §12.4.3), and Z-machine-specific settings like
 `$ZCODE_HEADER_EXT_WORDS` are ignored.
 
@@ -900,7 +907,7 @@ specialized applications.
 | `$DICT_CHAR_SIZE` | Bytes per character in dictionary words (1 or 4) | §12.4.3 |
 | `$DICT_IMPLICIT_SINGULAR` | Auto-set singular flag on noun words | §12.5.5 |
 | `$DICT_TRUNCATE_FLAG` | Flag words truncated beyond `DICT_WORD_SIZE` | §12.5.6 |
-| `$DICT_WORD_SIZE` | Bytes per dictionary word (ignored in Z-code) | §12.4.3 |
+| `$DICT_WORD_SIZE` | Bytes per dictionary word (must be 6 in Z-code) | §12.4.3 |
 | `$GLULX_OBJECT_EXT_BYTES` | Extra bytes per Glulx object data block | §12.4.6 |
 | `$GRAMMAR_META_FLAG` | Per-action meta flags in grammar table | §12.5.7 |
 | `$GRAMMAR_VERSION` | Grammar table format version (1, 2, or 3) | §12.4.4 |
