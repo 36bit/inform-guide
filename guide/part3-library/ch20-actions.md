@@ -51,8 +51,8 @@ describe it:
 | `action` | The action number (e.g. `##Take`). |
 | `noun`   | The first object, or a numeric value, or `0`. |
 | `second` | The second object, or a numeric value, or `0`. |
-| `inp1`   | Like `noun`, but `1` when the value is a number. |
-| `inp2`   | Like `second`, but `1` when the value is a number. |
+| `inp1`   | Like `noun`, but `1` for a number or dictionary address, or `0` for a multiple-object placeholder. |
+| `inp2`   | Like `second`, but `1` for a number or dictionary address, or `0` for a multiple-object placeholder. |
 | `actor`  | The person performing the action (usually `player`). |
 | `meta`   | True if the action is a meta-action (see §20.5). |
 
@@ -181,9 +181,12 @@ moving objects, changing attributes, and so on.
 
 #### 4c. `AfterRoutines()`
 
-After the action routine completes, the library calls `after` handlers.
-Returning `true` from an `after` handler suppresses the default success
-message (the action itself has already occurred).
+Note that `begin_action()` itself only calls `BeforeRoutines()` and
+`ActionPrimitive()`. The `AfterRoutines()` step below is invoked from
+inside the action routine (each `ActionNameSub` calls `AfterRoutines()`
+itself, typically near the end). Returning `true` from an `after`
+handler suppresses the default success message (the action itself has
+already occurred).
 
 1. **Scope search for `react_after`** — every object in scope with a
    `react_after` property is checked.
@@ -319,8 +322,10 @@ Object  guard "burly guard" throne_room
 
 The `life` property is called on **animate** objects when certain actions
 target them directly. It works like `before`, but is specific to
-person-oriented actions. The library calls `RunLife(object, ##Action)`
-from inside the relevant action routines.
+person-oriented actions. For most of these actions the library calls
+`RunLife(object, ##Action)` from inside the relevant action routine; for
+`##Order` the call is made by `InformLibrary.actor_act()` when an NPC
+receives a command.
 
 Actions that trigger `life`:
 
