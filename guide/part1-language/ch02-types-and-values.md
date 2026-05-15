@@ -563,9 +563,10 @@ The expression `'take'` evaluates to the address of the dictionary entry for
 compared, and passed like any other value.
 
 Single-character dictionary literals require special handling. Because `'x'`
-is interpreted by the compiler as the ASCII value of the character `x`
-(not a dictionary word), the form `#n$x` must be used to obtain the
-dictionary address of a single-character word:
+is interpreted by the compiler as the character code of `x` — its ZSCII
+value on the Z-machine, its Unicode code point on Glulx — rather than as a
+dictionary word, the form `#n$x` must be used to obtain the dictionary
+address of a single-character word:
 
 ```inform6
 Constant DICT_A = #n$a;   ! dictionary address of "a"
@@ -644,9 +645,12 @@ to the `Take` action. This value can be stored, compared, and used in
 ### 2.10.2 Action Numbers
 
 Action numbers are plain integers with no inherent structure. The compiler
-assigns them based on `Verb` directive order. The programmer should never
-hard-code specific action numbers; always use the `##ActionName` syntax to
-refer to actions by name:
+assigns them sequentially in the order each action name is first encountered
+in the source — usually through a `Verb` directive, but equally through a
+`##ActionName` constant or an explicit `<Action>` statement. The exact number
+an action receives therefore depends on compilation order. The programmer
+should never hard-code specific action numbers; always use the `##ActionName`
+syntax to refer to actions by name:
 
 ```inform6
 ! WRONG: fragile, depends on compilation order
