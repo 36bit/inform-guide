@@ -346,12 +346,7 @@ lowercase for identifiers, and uppercase for named constants.
 
 ### 1.4.3 Identifier Length
 
-Identifiers may be of **any length**, and the entire identifier is
-significant for symbol lookup. The lexer reads identifier characters into
-a dynamically grown buffer with no fixed length cap, so two identifiers
-that differ at any position — even far past character 32 — are treated
-as distinct symbols. (Earlier versions of the compiler enforced a 32-character
-limit; that limit was removed in version 6.34.)
+Identifiers may be of **any length**.
 
 ### 1.4.4 Reserved Words (Keywords)
 
