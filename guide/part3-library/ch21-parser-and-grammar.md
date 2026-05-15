@@ -251,7 +251,7 @@ indicate what phase of scoping is occurring:
 ```inform6
 [ SearchDeadScope x;
     switch (scope_stage) {
-        1: rfalse;         ! No special prompts
+        1: rfalse;         ! Return 1 to allow multiple objects; 0 = single
         2: objectloop (x ofclass Thing)
                if (x has dead) PlaceInScope(x);
            rtrue;          ! Scope provided
@@ -631,8 +631,12 @@ WordAddress(n)      ! Returns the buffer address of word n.
 
 WordLength(n)       ! Returns the length of word n.
 
-NumberWord(n)       ! Parses word n as a number; returns the value
-                    ! or 0 if not found.
+NumberWord(w)       ! If dictionary word w is a number word like 'one'..
+                    ! 'twenty', returns its integer value; else 0.
+
+TryNumber(n)        ! Parses word n in the parse table as a number,
+                    ! recognizing digits and number words. Returns the
+                    ! value, or -1000 if word n is not a number.
 ```
 
 ### Manipulating Input
@@ -641,13 +645,15 @@ Games can modify the buffer and re-tokenize to alter what the parser
 sees. This is typically done in `BeforeParsing()`:
 
 ```inform6
-[ BeforeParsing  i;
-    ! Replace "please" at start of input with nothing
-    if (parse-->1 == 'please') {
-        for (i = 1 : i <= parse->1 - 1 : i++)
-            parse-->(i) = parse-->(i + 1);
-        parse->1 = parse->1 - 1;
-        num_words = num_words - 1;
+[ BeforeParsing  i pos len;
+    ! Strip a leading "please" from the input by overwriting it with
+    ! spaces in the buffer, then re-tokenising.
+    if (num_words > 0 && parse-->1 == 'please') {
+        pos = WordAddress(1) - buffer;
+        len = WordLength(1);
+        for (i = 0 : i < len : i++) (buffer+pos)->i = ' ';
+        Tokenise__(buffer, parse);
+        num_words = NumberWords();
     }
 ];
 ```

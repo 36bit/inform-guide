@@ -653,7 +653,7 @@ situations. For example, `##Take` defines:
 | `lm_n` | Default Text |
 |---------|-------------|
 | 1 | "Taken." |
-| 2 | "You are always self-possessed." |
+| 2 | "You're always self-possessed." |
 | 3 | "I don't suppose (the noun) would care for that." |
 
 The pseudo-action `##Miscellany` covers general parser and system

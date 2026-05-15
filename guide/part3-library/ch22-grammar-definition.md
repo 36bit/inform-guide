@@ -450,9 +450,10 @@ When the parser successfully matches a grammar line:
 1. It sets `action`, `noun`, and `second` from the matched tokens.
 2. If `action_reversed` is true with two parameters, `noun` and `second`
    are swapped (§22.6).
-3. The library calls `ActionPrimitive()`, which runs the `before` chain.
-4. If no handler intercepts, it calls the action's `Sub` routine.
-5. The `after` chain runs.
+3. The library calls `BeforeRoutines()` to run the `before` chain.
+4. If no handler intercepts (it returns `false`), the library calls
+   `ActionPrimitive()`, which dispatches to the action's `Sub` routine.
+5. `AfterRoutines()` runs the `after` chain.
 
 See §20.1 for action variables and §20.7 for `<< >>` syntax.
 

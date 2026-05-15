@@ -454,10 +454,13 @@ For each non-zero entry:
   calls `RunRoutines(obj, daemon)`, which invokes the object's
   `daemon` property routine.
 
-- Otherwise, it is a **timer**. The library decrements `obj.time_left`.
-  If `time_left` reaches zero, the library calls
-  `RunRoutines(obj, time_out)` and clears the slot (effectively
-  calling `StopTimer` automatically).
+- Otherwise, it is a **timer**. The library tests `obj.time_left`. If
+  it is already zero, the library first calls `StopTimer(obj)` to clear
+  the slot and then calls `RunRoutines(obj, time_out)` — so the slot is
+  free by the time the `time_out` routine runs. If `time_left` is
+  non-zero, the library decrements it by one and does *not* call
+  `time_out` on this turn; the `time_out` will fire on the turn after
+  `time_left` reaches zero.
 
 If any daemon or timer sets `deadflag` to a non-zero value, the
 sequence aborts immediately and the death/victory sequence begins.
@@ -470,9 +473,13 @@ are freed by stopping).
 ### 24.6.3 Step 3: `RunEachTurnProperties()`
 
 Calls the `each_turn` property of every object currently in scope,
-using the scope mechanism with `EACH_TURN_REASON`. This routine
-invokes `DoScopeAction` for each in-scope object, which in turn calls
-`RunRoutines(obj, each_turn)` if the property exists.
+using the scope mechanism with `EACH_TURN_REASON`. `DoScopeAction` is
+invoked for each in-scope object; for the `EACH_TURN_REASON` branch it
+returns immediately if the object has no `each_turn` property
+(`thing.#each_turn == 0`), and otherwise calls
+`PrintOrRun(obj, each_turn)`. Because `PrintOrRun` is used, an
+`each_turn` value that is a string is printed (with a trailing
+newline), while a routine value is called.
 
 If any `each_turn` routine sets `deadflag`, the sequence aborts.
 
