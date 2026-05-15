@@ -358,8 +358,9 @@ Each entry consists of Z-encoded text followed by data bytes:
 | 0–5 | 6 bytes | Z-encoded text (9 Z-characters = up to 9 resolved characters) |
 | 6–8 | 3 bytes | Data bytes (flags and grammar information) |
 
-When the compiler setting `$ZCODE_LESS_DICT_DATA` is enabled, v4+
-entries use only 2 data bytes (8 bytes total), omitting one data byte.
+When the compiler setting `$ZCODE_LESS_DICT_DATA` is enabled, entries
+omit one data byte, giving 6 bytes total for v3 and 8 bytes total for
+v4+.
 
 Dictionary entries are stored in sorted order (alphabetical by their
 Z-encoded form) to allow binary search at runtime. The compiler
@@ -646,8 +647,8 @@ The compiler defines 69 standard accented characters starting at ZSCII
 | 158 | Ä (A-umlaut) | 172 | ó (o-acute) |
 | 159 | Ö (O-umlaut) | 173 | ú (u-acute) |
 | 160 | Ü (U-umlaut) | 174 | ý (y-acute) |
-| 161 | ß (eszett) | 175 | À (A-grave) |
-| 162 | » (right guillemet) | 176 | È (E-grave) |
+| 161 | ß (eszett) | 175 | Á (A-acute) |
+| 162 | » (right guillemet) | 176 | É (E-acute) |
 | 163 | « (left guillemet) | ... | ... |
 
 The complete list of 69 characters is defined by the compiler's internal
@@ -684,8 +685,8 @@ efficient character conversion:
   Z-machine alphabet (0–77), or to negative values for characters that
   exist in ZSCII but not in the alphabet, or to −5 for characters not
   in ZSCII at all
-- `zscii_to_unicode_grid[256]` — maps ZSCII values to Unicode code
-  points
+- `zscii_to_unicode_grid[97]` — maps ZSCII values 155–251 to Unicode
+  code points
 
 These grids must be kept consistent with each other. Changing one
 structure (such as the alphabet table or the character set setting)
