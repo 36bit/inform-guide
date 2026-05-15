@@ -542,7 +542,7 @@ character escapes:
 | `@et` | Icelandic eth (lowercase) |
 | `@Th` | Icelandic thorn (uppercase) |
 | `@Et` | Icelandic eth (uppercase) |
-| `@LL` | L-stroke (uppercase) |
+| `@LL` | Pound sign (£) |
 | `@!!` | Inverted exclamation mark |
 | `@??` | Inverted question mark |
 | `@>>` | Right guillemet |
@@ -558,7 +558,7 @@ Examples:
 ```inform6
 print "caf@'e^";                  ! prints: café
 print "na@:ive^";                 ! prints: naïve
-print "Price: @@163100^";         ! prints: Price: £100 (ZSCII 163 = £)
+print "Price: @@219100^";         ! prints: Price: £100 (ZSCII 219 = £)
 print "@{00C9}lan^";              ! prints: Élan
 print "She said, ~Hello.~^";      ! prints: She said, "Hello."
 print "@<<Bonjour@>>^";           ! prints: «Bonjour»
