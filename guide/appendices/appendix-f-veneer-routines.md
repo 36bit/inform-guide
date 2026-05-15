@@ -972,10 +972,10 @@ one of these five identifiers.
 
 **Behavior:**
 
-- `create`: If the class has more than one child (the first child is the
-  prototype), removes the second child from the class, calls `create` on it
-  if provided, and returns the new instance. The prototype (first child) is
-  never removed.
+- `create`: If the class has more than one child, removes the first child
+  from the class, calls `create` on it if provided, and returns the new
+  instance. If the class has only one child (the prototype-template used by
+  `recreate`/`destroy`), `create` returns false.
 
 - `recreate(a)`: Verifies `a ofclass obj`, calls `a.destroy()` if provided
   [Glulx only — the Z-machine version does not call destroy first],
