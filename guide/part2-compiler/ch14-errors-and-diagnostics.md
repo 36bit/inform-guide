@@ -68,11 +68,15 @@ file is written.
 Fatal errors are printed in the form:
 
 ```
-Fatal error: description
+"filename", line N: Fatal error: description
 ```
 
-The compiler then exits with a non-zero exit code, which can be tested
-by build scripts and Makefiles.
+The same file/line preamble used for ordinary errors and warnings is
+emitted first (using whichever format `-E` selects; see §14.5). When no
+source position is available — for example a fatal error raised during
+compiler setup before any file has been opened — only `Fatal error:
+description` is printed. The compiler then exits with a non-zero exit
+code, which can be tested by build scripts and Makefiles.
 
 ### 14.2.2 Common Fatal Errors
 
@@ -103,13 +107,15 @@ multiple errors can be found in a single compilation run.
 
 ### 14.3.1 Format
 
-The default error format is:
+The default error format (for the `-E0` style) is:
 
 ```
-"filename", line N: Error: description
+"filename", line N: Error:  description
 ```
 
-The format can be changed with the `-E` switch (see §14.5).
+For errors in the main source file the `"filename", ` portion is
+omitted; filenames are always shown for errors in included files. The
+overall format can be changed with the `-E` switch (see §14.5).
 
 ### 14.3.2 Error Recovery
 
@@ -172,9 +178,10 @@ Similarly, the Z-machine limits user-declarable common properties to
 
 #### Type checking (Inform 6.36+)
 
-Starting with Inform 6.36, the compiler performs additional type
-checking when strict mode is enabled. A type mismatch is reported via
-a warning of the form:
+Starting with Inform 6.36, the compiler performs additional checks
+that compare the static type of a symbol (object, routine, string,
+constant, …) against the type expected in context. A type mismatch is
+reported via a warning of the form:
 
 ```
 "game.inf", line 85: Warning:  In <context>, expected <type> but found <type> "name"
@@ -204,7 +211,7 @@ flagged code.
 ### 14.4.1 Format
 
 ```
-"filename", line N: Warning: description
+"filename", line N: Warning:  description
 ```
 
 ### 14.4.2 Suppressing Warnings

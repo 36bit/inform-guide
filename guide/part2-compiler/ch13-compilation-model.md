@@ -335,7 +335,7 @@ compiler's veneer module.
 
 | Routine | Purpose |
 | ------- | ------- |
-| `Box__Routine` | Implement the `box` statement [Z-machine only] |
+| `Box__Routine` | Implement the `box` statement |
 
 **Default library stubs:**
 
