@@ -102,16 +102,23 @@ library maintains a global `gg_statuswin` that holds the Glk window
 reference for the status window (created during initialization by
 `GGInitialise`). The default implementation:
 
-1. Calls `glk_set_window(gg_statuswin)` to direct output to the status
-   window.
-2. Uses `glk_window_get_size(gg_statuswin, gg_arguments, gg_arguments+4)`
-   to obtain the window dimensions in characters.
-3. Calls `glk_window_clear(gg_statuswin)` to erase the previous contents.
-4. Uses `glk_set_style(style_Subheader)` for formatting.
-5. Positions text with `glk_window_move_cursor(gg_statuswin, col, row)`.
-6. Prints the location name on the left and score/moves on the right,
-   computing column offsets from the window width.
-7. Calls `glk_set_window(gg_mainwin)` to return output to the main window.
+1. Returns early if `gg_statuswin` is 0 (the interpreter did not provide
+   a status window).
+2. Calls `StatusLineHeight(gg_statuswin_size)` to ensure the status
+   window is split to the requested number of lines.
+3. Uses `MoveCursor(1, 1)` (which internally calls
+   `glk_set_window(gg_statuswin)` and
+   `glk_window_move_cursor(gg_statuswin, 0, 0)`).
+4. Uses `ScreenWidth()` to obtain the window width in characters.
+5. Prints `width` spaces to clear the line, then repositions the cursor
+   and prints the location name on the left and score/moves on the
+   right at column positions computed from the width.
+6. Calls `MainWindow()` to return output to the main window (which
+   internally calls `glk_set_window(gg_mainwin)`).
+
+The default routine does not call `glk_set_style` explicitly; the
+status window is a text-grid window and the interpreter renders it in
+its native status-line style.
 
 For details on Glk windows and styles, see §30.8.
 
@@ -122,9 +129,12 @@ that are used internally by `DrawStatusLine`
 and the menu system, and are available for game code:
 
 **`ClearScreen(window)`** — clears the specified
-window. On the Z-machine, this compiles to `@erase_window window`. On
-Glulx, it calls `glk_window_clear()` on the appropriate Glk window. The
-`window` parameter is 0 for the main window and 1 for the status window.
+window. On the Z-machine, this expands (via a switch) to
+`@erase_window` with operand `-1`, `1`, or `0`. On Glulx, it calls
+`glk_window_clear()` on the appropriate Glk window. The `window`
+argument is one of the constants `WIN_ALL` (0, clears everything),
+`WIN_STATUS` (1, the status window), or `WIN_MAIN` (2, the main
+window).
 
 **`MoveCursor(line, column)`** — positions the
 cursor to the given line and column within the upper (status) window.
@@ -149,14 +159,16 @@ from header byte `$21` (address 33 decimal):
 ];
 ```
 
-**[Glulx]** On Glulx, `ScreenWidth` queries the status window dimensions
-via `glk_window_get_size`:
+**[Glulx]** On Glulx, `ScreenWidth` queries the currently active output
+window (the status window when the library is drawing the status line,
+otherwise the main window):
 
 ```inform6
-[ ScreenWidth width;
-    glk_window_get_size(gg_statuswin, gg_arguments, 0);
-    width = gg_arguments-->0;
-    return width;
+[ ScreenWidth  id;
+    id = gg_mainwin;
+    if (gg_statuswin && statuswin_current) id = gg_statuswin;
+    glk_window_get_size(id, gg_arguments, 0);
+    return gg_arguments-->0;
 ];
 ```
 
@@ -278,46 +290,74 @@ machine and interpreter capabilities.
 
 **Parameters:**
 
-- `menu_choices` — a string containing the menu title and item labels
-  separated by `^` (newline) characters. The first entry is the menu
-  title; subsequent entries are the item labels.
-- `EntryR` — a routine called when a menu item is highlighted or
-  displayed. It receives the item number (1-based) and should print the
-  item's text.
-- `ChoiceR` — a routine called when the player selects a menu item. It
-  receives the item number and should print the full content for that
-  choice.
+- `menu_choices` — either a string or a routine. It supplies the body
+  text printed in the menu pane (typically the list of selectable items
+  as they appear on screen). If it is a string, the library prints it
+  verbatim with `print (string) menu_choices`; if it is a routine, the
+  library calls it with no arguments and lets it print whatever it
+  likes.
+- `EntryR` — a parameterless routine that the library uses to enumerate
+  the menu and to label individual items. It communicates with the
+  library through the globals `menu_item`, `item_name`, and
+  `item_width`.
+- `ChoiceR` — a parameterless routine called when the player selects
+  an item. It is expected to print the body content for the selected
+  item and return a control code (see below).
 
-Both callback routines are called with a single argument: the 1-based
-item number. `EntryR` is called to display each item in the menu list,
-while `ChoiceR` is called when the player selects an item to read its
-content.
+**Callback protocol.** All three menu globals are declared in
+`parser.h`: `menu_item` (the currently active item, 0 while
+enumerating), `item_name` (the displayed title, default `"---"`), and
+`item_width` (its visible width in characters, default 8).
+
+`EntryR` is called by the library in two situations:
+
+- First, with `menu_item = 0`: the routine must set `item_name` and
+  `item_width` to describe the *menu title* and **return the number of
+  selectable items** in the menu.
+- Later, with `menu_item = N` (1-based): the routine must set
+  `item_name` and `item_width` to describe item `N`. The library uses
+  these to draw the per-item heading shown while `ChoiceR` is
+  printing.
+
+`ChoiceR` is called with `menu_item` set to the selected item number.
+It prints the long content for that item and returns one of:
+
+- `1` (or fall through) — wait for a key, then redisplay the menu.
+- `2` — redisplay the menu immediately (no "press any key" prompt).
+- `3` — exit the menu entirely.
 
 ### 34.2.2 Using DoMenu
 
 The following example demonstrates a complete help menu system:
 
 ```inform6
-[ HelpMenuR choice;
-    switch (choice) {
-        1: print "About this game...^";
-        2: print "How to play...^";
-        3: print "Credits...^";
+[ HelpEntryR;
+    switch (menu_item) {
+        0: item_name = "Help"; item_width = 4; return 3;
+        1: item_name = "About";        item_width = 5;
+        2: item_name = "How to play";  item_width = 11;
+        3: item_name = "Credits";      item_width = 7;
     }
 ];
 
-[ HelpChoiceR choice;
-    switch (choice) {
-        1: "This is a demonstration game.";
-        2: "Type commands to interact with the world.";
-        3: "Written by the author.";
+[ HelpChoiceR;
+    switch (menu_item) {
+        1: print "This is a demonstration game.^";
+        2: print "Type commands to interact with the world.^";
+        3: print "Written by the author.^";
     }
 ];
 
 [ HelpSub;
-    DoMenu("Help^About^How to play^Credits", HelpMenuR, HelpChoiceR);
+    DoMenu("About^How to play^Credits^", HelpEntryR, HelpChoiceR);
 ];
 ```
+
+The string `menu_choices` is what the player sees as the list of items
+on the menu screen; the `^` characters in it are simply newlines in the
+printed text, not delimiters parsed by the library. The number of items
+is determined solely by the value returned from `EntryR` when
+`menu_item == 0`.
 
 To make this accessible, define a verb:
 
@@ -326,31 +366,41 @@ Verb meta 'help' 'info'
     *                          -> Help;
 ```
 
-The menu title (the first `^`-delimited segment, "Help" in this example)
-appears at the top of the menu display. The remaining segments become the
-selectable items. The number of items is determined by counting `^`
-separators in the string.
+The text drawn at the top of the menu is whatever `EntryR` writes into
+`item_name` when called with `menu_item == 0`. The selectable items
+themselves are whatever `menu_choices` prints (or, if `menu_choices` is
+a routine, whatever that routine prints). The library does *not* parse
+`^`-delimited segments of `menu_choices` to obtain the title or count
+the items.
 
 ### 34.2.3 The LowKey_Menu Fallback
 
 `LowKey_Menu(menu_choices, EntryR, ChoiceR)`
-provides a text-only menu fallback. It is used automatically on Z-machine
-V3 (which has no upper window support) and on interpreters that lack
-cursor-addressing capabilities. It can also be called directly by game
-code that wants a simple numbered-choice interface.
+provides a text-only menu fallback. It is used automatically on
+Z-machine V3 (which has no upper window support) and on any platform
+where the global `pretty_flag` is zero (set by the screen-capability
+check when the interpreter lacks cursor-addressing, or by the author).
+On Glulx it is also used when `gg_statuswin` is 0. It can be called
+directly by game code that wants a simple numbered-choice interface.
 
 The routine works as follows:
 
-1. Counts the number of menu items by scanning for `^` characters.
-2. Prints the menu title.
-3. Displays each item with a number prefix (1, 2, 3, ...).
-4. Prompts the player to type a number or Q to quit.
-5. Reads single-character input using `KeyCharPrimitive()`.
-6. If the input is Q or q, the menu exits.
-7. If the input is a valid item number, `ChoiceR` is called with that
-   number.
-8. The menu loops, redisplaying after each selection until the player
-   quits.
+1. Calls `EntryR()` once (with `menu_item = 0`) to obtain the title in
+   `item_name` and the line count as the routine's return value.
+2. Prints `--- title ---` followed by the body, which is the
+   `menu_choices` parameter (printed as a string, or invoked as a
+   routine if it is one).
+3. Prints library message `Miscellany` 52 (the "Type a number..."
+   prompt) and reads a line of input using `read buffer parse` on the
+   Z-machine or `KeyboardPrimitive(buffer, parse)` on Glulx — *not*
+   single-character `KeyCharPrimitive` input.
+4. If the input is empty or its first word is `QUIT1__WD` /
+   `QUIT2__WD`, the menu exits (decrementing `menu_nesting` and, at
+   the outermost level, performing a `<Look>`).
+5. If `TryNumber(1)` yields a valid item number in 1..lines,
+   `menu_item` is set to that value and `ChoiceR()` is called; the
+   loop continues based on `ChoiceR`'s return value (2 = redisplay
+   title, 3 = exit).
 
 This implementation requires no special interpreter capabilities — it
 works with plain sequential text output and basic keyboard input.
@@ -368,36 +418,48 @@ implementation proceeds through several phases:
 - `@set_window 1` directs output to the upper window.
 
 **Menu rendering:**
-- The title is printed centred at the top of the upper window using
-  `@set_cursor` for positioning.
-- Each menu item is printed on a separate line. The currently highlighted
-  item is displayed in reverse video (`style reverse`), while other items
-  are printed in normal style.
-- If there are more items than fit on one page, page indicators
-  (such as "[MORE]" or arrows) are shown.
+- The title (`item_name`, set by `EntryR` when called with
+  `menu_item == 0`) is printed in reverse video, centred across the
+  upper window using `@set_cursor` for positioning, with `item_width`
+  used to compute the centre offset.
+- Below the title, the library prints two reverse-video lines listing
+  the navigation keys (`NKEY__TX`, `PKEY__TX`, `RKEY__TX`, and
+  `QKEY1__TX` / `QKEY2__TX` from `english.h`).
+- The body (`menu_choices` parameter) is then printed once, in normal
+  style, with no reformatting by the library.
+- A `>` cursor in the left margin marks the currently highlighted
+  item; navigation moves the cursor up and down.
 
 **Input handling:**
-- `@read_char 1` reads a single keypress without echoing it.
-- Navigation keys:
-  - **N** or **Down arrow** — move highlight to the next item.
-  - **P** or **Up arrow** — move highlight to the previous item.
-  - **Return/Enter** — select the highlighted item, calling `ChoiceR`.
-  - **Q** or **Escape** — exit the menu and return to the game.
-  - **N** (when at bottom) — advance to the next page (if paginated).
-  - **P** (when at top) — go back to the previous page (if paginated).
+- `@read_char 1 -> pkey` reads a single keypress without echoing it.
+- Navigation keys (compared against the constants in `english.h` plus
+  the Z-machine function-key codes 129/130/131/132):
+  - **N**, **Down arrow** (key code 130) — move highlight to the next
+    item (wrapping from the last to the first).
+  - **P**, **Up arrow** (key code 129) — move highlight to the previous
+    item (wrapping from the first to the last).
+  - **Return** (10 or 13) or **Select** (key code 132) — select the
+    highlighted item, calling `EntryR` (to print the per-item heading)
+    and then `ChoiceR`.
+  - **Q**, **Escape** (key code 27), or **Function key** 131 — exit
+    the menu and return to the game.
 
 **Selection display:**
-When the player selects an item, the lower window is used to display the
-full content returned by `ChoiceR`. The player presses a key to return to
-the menu listing.
+When the player selects an item, `EntryR` is called with `menu_item`
+set to the chosen line, the screen is redrawn with `item_name` shown
+as a one-line title, and `ChoiceR` is called in the lower window to
+print the full content. If `ChoiceR` returns 2 the menu is
+redisplayed immediately; if it returns 3 the menu exits; otherwise
+the library prints `Miscellany` 53 (the "Press any key" prompt),
+reads a key, and redisplays the menu.
 
 **Cleanup:**
-When the player exits the menu (Q or Escape), the routine restores the
-normal screen layout:
-- `@erase_window $ffff` clears both windows.
-- `@split_window 1` restores the standard one-line status bar.
-- `DrawStatusLine()` is called to redraw the status line.
-- A `<Look>` action is generated to redisplay the current room.
+When the player exits the menu (Q, Escape, or function key 131), the
+routine clears both windows with `@erase_window $ffff`, switches back
+to window 0 with `@set_window 0`, and (at the outermost level of
+`menu_nesting`) generates a `<<Look>>` to redisplay the current room.
+It does *not* explicitly call `DrawStatusLine`; the status line is
+redrawn automatically by the main game loop on the next turn.
 
 ### 34.2.5 Glulx Menu
 
@@ -406,30 +468,34 @@ uses the Glk API for all display operations. The structure mirrors the
 Z-machine version but uses Glk calls:
 
 **Window management:**
-- `glk_window_clear(gg_mainwin)` clears the main window.
+- `glk_window_clear` is called on both `gg_statuswin` and `gg_mainwin`.
 - `glk_set_window(gg_statuswin)` selects the status window for menu
   drawing.
+- `StatusLineHeight(lines+7)` enlarges the status window to hold the
+  title, the two-line key legend, a blank line, and the body items.
 - `glk_window_get_size(gg_statuswin, gg_arguments, gg_arguments+4)`
   obtains the window dimensions for layout calculations.
 - `glk_window_move_cursor(gg_statuswin, x, y)` positions text within
   the status window for each menu item.
 
 **Styling:**
-- `glk_set_style(style_Subheader)` is used for the menu title and
-  highlighted items.
-- `glk_set_style(style_Normal)` is used for non-highlighted items and
-  body text.
+- `glk_set_style(style_Subheader)` is used for the menu title and the
+  per-item heading shown during the selection display.
+- `glk_set_style(style_Normal)` is used for the body and key legend.
 
 **Input:**
-- `KeyCharPrimitive()` handles input through the Glk event system,
-  calling `glk_request_char_event()` and waiting for a `evtype_CharInput`
-  event. This provides the same single-keypress interface as `@read_char`
-  on the Z-machine.
+- Input is read with `KeyCharPrimitive(gg_statuswin, true)`, which
+  internally uses Glk's `glk_request_char_event()` and waits for an
+  `evtype_CharInput` event. The navigation key constants from
+  `english.h` are accepted alongside the Glk special-key codes
+  (e.g. `$fffffffb` for `keycode_Down`, `$fffffffc` for `keycode_Up`,
+  `$fffffffa` for `keycode_Return`, `$fffffff8` for `keycode_Escape`).
 
 **Cleanup:**
-On exit, the routine clears both windows, redraws the status line via
-`DrawStatusLine()`, and generates a `<Look>` action to restore the room
-description.
+On exit the routine clears `gg_mainwin` and (at the outermost level of
+`menu_nesting`) generates a `<<Look>>` to restore the room description.
+It does not explicitly call `DrawStatusLine`; the status line is
+redrawn on the next turn by the main game loop.
 
 ### 34.2.6 Menu Design Considerations
 
@@ -444,14 +510,15 @@ string with `^` separators. This imposes some practical constraints:
 
 For complex multi-level menus, the `ChoiceR` routine can itself call
 `DoMenu` recursively, creating nested submenus. Each level of nesting
-pushes a new menu onto the screen, and exiting returns to the parent:
+pushes a new menu onto the screen, and exiting returns to the parent
+(the library tracks the depth in the global `menu_nesting`):
 
 ```inform6
-[ TopMenuChoiceR choice;
-    switch (choice) {
-        1: DoMenu("Commands^Movement^Objects^Talking",
-                   SubMenuR, SubMenuChoiceR);
-        2: "This game was created as a demonstration.";
+[ TopMenuChoiceR;
+    switch (menu_item) {
+        1: DoMenu("Movement^Objects^Talking^",
+                   SubEntryR, SubChoiceR);
+        2: print "This game was created as a demonstration.^";
     }
 ];
 ```
@@ -513,10 +580,13 @@ V6 provides opcodes for drawing and managing pictures:
   (pixels in most V6 interpreters).
 - `@erase_picture pic_num y x` — erases the area occupied by picture
   `pic_num` at the given position, filling it with the background color.
-- `@picture_data pic_num array -> result` — stores the height and width
-  of picture `pic_num` into `array-->0` and `array-->1` respectively.
-  If `pic_num` is 0, stores the number of available pictures and the
-  release number of the picture file. Returns true if the picture exists.
+- `@picture_data pic_num array ?label` — stores the height and width
+  of picture `pic_num` into `array-->0` and `array-->1` respectively,
+  and branches to `label` if the picture exists. If `pic_num` is 0,
+  it stores the number of available pictures and the release number of
+  the picture file instead. (This is a *branch* instruction, not a
+  store instruction: results are returned through the array and the
+  branch, not through a `-> result` operand.)
 - `@picture_table table` — hints to the interpreter that the pictures
   listed in `table` (a word array of picture numbers, terminated by 0)
   should be preloaded into memory for fast display.
@@ -527,11 +597,12 @@ V6 provides opcodes for drawing and managing pictures:
 
 ! Query picture dimensions
 Array pic_info --> 2;
-@picture_data 1 pic_info -> i;
-if (i) {
-    print "Height: ", pic_info-->0,
-          " Width: ", pic_info-->1, "^";
-}
+@picture_data 1 pic_info ?HavePic;
+jump NoPic;
+.HavePic;
+print "Height: ", pic_info-->0,
+      " Width: ", pic_info-->1, "^";
+.NoPic;
 
 ! Preload pictures 1-3
 Array preload_pics --> 1 2 3 0;
@@ -846,12 +917,17 @@ Array read_buffer -> 256;
 
 ### 34.4.5 The Glk Wrapper and Output Streams
 
-The veneer includes `Glk__Wrap`,
-a wrapper routine that mediates between the `print` statement and
-the Glk I/O system. When the compiler targets Glulx, all `print`
-output is routed through the current Glk stream. The `@glk` opcode
-provides direct access to the Glk API; the veneer function translates
-between the compiler's calling convention and the Glk dispatch layer.
+The veneer includes `Glk__Wrap`, a wrapper routine around the `@glk`
+opcode. It accepts the Glk call ID as its first argument and any
+number of additional Glk arguments through the variadic `_vararg_count`
+mechanism, dispatches them to the Glk layer via `@glk`, and returns
+the Glk call's result value. This is how the compiler implements
+variadic Glk function calls expressed in Inform 6 source (the
+`glk_*` veneer stubs in `infglk.h` each use `@glk` directly, but
+indirect or runtime-dispatched Glk calls go through `Glk__Wrap`).
+On Glulx, `print` output is routed through the current Glk stream;
+the `@glk` opcode (directly or through `Glk__Wrap`) is the underlying
+mechanism by which the runtime talks to the Glk dispatch layer.
 
 On the Z-machine, `@output_stream` directs output to different
 destinations (screen, transcript, table, or command file). On Glulx,
@@ -960,9 +1036,11 @@ This code performs the following steps:
    `GGRecoverObjects()` to re-establish Glk object references (window
    IDs, stream handles, etc.) that may have been invalidated by the
    state restore, then normalizes the result to 2.
-3. **Normalize Glulx results**: the `~~i` (bitwise NOT) converts the
-   Glulx convention (0 = success) to the library's convention
-   (non-zero = success).
+3. **Normalize Glulx results**: the `~~i` is Inform 6's **logical NOT**
+   operator (`~` is bitwise NOT; `~~` is logical NOT). It converts the
+   Glulx convention (0 = success at save time) to the library's
+   convention (non-zero = success) by mapping 0 to 1 and any non-zero
+   value to 0.
 4. **Reset `just_undone`** to 0, allowing undo on this turn.
 5. **Set `undo_flag`** based on the result:
    - Result of -1 (Z-machine) → `undo_flag = 0` (no undo support).
@@ -973,43 +1051,50 @@ This code performs the following steps:
 
 When the player types UNDO, the parser recognizes it as a special
 meta-command and calls `PerformUndo`.
-This routine handles all the validation and error reporting:
+This routine handles validation and error reporting. In the library
+its checks are performed in the following order:
 
-1. **Check for game start**: if the turn count is at its initial value
-   (comparing `turns` against the starting turn), the undo is rejected
-   with library message `Miscellany` 11:
+1. **Check for game start**: if `turns == START_MOVE`, the undo is
+   rejected with library message `Miscellany` 11:
    *"You can't ~undo~ what hasn't been done!"*
 
-2. **Check for consecutive undos**: if `just_undone` is true, the undo
-   is rejected with library message `Miscellany` 12:
-   *"Can't ~undo~ twice in succession. Sorry!"*
-
-3. **Check undo availability**: if `undo_flag` is 0, the undo is
+2. **Check undo availability**: if `undo_flag` is 0, the undo is
    rejected with library message `Miscellany` 6:
    *"Your interpreter does not provide ~undo~. Sorry!"*
    If `undo_flag` is 1, the undo is rejected with library message
    `Miscellany` 7:
    *"You cannot ~undo~ any further."*
 
-4. **Attempt restore**: the appropriate restore opcode is executed:
+3. **Attempt restore**: the appropriate restore opcode is executed:
 
    ```inform6
    #Ifdef TARGET_ZCODE;
    @restore_undo i;
    #Ifnot; ! TARGET_GLULX
    @restoreundo i;
+   i = (~~i);
    #Endif;
    ```
 
-5. **Handle failure**: if the restore opcode returns (which means it
-   failed — a successful restore never returns to this point), the
-   routine prints `Miscellany` message 7.
+4. **Handle failure**: if the restore opcode returns (which means it
+   failed — a successful restore never returns to this point), and
+   the (Glulx-normalised) result is 0, the routine prints `Miscellany`
+   message 7 and returns 0.
 
-6. **Handle success**: on a successful restore, execution resumes at the
-   `@save_undo`/`@saveundo` call in the game loop (§34.5.3) with a
-   result indicating restoration. The library detects this, sets
+5. **Handle success**: on a successful restore, execution does not
+   resume in `PerformUndo` at all: it resumes at the
+   `@save_undo` / `@saveundo` call in the game loop (§34.5.3) with a
+   result indicating restoration. The game loop detects this, sets
    `just_undone = 1`, and prints `Miscellany` message 13:
    *"Previous turn undone."*
+
+The library's `just_undone` global is set after a successful undo and
+cleared at the top of each turn. The comment in `parser.h` describes
+its intent as "Can't have two successive UNDOs", but in this version
+of the library `PerformUndo` does not itself test `just_undone` — the
+practical block on consecutive undos comes from the underlying
+opcode, since each `@restore_undo` consumes the snapshot saved by
+the previous `@save_undo`.
 
 ### 34.5.5 Undo-Related Library Messages
 
@@ -1020,11 +1105,12 @@ through the standard library message interception mechanism
 
 | Message Number | Default Text | When Used |
 |----------------|-------------|-----------|
-| 6  | "Your interpreter does not provide ~undo~. Sorry!" | `undo_flag == 0`: interpreter lacks undo support entirely. |
-| 7  | "You cannot ~undo~ any further." | `undo_flag == 1`: undo save failed, or restore failed. |
-| 11 | "You can't ~undo~ what hasn't been done!" | Player tries to undo before the first move. |
-| 12 | "Can't ~undo~ twice in succession. Sorry!" | `just_undone` is set — consecutive undo attempt. |
-| 13 | "Previous turn undone." | Successful undo restoration. |
+| 6  | "[Your interpreter does not provide ~undo~. Sorry!]" | `undo_flag == 0`: interpreter lacks undo support entirely. |
+| 7 (Z-machine)  | "~Undo~ failed. [Not all interpreters provide it.]" | `undo_flag == 1`, or `@restore_undo` returned failure. |
+| 7 (Glulx)  | "[You cannot ~undo~ any further.]" | `undo_flag == 1`, or `@restoreundo` returned failure. |
+| 11 | "[You can't ~undo~ what hasn't been done!]" | Player tries to undo before the first move (`turns == START_MOVE`). |
+| 12 | "[Can't ~undo~ twice in succession. Sorry!]" | Defined in the library but not currently emitted from the undo code path; reserved for language overrides that wish to add such a check. |
+| 13 | "[Previous turn undone.]" | Successful undo restoration. |
 
 The tilde characters (`~`) in these messages are the language's escape
 sequence for double-quote characters in strings (see §1.4).

@@ -78,17 +78,19 @@ provides no benefit and the compiler issues a warning.
 ### 35.1.3 Creating Abbreviations: make_abbreviation()
 
 The `make_abbreviation()` function processes each
-`Abbreviate` argument. It performs the following steps:
+`Abbreviate` argument. The caller (`directs.c`) first checks that
+adding another abbreviation will not exceed the Z-code hard limit of 96
+or the `$MAX_ABBREVS` authoring limit, then calls `make_abbreviation()`,
+which performs the following steps:
 
-1. Checks that the maximum abbreviation count (`$MAX_ABBREVS`) has not
-   been exceeded.
-2. If `economy_switch` is false (i.e. `-e` was not given), returns
+1. If `economy_switch` is false (i.e. `-e` was not given), returns
    immediately — the abbreviation is parsed but not stored.
-3. Computes the Z-character encoding cost of the abbreviation text.
-4. Calculates quality as `(Z-char cost) - 2`.
-5. If quality is less than or equal to zero, issues a warning that the
+2. Compiles the abbreviation text as a string, recording its
+   Z-character encoding cost.
+3. Calculates quality as `(Z-char cost) - 2`.
+4. If quality is less than or equal to zero, issues a warning that the
    abbreviation saves no space.
-6. Stores the abbreviation in the abbreviation table with its text
+5. Stores the abbreviation in the abbreviation table with its text
    position, length, quality, and an initial frequency of zero.
 
 ### 35.1.4 Automatic Abbreviation Computation (-u)
@@ -251,8 +253,9 @@ strings are compressed using Huffman encoding, which assigns shorter bit
 sequences to more frequently occurring characters and substrings.
 
 The `-H` switch controls Huffman compression for Glulx targets. It is
-enabled by default; passing `-H` disables it (the switch toggles the
-setting). With Huffman compression enabled, the compiler:
+enabled by default; passing `-H` (re)enables it, and `-~H` disables it
+(following Inform's standard `~` convention for negating switches).
+With Huffman compression enabled, the compiler:
 
 1. Analyses the frequency of all characters and common substrings across
    all game text.
@@ -669,7 +672,7 @@ text followed by data bytes that store flags and grammatical information
 | Version | Encoded text | Data bytes (normal) | Data bytes (reduced) | Total (normal) | Total (reduced) |
 |---------|-------------|--------------------|--------------------|---------------|----------------|
 | V3 | 4 bytes | 3 bytes | 2 bytes | 7 bytes | 6 bytes |
-| V5+ | 6 bytes | 3 bytes | 2 bytes | 9 bytes | 8 bytes |
+| V4+ | 6 bytes | 3 bytes | 2 bytes | 9 bytes | 8 bytes |
 
 The byte length formula is:
 

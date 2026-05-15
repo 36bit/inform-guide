@@ -222,7 +222,7 @@ The following library routines are frequently replaced by games:
 |---------|-----------|---------|
 | `Banner` | `verblib.h` | Prints the game banner at startup |
 | `DrawStatusLine` | `parser.h` | Draws the status line (Z-machine) |
-| `PrintRank` | `parser.h` | Prints the player's rank based on score |
+| `PrintRank` | `grammar.h` | Prints the player's rank based on score |
 | `BeforeParsing` | Stub in `grammar.h` | Hook called before each input is parsed |
 | `Initialise` | Game-defined (not in library) | Game setup (typically defined by the game) |
 
@@ -347,8 +347,8 @@ each receives:
 | `PrintVerb` | 1 | To print a verb the library does not recognize |
 | `TimePasses` | 0 | At the end of each turn |
 | `UnknownVerb` | 1 | To handle a verb the parser does not recognize |
-| `AfterSave` | 1 | After a save operation (argument: success flag) |
-| `AfterRestore` | 1 | After a restore operation (argument: success flag) |
+| `AfterSave` | 1 | After a save operation |
+| `AfterRestore` | 1 | After a restore operation |
 
 ## 32.4 Adding New Actions and Verbs
 
@@ -547,7 +547,7 @@ a new verb entry counts against this limit. (This is because the Z-machine's dic
 
 However, the limit on *actions* is much higher. Under Grammar Version 2 (GV2) and Version 3 (GV3), the Z-machine supports up to **1024 distinct actions**. (Under the older Grammar Version 1, actions are limited to 256).
 
-**[Glulx]** Although the VM itself has no architectural limitation on the number of verbs, the Inform 6 compiler enforces a fixed maximum of 65,535 verbs for Glulx programs. In practice, this is effectively unlimited. Glulx also supports a virtually unlimited number of actions.
+**[Glulx]** Although the VM itself has no architectural limitation on the number of verbs, the Inform 6 compiler enforces a fixed maximum of 65,535 verbs for Glulx programs. In practice, this is effectively unlimited. For actions, the Glulx compiler enforces a ceiling of 4,096 (the value where fake action numbers begin); attempts to create more produce the error "Cannot create action (grammar is limited to 4096)".
 
 ## 32.5 Extending Classes
 

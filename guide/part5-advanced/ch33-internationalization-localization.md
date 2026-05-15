@@ -646,7 +646,7 @@ ZSCII escape sequence, which is expensive.
 
 ### 33.3.1 Directive Forms
 
-The `Zcharacter` directive has four forms:
+The `Zcharacter` directive has five forms:
 
 **Form 1: Replace all three alphabets**
 
@@ -702,6 +702,20 @@ Zcharacter table + $0100 $0101 $010C $010D;
 The `+` sign preserves existing entries and appends new ones. The
 `plus_flag` is passed to `new_zscii_character()`, which skips the
 `zscii_high_water_mark` reset.
+
+**Form 5: Declare terminating ZSCII characters**
+
+```inform6
+Zcharacter terminating 129 130 131 132;
+```
+
+This populates the terminating-characters table, which lists ZSCII codes
+that an interpreter's `@read` (and `@read_char`) input opcodes should
+treat as line terminators in addition to RETURN. The compiler emits this
+table only when targeting Z-machine version 5 or later (it is written
+into the header at bytes 46–47, pointing at a 0-terminated array of
+ZSCII codes). In earlier versions the directive is accepted but has no
+effect on the story file.
 
 ### 33.3.2 Practical Example
 

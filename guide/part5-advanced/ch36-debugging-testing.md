@@ -74,9 +74,10 @@ Verb meta 'actions'
 ```
 
 When compiling without `-D`, none of the debug verbs (`trace`,
-`showobj`, `showverb`, `scope`, `tree`, `gonear`, `purloin`,
-`abstract`, `actions`, `routines`, `timers`, `changes`, `showdict`)
-exist in the compiled game. This saves significant space — both the
+`showobj`, `showverb`, `scope`, `tree`, `gonear`, `goto`, `purloin`,
+`abstract`, `actions`, `routines`/`messages`, `timers`/`daemons`,
+`changes`, `showdict`/`dict`, `random` (Predictable), and on Glulx
+`glklist`) exist in the compiled game. This saves significant space — both the
 grammar table entries and the implementing routines are omitted
 entirely.
 
@@ -91,7 +92,10 @@ This directive must appear before any library inclusion.
 
 > **Note:** The `-D` switch only defines the `DEBUG` constant. It does
 > not by itself enable strict runtime checking (see §36.1.2) or the
-> Infix debugger (see §36.1.3). These are independent switches.
+> Infix debugger (see §36.1.3). These are independent switches. (Note,
+> however, that `-X` causes the standard library to give `DEBUG` a
+> default value of 0, so Infix builds automatically include the debug
+> verbs as well — see §36.1.3.)
 
 
 ### 36.1.2 -S (Runtime Error Checking — STRICT Mode)
@@ -156,13 +160,22 @@ Infix interactive debugger.
 The Infix debugger is a substantially more powerful debugging facility
 than the standard debug verbs; it is described in detail in §36.2.
 
-The `-X` switch is independent of `-D`: enabling Infix does not
-automatically define `DEBUG`. To get the standard debug verbs
-(§36.3) alongside the Infix debugger, pass both switches.
+The `-X` switch is independent of `-D` at the compiler level:
+enabling Infix does not by itself cause the compiler to define the
+`DEBUG` symbol. However, the standard library's `parser.h` contains
 
+```inform6
+#Ifdef INFIX;
+Default DEBUG 0;
+#Endif;
 ```
-inform6 -D -X game.inf    ! Enable Infix debugger and standard debug verbs
-```
+
+(parser.h lines 77–80), which means that when `-X` is used with the
+standard library, `DEBUG` is given a default value of 0, and the
+debug verbs (§36.3) become available alongside Infix. To compile
+with Infix but explicitly suppress the standard debug verbs you
+would need to avoid that default (for instance by replacing the
+relevant block of `parser.h`).
 
 > **[Glulx]** The Infix debugger is not available when targeting Glulx.
 > If `-X` is passed in Glulx mode the compiler prints a warning and
