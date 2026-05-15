@@ -115,8 +115,8 @@ describes value constraints enforced by the compiler.
 | Setting | Z Default | Glulx Default | Platform | Limit | Description |
 |---------|-----------|---------------|----------|-------|-------------|
 | `MAX_ABBREVS` | 64 | — | [Z-machine] | 0–96 | Maximum number of declared abbreviations |
-| `NUM_ATTR_BYTES` | 6 | 7 | [Glulx] | Multiple of 4, plus 3 | Space (in bytes) used to store attribute flags; each byte stores 8 attributes |
-| `DICT_WORD_SIZE` | ignored | 9 | [Glulx] | Any ≥ 0 (Glulx) | Bytes of encoded text per dictionary word. **Ignored in Z-code** — the compiler auto-sizes entries to 4 bytes (v3) or 6 bytes (v4+); see notes below. |
+| `NUM_ATTR_BYTES` | 6 | 7 | [Glulx] | Multiple of 4, plus 3 (max 39) | Space (in bytes) used to store attribute flags; each byte stores 8 attributes |
+| `DICT_WORD_SIZE` | ignored | 9 | [Glulx] | Any ≥ 0 (Glulx) | Characters per dictionary word. **Ignored in Z-code** — the compiler auto-sizes entries to 4 bytes (v3) or 6 bytes (v4+); see notes below. |
 | `DICT_CHAR_SIZE` | 1 | 1 | [Glulx] | 1 or 4 | Byte size of one character in the dictionary (4 enables full Unicode input) |
 | `GRAMMAR_VERSION` | 1 | 2 | [All] | Validated later | Grammar table format: 1 = Infocom format, 2 = Inform standard, 3 = compact (Z-code only, added in 6.43) |
 | `GRAMMAR_META_FLAG` | 0 | 0 | [All] | 0–1 | If 1, meta actions are indicated by value (≤ `#largest_meta_action`) rather than dict word flags |
@@ -210,8 +210,9 @@ to distinguish longer words, at the cost of a larger dictionary table.
 
 The byte size of a single character in dictionary entries. The default of 1
 uses one byte per character (Latin-1 range). Setting this to 4 enables full
-Unicode dictionary words, where each character occupies four bytes. Values of
-0, 2, or 3 are normalized to 1 by the compiler.
+Unicode dictionary words, where each character occupies four bytes. Values
+other than 1 or 4 (including 0, 2, or 3) are normalized to 4 by the compiler
+with a warning.
 
 ```inform6
 !% $DICT_CHAR_SIZE=4
@@ -303,7 +304,9 @@ allowed values are 3, 7, 11, 15, and so on. In Z-code this is fixed at 6
 ```
 
 This would provide 88 attribute slots. The value must satisfy the constraint:
-`(NUM_ATTR_BYTES - 3)` must be a multiple of 4.
+`(NUM_ATTR_BYTES - 3)` must be a multiple of 4. The compiler enforces a hard
+upper bound of 39 (`MAX_NUM_ATTR_BYTES`); larger values are clamped down with
+a warning.
 
 #### `INDIV_PROP_START`
 

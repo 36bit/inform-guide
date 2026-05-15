@@ -280,7 +280,7 @@ label.
 |--:|-------------|-----------|------------|-------|
 | 1 | "[Replaying commands.]" | — | — | |
 | 2 | "[Commands are already replaying.]" | — | — | [Glulx only] |
-| 3 | "[Command replay failed. Command recording is on.]" | — | — | [Glulx only] |
+| 3 | "[Command replay failed.  Command recording is on.]" | — | — | [Glulx only] |
 | 4 | "[Command replay failed.]" | — | — | [Glulx only] |
 | 5 | "[Command replay complete.]" | — | — | [Glulx only] |
 
@@ -383,7 +383,7 @@ label.
 
 | # | Default Text | Parameters | Called From | Notes |
 |--:|-------------|-----------|------------|-------|
-| 1 | "Darkness, noun. An absence of light to see by." | — | — | In darkness |
+| 1 | "Darkness, noun.  An absence of light to see by." | — | — | In darkness |
 | 2 | "[Actor] see[s] nothing special about [x1]." | `x1` = noun | — | When no description; tense-aware |
 | 3 | "[x1] is currently switched on/off." | `x1` = noun | — | For switchable objects; tense-aware |
 
@@ -435,8 +435,8 @@ label.
 | # | Default Text | Parameters | Called From | Notes |
 |--:|-------------|-----------|------------|-------|
 | 1 | "[Actor] isn't holding [x1]." | `x1` = noun | — | Tense-aware |
-| 2 | "[Actor] juggle[s] [x1] for a while, but don't achieve much." | `x1` = noun | — | When giving to self; tense-aware |
-| 3 | "[x1] don't seem interested." | `x1` = second | — | Default NPC refusal |
+| 2 | "[Actor] juggle[s] [x1] for a while, but don't/doesn't achieve much." | `x1` = noun | — | When giving to self; tense-aware |
+| 3 | "[x1] don't/doesn't seem interested." | `x1` = second | — | Default NPC refusal |
 | 4 | "[Actor] hand[s] over [x1]." | `x1` = noun | — | Success; tense-aware |
 
 ### §C.4.10 Go (`##Go`)
@@ -449,7 +449,7 @@ label.
 | 2 | "[Actor] can't go that way." | — | — | Tense-aware |
 | 3 | "[Actor] is unable to climb [x1]." | `x1` = door object | — | Going up through a door |
 | 4 | "[Actor] is unable to descend by [x1]." | `x1` = door object | — | Going down through a door |
-| 5 | "[Actor] can't, since [x1] is in the way." | `x1` = door object | — | Door blocking other direction |
+| 5 | "[Actor] can't, since [x1] is/are in the way." | `x1` = door object | — | Door blocking other direction |
 | 6 | "[Actor] can't, since [x1] lead[s] nowhere." | `x1` = door object | — | Door with no destination; tense-aware |
 | 7 | "[Actor] depart[s]." | — | — | NPC going; tense-aware |
 
@@ -595,10 +595,10 @@ inventory listings.
 
 | # | Default Text | Parameters | Called From | Notes |
 |--:|-------------|-----------|------------|-------|
-| 1 | "[x1] don't seem to be something [actor] can lock." | `x1` = noun | — | Tense-aware |
+| 1 | "[x1] don't/doesn't seem to be something [actor] can lock." | `x1` = noun | — | Tense-aware |
 | 2 | "[x1] is locked at the moment." | `x1` = noun | — | |
 | 3 | "[Actor] will first have to close [x1]." | `x1` = noun | — | |
-| 4 | "[x1] don't seem to fit the lock." | `x1` = second | — | Wrong key |
+| 4 | "[x1] don't/doesn't seem to fit the lock." | `x1` = second | — | Wrong key |
 | 5 | "[Actor] lock[s] [x1]." | `x1` = noun | — | Success; tense-aware |
 
 ### §C.4.24 Look (`##Look`)
@@ -944,7 +944,7 @@ complete discussion, see §C.9.
 
 | # | Default Text | Parameters | Called From | Notes |
 |--:|-------------|-----------|------------|-------|
-| 1 | "You have so far scored [score] out of a possible [MAX_SCORE], in [turns] turn[s]." | — | — | Adapts to `deadflag` ("In that game you scored...") |
+| 1 | "You have so far scored [score] out of a possible [MAX_SCORE], in [turns] turn[s]" | — | — | Adapts to `deadflag` ("In that game you scored..."); no trailing period |
 | 2 | "There is no score in this story." | — | — | When `NO_SCORE` is defined |
 
 ### §C.6.3 ScriptOff (`##ScriptOff`)
@@ -1180,9 +1180,9 @@ complete discussion, see §C.9.
 
 | # | Default Text | Parameters | Called From | Notes |
 |--:|-------------|-----------|------------|-------|
-| 1 | "[x1] don't seem to be something [actor] can unlock." | `x1` = noun | — | Not lockable; tense-aware |
+| 1 | "[x1] don't/doesn't seem to be something [actor] can unlock." | `x1` = noun | — | Not lockable; tense-aware |
 | 2 | "[x1] is unlocked at the moment." | `x1` = noun | — | Already unlocked |
-| 3 | "[x1] don't seem to fit the lock." | `x1` = second | — | Wrong key |
+| 3 | "[x1] don't/doesn't seem to fit the lock." | `x1` = second | — | Wrong key |
 | 4 | "[Actor] unlock[s] [x1]." | `x1` = noun | — | Success; tense-aware |
 | 5 | "(first unlocking [x1])" | `x1` = noun | — | Implicit action |
 
